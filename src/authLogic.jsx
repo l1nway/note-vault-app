@@ -24,7 +24,7 @@ function authLogic() {
     // send data to the server for login or registration
     const submitRequest = async () => {
         try {
-            const res = await fetch(`http://api.notevault.pro/api/v1/auth/${path}`,
+            const res = await fetch(`https://api.notevault.pro/api/v1/auth/${path}`,
                 {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -75,7 +75,7 @@ function authLogic() {
             setNotesError(false)
 
             const fetchPromises = endpoints.map(endpoint =>
-                fetch(`http://api.notevault.pro/api/v1/${endpoint.key}`, {
+                fetch(`https://api.notevault.pro/api/v1/${endpoint.key}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

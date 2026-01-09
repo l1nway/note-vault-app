@@ -5,7 +5,7 @@ const useApi = (token) => {
         body
     } = {}
     ) => {
-        const res = await fetch(`http://api.notevault.pro${url}`, {
+        const res = await fetch(`https://api.notevault.pro${url}`, {
             method,
             headers: {
                 'content-type': 'application/json',

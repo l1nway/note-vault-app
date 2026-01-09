@@ -30,7 +30,7 @@ function User() {
 
     // getting user information from the server
     const getUser = () => {
-            fetch(`http://api.notevault.pro/api/v1/auth/me`,
+            fetch(`https://api.notevault.pro/api/v1/auth/me`,
                 {
                     method: 'GET',
                     headers: {
@@ -50,7 +50,7 @@ function User() {
     const remember = true
 
     const changeName = () => {
-        fetch(`http://api.notevault.pro/api/v1/profile`,
+        fetch(`https://api.notevault.pro/api/v1/profile`,
             {
                 method: 'PATCH',
                 headers: {

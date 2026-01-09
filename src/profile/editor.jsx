@@ -150,7 +150,7 @@ const Editor = forwardRef((props, ref) => {
             formData.append('avatar', blob, 'avatar.png'
         )
 
-        fetch(`http://api.notevault.pro/api/v1/profile/avatar`,
+        fetch(`https://api.notevault.pro/api/v1/profile/avatar`,
             {
                 method: 'POST',
                 headers: {

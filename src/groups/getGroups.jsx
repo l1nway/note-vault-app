@@ -18,7 +18,7 @@ const getGroups = async (path, setLoading = () => {}) => {
 
     group?.length == 0 && setLoading(true)
     try {
-        const res = await fetch(`http://api.notevault.pro/api/v1/${path}`, {
+        const res = await fetch(`https://api.notevault.pro/api/v1/${path}`, {
             method: 'GET',
             headers: {
                 'content-type': 'application/json',

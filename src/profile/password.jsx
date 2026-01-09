@@ -72,7 +72,7 @@ function Password(props) {
     // contacting the server to change the password
     const changePass = async () => {
         try {
-            const res = await fetch(`http://api.notevault.pro/api/v1/profile/password`, {
+            const res = await fetch(`https://api.notevault.pro/api/v1/profile/password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
