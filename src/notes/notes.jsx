@@ -83,7 +83,7 @@ function Notes() {
     useEffect(() => {
         if (!token || !online) return
             const getTags = async () => {
-                const res = await fetch(`https://api.notevault.pro/api/v1/tags`, {
+                const res = await fetch(`http://api.notevault.pro/api/v1/tags`, {
                     headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }
                 })
                 const data = await res.json()
@@ -91,7 +91,7 @@ function Notes() {
             }
 
             const getCats = async () => {
-                const res = await fetch(`https://api.notevault.pro/api/v1/categories`, {
+                const res = await fetch(`http://api.notevault.pro/api/v1/categories`, {
                     headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }
                 })
                 const data = await res.json()
@@ -380,7 +380,7 @@ function Notes() {
                         className='select-buttons'
                     >
                         <SlideLeft
-                            visibility={category != 'All categories'}
+                            visibility={category?.name}
                         >
                             <FontAwesomeIcon
                                 className='cancel-select'
@@ -429,22 +429,20 @@ function Notes() {
                         className='select-head'
                         ref={tagHeadRef}
                     >
-                        {tag?.name ? `#${t(tag.name)}` : t('All tags')}
+                        {tag?.name ? `#${t(tag?.name)}` : t('All tags')}
                     </p>
                     <div
                         className='select-buttons'
                     >
-                        <FontAwesomeIcon
-                            className='cancel-select'
-                            icon={faXmark}
-                            tabIndex={tag != 'All tags' ? '0' : '1'}
-                            onClick={() => {
-                                setTag('All tags')
-                            }}
-                            style={{
-                                '--opacity': tag != 'All tags' ? 1 : 0
-                            }}
-                        />
+                        <SlideLeft
+                            visibility={tag?.name}
+                        >
+                            <FontAwesomeIcon
+                                className='cancel-select'
+                                icon={faXmark}
+                                onClick={() => setTag('All tags')}
+                            />
+                        </SlideLeft>
                         <FontAwesomeIcon
                             className='select-icon'
                             icon={faArrowUpSolid}

@@ -33,10 +33,10 @@ const clarifyApi = async ({
 
     const url =
         action == 'new'
-            ? `https://api.notevault.pro/api/v1/${normalizedEntity}`
+            ? `http://api.notevault.pro/api/v1/${normalizedEntity}`
             : normalizedEntity == 'notes' && noteActionEndpoints[action]
-                ? `https://api.notevault.pro/api/v1/notes/${id}/${noteActionEndpoints[action]}`
-                : `https://api.notevault.pro/api/v1/${normalizedEntity}/${id}`
+                ? `http://api.notevault.pro/api/v1/notes/${id}/${noteActionEndpoints[action]}`
+                : `http://api.notevault.pro/api/v1/${normalizedEntity}/${id}`
 
 
     const res = await fetch(url, {

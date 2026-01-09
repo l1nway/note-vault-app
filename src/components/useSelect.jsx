@@ -5,12 +5,11 @@ function useSelect({disabled, isOpen, setIsOpen}) {
 
     const handleBlur = useCallback((e) => {
         if (e.currentTarget.contains(e.relatedTarget)) return
-        setIsOpen(false)
+        setIsOpen(false, 'shit blur')
     }, [setIsOpen])
 
     const handleFocus = useCallback(() => {
         if (disabled) return
-
         if (!isOpen) {
             setIsOpen(true)
             justFocused.current = true
@@ -26,8 +25,8 @@ function useSelect({disabled, isOpen, setIsOpen}) {
         if (e.target.closest('.cancel-select')) return
         if (justFocused.current) return
 
-        setIsOpen()
-    }, [disabled, setIsOpen])
+        setIsOpen(!isOpen)
+    }, [disabled, isOpen, setIsOpen])
 
     const handleKeyDown = useCallback((e) => {
         if (e.key == 'Escape') {

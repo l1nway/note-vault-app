@@ -98,7 +98,7 @@ const useClarifyLogic = (props) => {
             setClarifyLoading(false)
             return
         }
-        fetch(`https://api.notevault.pro/api/v1/${(path == 'archived' || path == 'trash') ? 'notes' : path}`,
+        fetch(`http://api.notevault.pro/api/v1/${(path == 'archived' || path == 'trash') ? 'notes' : path}`,
             {
                 method: 'GET',
                 headers: {

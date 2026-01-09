@@ -63,7 +63,7 @@ function profileLogic() {
     
     // request to the server to delete the avatar
     const delAvatar = () => {
-        fetch(`https://api.notevault.pro/api/v1/profile/avatar`,
+        fetch(`http://api.notevault.pro/api/v1/profile/avatar`,
             {
                 method: 'DELETE',
                 headers: {

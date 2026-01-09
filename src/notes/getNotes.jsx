@@ -24,7 +24,7 @@ const getNotes = async (
         setNotesError(false)
 
     const res = await fetch(
-    `https://api.notevault.pro/api/v1/notes${queryString}`,
+    `http://api.notevault.pro/api/v1/notes${queryString}`,
     {
         method: 'GET',
         headers: {

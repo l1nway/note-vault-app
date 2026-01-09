@@ -17,7 +17,7 @@ const getTrash = (
         token !== 'null'
     )
 
-    const trashUrl = `https://api.notevault.pro/api/v1/notes?${path == 'trash' ? 'deleted' : path}=true`
+    const trashUrl = `http://api.notevault.pro/api/v1/notes?${path == 'trash' ? 'deleted' : path}=true`
 
     fetch(trashUrl, {
         method: 'GET',
