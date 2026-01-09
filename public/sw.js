@@ -8,7 +8,6 @@ const APP_SHELL = [
   '/style.css'
 ]
 
-// Установка SW и кэширование статики
 self.addEventListener('install', event => {
   console.log('[SW] Install')
   event.waitUntil(
@@ -16,7 +15,6 @@ self.addEventListener('install', event => {
   )
 })
 
-// Активация и удаление старых кэшей
 self.addEventListener('activate', event => {
   console.log('[SW] Activate')
   const currentCaches = [STATIC_CACHE, DATA_CACHE]
@@ -33,14 +31,12 @@ self.addEventListener('activate', event => {
   )
 })
 
-// Обработка fetch запросов
 self.addEventListener('fetch', event => {
-  const { request } = event
+  const {request} = event
   const url = new URL(request.url)
 
   if (!url.protocol.startsWith('http')) return
 
-  // API-запросы
   if (request.url.includes('/api/v1/')) {
     event.respondWith(
       fetch(request)
@@ -60,21 +56,19 @@ self.addEventListener('fetch', event => {
               headers
             })
           }
-          return new Response('Offline', { status: 503 })
+          return new Response('Offline', {status: 503})
         })
     )
     return
   }
 
-  // Навигация
-  if (request.mode === 'navigate') {
+  if (request.mode == 'navigate') {
     event.respondWith(
       caches.match('/index.html').then(res => res || fetch('/index.html'))
     )
     return
   }
 
-  // Все остальные запросы — сначала кэш, потом сеть
   event.respondWith(
     caches.match(request).then(res => res || fetch(request))
   )

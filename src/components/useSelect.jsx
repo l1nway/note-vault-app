@@ -5,7 +5,7 @@ function useSelect({disabled, isOpen, setIsOpen}) {
 
     const handleBlur = useCallback((e) => {
         if (e.currentTarget.contains(e.relatedTarget)) return
-        setIsOpen(false, 'shit blur')
+        setIsOpen(false)
     }, [setIsOpen])
 
     const handleFocus = useCallback(() => {

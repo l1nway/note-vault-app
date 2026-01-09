@@ -31,7 +31,7 @@ function GroupCard({element, openAnim, setElementID, setName, setColor, listView
     const isPending = Boolean(pending)
 
     const edit = useCallback((e, element) => {
-        e.preventDefault()
+        e.stopPropagation()
         if (animating == true) {
             return false
         }
@@ -43,7 +43,7 @@ function GroupCard({element, openAnim, setElementID, setName, setColor, listView
     })
 
     const del = useCallback((e, element) => {
-        e.preventDefault()
+        e.stopPropagation()
         if (animating == true) {
             return false
         }
@@ -53,8 +53,8 @@ function GroupCard({element, openAnim, setElementID, setName, setColor, listView
     })
 
     const redirect = useCallback((e, element) => {
+        e.stopPropagation()
         if (isPending) {
-            e.preventDefault()
             undo(pending.pendingId)
             return
         }
