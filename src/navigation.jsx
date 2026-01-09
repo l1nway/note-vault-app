@@ -322,7 +322,7 @@ function Navigation() {
                                     <div
                                         className='not-authorized'
                                     >
-                                        {t('not authorized')}
+                                        {t('not logged in')}
                                     </div>
                                     :
                                     <>
