@@ -9,17 +9,21 @@ const queryClient = new QueryClient()
 
 if (
   'serviceWorker' in navigator
-  // import.meta.env.PROD
 ) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/sw.js')
       .then(registration => {
-        console.log('SW registered:', registration)
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+              window.location.reload()
+            }
+          })
+        })
       })
-      .catch(error => {
-        console.error('SW registration failed:', error)
-      })
+      .catch(error => console.error('SW registration failed:', error))
   })
 }
 

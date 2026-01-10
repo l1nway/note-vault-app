@@ -3,13 +3,12 @@ const DATA_CACHE = 'data-v1'
 
 const APP_SHELL = [
   '/',
-  '/index.html',
-  '/main.js',
-  '/style.css'
+  '/index.html'
 ]
 
 self.addEventListener('install', event => {
   console.log('[SW] Install')
+  self.skipWaiting()
   event.waitUntil(
     caches.open(STATIC_CACHE).then(cache => cache.addAll(APP_SHELL))
   )
@@ -64,12 +63,28 @@ self.addEventListener('fetch', event => {
 
   if (request.mode == 'navigate') {
     event.respondWith(
-      caches.match('/index.html').then(res => res || fetch('/index.html'))
+      fetch('/index.html')
+        .then(res => {
+          const resClone = res.clone()
+          caches.open(STATIC_CACHE).then(cache => cache.put('/index.html', resClone))
+          return res;
+        })
+        .catch(() => caches.match('/index.html'))
     )
     return
   }
 
   event.respondWith(
-    caches.match(request).then(res => res || fetch(request))
+    caches.match(request).then(cachedResponse => {
+      const fetchPromise = fetch(request).then(networkResponse => {
+        if (networkResponse && networkResponse.status == 200) {
+          const resClone = networkResponse.clone()
+          caches.open(STATIC_CACHE).then(cache => cache.put(request, resClone))
+        }
+        return networkResponse
+      }).catch(() => {})
+
+      return cachedResponse || fetchPromise
+    })
   )
 })
