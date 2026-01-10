@@ -387,13 +387,6 @@ input[type=checkbox] {
     border-color: var(--del-btn) !important;
 }
 
-.notes-main:has(input:checked) .pop-up-enter-done {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-}
-
 .notes-list {
     transition: margin 300ms;
     display: flex;
@@ -419,7 +412,7 @@ input[type=checkbox] {
     }
 }
 
-.notes-list:has(.list-view:checked) {
+.notes-list .--listView {
     scrollbar-gutter: stable;
 }
 

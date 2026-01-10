@@ -20,7 +20,7 @@ const getTrash = (
     )
 
     const trashUrl =
-        `http://api.notevault.pro/api/v1/notes` +
+        `https://api.notevault.pro/api/v1/notes` +
         `?${path == 'trash' ? 'deleted' : 'archived'}=true` +
         `&page=${page}`
 

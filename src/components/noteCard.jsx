@@ -46,10 +46,7 @@ const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setT
     const ref = useRef(null)
     const visible = useInView(ref, {amount: 0.1, margin: '100px 0px 50px 0px'})
 
-    const notesView = notesViewStore(
-        state => state.notesView,
-        (a, b) => a == b
-    )
+    const notesView = notesViewStore(state => state.notesView == 'list')
 
     const renderButtons = useMemo(() => 
         allActions[path]?.map((action, index) => (
@@ -90,7 +87,7 @@ const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setT
     return (
         <motion.div
             tabIndex={0}
-            className='note-animated-element'
+            className={`note-animated-element ${notesView ? '--listView' : ''}`}
             style={{ 
                 willChange: 'transform, opacity, height',
                 backfaceVisibility: 'hidden',
@@ -123,13 +120,6 @@ const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setT
                 to={`note/${note.id}`}
                 onClick={(e) => click(e)}
             >
-                {/* input for css only */}
-                <input
-                    type='checkbox'
-                    className='list-view'
-                    checked={notesView == 'list'}
-                    readOnly    
-                />
                 <div
                     className='note-buttons'
                 >

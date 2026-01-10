@@ -2,12 +2,12 @@ input[type=checkbox] {
     display: none;
 }
 
-.note-element:has(.list-view:checked) .note-title,
-.note-element:has(.list-view:checked) .note-desc,
-.note-element:has(.list-view:checked) .note-category,
-.note-element:has(.list-view:checked) .note-tags,
-.note-element:has(.list-view:checked) .note-date,
-.note-element:has(.list-view:checked) .note-buttons {
+.note-animated-element.--listView .note-title,
+.note-animated-element.--listView .note-desc,
+.note-animated-element.--listView .note-category,
+.note-animated-element.--listView .note-tags,
+.note-animated-element.--listView .note-date,
+.note-animated-element.--listView .note-buttons {
     grid-row: 1;
 }
 
@@ -16,25 +16,6 @@ input[type=checkbox] {
     display: flex;
     align-items: center;
 }
-
-/* .notes-list {
-    transition: margin 300ms;
-    display: flex;
-    flex-direction: row;
-    gap: 1vw;
-    flex-wrap: wrap;
-    width: 100%;
-    padding: 0vw 0vw 1vw;
-
-    min-height: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: 100%;
-
-    @media (max-width: 1024px) {
-        gap: 3vw;
-    }
-} */
 
 .notes-wrapper {
     display: flex;
@@ -62,17 +43,7 @@ input[type=checkbox] {
     background-color: #151515;
     border-radius: 2vw;
     will-change: transform, opacity;
-    transition: border-color 300ms, background-color 300ms
-        /* height 300ms,
-        max-width 300ms,
-        min-width 300ms,
-        max-height 300ms,
-        min-height 300ms, */
-        /* border 300ms, */
-        /* opacity 300ms, */
-        /* pading 300ms, */
-        /* margin 300ms */
-        ;
+    transition: border-color 300ms, background-color 300ms;
     content-visibility: auto;
     contain-intrinsic-size: 150px
 }
@@ -103,7 +74,7 @@ input[type=checkbox] {
     border: 0.1vw solid var(--def-btn);
 }
 
-.note-element:has(.list-view:checked) {
+.note-animated-element.--listView  .note-element{
     display: grid;
     grid-template-columns: 2.5fr minmax(max-content, max-content) minmax(0, min-content) min-content min-content;
     align-items: center;
@@ -119,20 +90,7 @@ input[type=checkbox] {
     }
 }
 
-.note-element:has(.list-view:checked) > .slideDown-enter-done,
-.note-element:has(.list-view:checked) > .slideDown-exit-active,
-.note-element:has(.list-view:checked) > .slideDown-exit,
-.note-element:has(.list-view:checked) > .slideDown-enter,
-.note-element:has(.list-view:checked) > .slideDown-enter-active {
-    grid-column: 5;
-    grid-row: 1;
-
-    @media (max-width: 1024px) {
-        grid-column: 4;
-    }
-}
-
-.note-animated-element:has(.list-view:checked) {
+.note-animated-element.--listView {
     min-width: 100%;
     max-width: 100%;
     max-height: 10vw;
@@ -140,17 +98,6 @@ input[type=checkbox] {
     transition: border-color 300ms, background-color 300ms;
     content-visibility: auto;
     contain-intrinsic-size: 150px;
-    /* transition: 
-        height 300ms,
-        max-width 300ms,
-        min-width 300ms,
-        max-height 300ms,
-        min-height 300ms,
-        border 300ms,
-        opacity 300ms,
-        pading 300ms,
-        border 300ms,
-        margin 300ms; */
 
     @media (max-width: 1024px) {
         min-height: 31vw;
@@ -246,7 +193,7 @@ input[type=checkbox] {
     }
 }
 
-.note-element:has(.list-view:checked) .note-top-group .wmde-markdown {
+.note-animated-element.--listView .note-top-group .wmde-markdown {
     max-height: 5vw;
     
     @media (max-width: 1024px) {
@@ -275,7 +222,7 @@ input[type=checkbox] {
     }
 }
 
-.note-element:has(.list-view:checked) .note-title {
+.note-animated-element.--listView .note-title {
     max-width: 35vw;
 
     @media (max-width: 1024px) {
@@ -321,7 +268,7 @@ input[type=checkbox] {
         }
     }
 
-.note-element:has(.list-view:checked) .note-desc {
+.note-animated-element.--listView .note-desc {
     white-space: wrap;
     margin: 0;
     width: auto;
@@ -397,7 +344,7 @@ input[type=checkbox] {
     border-color: var(--cat-color);
 }
 
-.note-element:has(.list-view:checked) .note-category {
+.note-animated-element.--listView .note-category {
     margin-right: 0.5vw;
     grid-column: 2;
     grid-row: 1;
@@ -437,7 +384,7 @@ input[type=checkbox] {
     }
 }
 
-.note-element:has(.list-view:checked) .note-tags {
+.note-animated-element.--listView .note-tags {
     grid-column: 3;
     grid-row: 1;
     margin: 0;
@@ -549,12 +496,12 @@ input[type=checkbox] {
     transition: 300ms color, 300ms background-color;
 }
 
-.note-element:has(.list-view:checked) .note-bottom-group,
-.note-element:has(.list-view:checked) .note-cats {
+.note-animated-element.--listView .note-bottom-group,
+.note-animated-element.--listView .note-cats {
     display: contents;
 }
 
-.note-element:has(.list-view:checked) .note-cats {
+.note-animated-element.--listView .note-cats {
 
     @media (max-width: 1024px) {
         align-items: baseline;
@@ -568,11 +515,11 @@ input[type=checkbox] {
     }
 }
 
-.note-element:has(.list-view:checked) .note-content {
+.note-animated-element.--listView .note-content {
     display: contents;
 }
 
-.note-element:has(.list-view:checked) .note-top-group {
+.note-animated-element.--listView .note-top-group {
     grid-column: 1;
     grid-row: 1;
     display: flex; 
@@ -592,7 +539,7 @@ input[type=checkbox] {
     }
 }
 
-.note-element:has(.list-view:checked) .note-date {
+.note-animated-element.--listView .note-date {
     grid-column: 4;
     grid-row: 1;
     display: grid;
@@ -608,8 +555,8 @@ input[type=checkbox] {
     }
 }
 
-.note-element:has(.list-view:checked) .note-category,
-.note-element:has(.list-view:checked) .note-tags {
+.note-animated-element.--listView .note-category,
+.note-animated-element.--listView .note-tags {
     justify-self: baseline;
 
     @media (max-width: 1024px) {
@@ -617,7 +564,7 @@ input[type=checkbox] {
     }
 }
 
-.note-element:has(.list-view:checked) .note-category {
+.note-animated-element.--listView .note-category {
     @media (max-width: 1024px) {
         display: flex;
         flex-direction: row;
@@ -625,7 +572,7 @@ input[type=checkbox] {
     }
 }
 
-.note-element:has(.list-view:checked) .note-buttons {
+.note-animated-element.--listView .note-buttons {
     grid-column: 5;
     grid-row: 1;
     position: initial;

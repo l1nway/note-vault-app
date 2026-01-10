@@ -83,7 +83,7 @@ function Notes() {
     useEffect(() => {
         if (!token || !online) return
             const getTags = async () => {
-                const res = await fetch(`http://api.notevault.pro/api/v1/tags`, {
+                const res = await fetch(`https://api.notevault.pro/api/v1/tags`, {
                     headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }
                 })
                 const data = await res.json()
@@ -91,7 +91,7 @@ function Notes() {
             }
 
             const getCats = async () => {
-                const res = await fetch(`http://api.notevault.pro/api/v1/categories`, {
+                const res = await fetch(`https://api.notevault.pro/api/v1/categories`, {
                     headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }
                 })
                 const data = await res.json()
@@ -332,21 +332,21 @@ function Notes() {
                 className='search-settings'
             >
                 <label
-                    className={`input-group ${(notesError || !notes.length) && '--disabled'}`}
+                    className={`input-group ${(notesError || !notes?.length) && '--disabled'}`}
                 >
                     <FontAwesomeIcon
                         className='search-icon'
                         icon={faMagnifyingGlassSolid}
                     />
                     <input
-                        tabIndex={notes.length ? 0 : -1}
+                        tabIndex={notes?.length ? 0 : -1}
                         placeholder={t('Search in all notes…')}
                         ref={searchRef}
                         onFocus={() => setSearchFocus(true)}
                         onBlur={() => setSearchFocus(false)}
-                        disabled={notesError || !notes.length}
+                        disabled={notesError || !notes?.length}
                         className='search-input'
-                        style={{cursor: notesError || !notes.length ? 'not-allowed' : 'pointer'}}
+                        style={{cursor: notesError || !notes?.length ? 'not-allowed' : 'pointer'}}
                         type='text'
                         value={search}
                         onChange={e => setSearch(e.target.value)}
@@ -362,14 +362,14 @@ function Notes() {
                         </div>
                 </label>
                 <label
-                    className={`select-element ${(notesError || !categories.length) && '--disabled'}`}
-                    tabIndex={`${!notesError && categories.length ? 0 : -1}`}
+                    className={`select-element ${(notesError || !categories?.length) && '--disabled'}`}
+                    tabIndex={`${!notesError && categories?.length ? 0 : -1}`}
                     ref={categoryRef}
                     // style={{maxWidth: categoryMaxWidth}}
-                    onClick={!notesError && categories.length ? categorySelect.handleToggle : undefined}
+                    onClick={!notesError && categories?.length ? categorySelect.handleToggle : undefined}
                     onBlur={categorySelect.handleBlur}
-                    onFocus={!notesError && categories.length ? categorySelect.handleFocus : undefined}
-                    onKeyDown={!notesError && categories.length ? categorySelect.handleKeyDown : undefined}
+                    onFocus={!notesError && categories?.length ? categorySelect.handleFocus : undefined}
+                    onKeyDown={!notesError && categories?.length ? categorySelect.handleKeyDown : undefined}
                 >
                     <p
                         className='select-head'
@@ -392,7 +392,7 @@ function Notes() {
                             />
                         </SlideLeft>
                         <SlideLeft
-                            visibility={!notesError && categories.length}
+                            visibility={!notesError && categories?.length}
                         >
                             <FontAwesomeIcon
                                 className='select-icon'
@@ -421,14 +421,14 @@ function Notes() {
                 </label>
                 
                 <label
-                    className={`select-element --mobile ${(notesError || !tags.length) && '--disabled'}`}
-                    tabIndex={`${!notesError && tags.length ? 0 : -1}`}
+                    className={`select-element --mobile ${(notesError || !tags?.length) && '--disabled'}`}
+                    tabIndex={`${!notesError && tags?.length ? 0 : -1}`}
                     ref={tagRef}
                     // style={{maxWidth: tagMaxWidth}}
-                    onClick={!notesError && tags.length ? tagSelect.handleToggle : null}
+                    onClick={!notesError && tags?.length ? tagSelect.handleToggle : null}
                     onBlur={tagSelect.handleBlur}
-                    onFocus={!notesError && tags.length ? tagSelect.handleFocus : null}
-                    onKeyDown={!notesError && tags.length ? tagSelect.handleKeyDown : null}
+                    onFocus={!notesError && tags?.length ? tagSelect.handleFocus : null}
+                    onKeyDown={!notesError && tags?.length ? tagSelect.handleKeyDown : null}
                 >
                     <p
                         className='select-head'
@@ -449,7 +449,7 @@ function Notes() {
                             />
                         </SlideLeft>
                         <SlideLeft
-                            visibility={!notesError && tags.length}
+                            visibility={!notesError && tags?.length}
                         >
                             <FontAwesomeIcon
                                 className='select-icon'
@@ -477,18 +477,18 @@ function Notes() {
                     </Options>
                 </label>
                 <label
-                    className={`notes-view ${!notes.length && '--disabled'}`}
-                    onClick={e => !notes.length && e.preventDefault()}
+                    className={`notes-view ${!notes?.length && '--disabled'}`}
+                    onClick={e => !notes?.length && e.preventDefault()}
                 >
                     <FontAwesomeIcon
-                        tabIndex={notes.length ? 0 : -1}
-                        className={`view-icon ${(!notes.length) && '--blocked'}`}
+                        tabIndex={notes?.length ? 0 : -1}
+                        className={`view-icon ${(!notes?.length) && '--blocked'}`}
                         icon={faTableCellsSolid}
                         ref={gridRef}
                     />
                     <FontAwesomeIcon
-                        tabIndex={notes.length ? 0 : -1}
-                        className={`view-icon ${(!notes.length) && '--blocked'}`}
+                        tabIndex={notes?.length ? 0 : -1}
+                        className={`view-icon ${(!notes?.length) && '--blocked'}`}
                         icon={faListSolid}
                         ref={listRef}
                     />

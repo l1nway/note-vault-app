@@ -66,7 +66,7 @@ function NotesList() {
                 retryFunction={retryFunction}
                 listView={listView}
             />
-    )}, [notes, handleAction, setCategory, setTag])
+    )}, [notes, handleAction, setCategory, setTag, listView])
 
     return(
         <>
@@ -81,7 +81,7 @@ function NotesList() {
                 path={path}
             />
             <SlideDown
-                visibility={notes.length}
+                visibility={notes?.length}
             >
                 <motion.div
                     className='notes-list'
