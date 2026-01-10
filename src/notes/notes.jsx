@@ -346,7 +346,7 @@ function Notes() {
                         onBlur={() => setSearchFocus(false)}
                         disabled={notesError || !notes.length}
                         className='search-input'
-                        style={{cursor: notesError ? 'not-allowed' : 'pointer'}}
+                        style={{cursor: notesError || !notes.length ? 'not-allowed' : 'pointer'}}
                         type='text'
                         value={search}
                         onChange={e => setSearch(e.target.value)}

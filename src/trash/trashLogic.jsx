@@ -1,4 +1,5 @@
 import {useState, useEffect, useRef, useMemo, useCallback} from 'react'
+import {useShallow} from 'zustand/react/shallow'
 import {useLocation} from 'react-router'
 import Cookies from 'js-cookie'
 
@@ -19,18 +20,21 @@ function trashLogic() {
     () => location.pathname.slice(1),
   [location.pathname])
 
-  const {
-    // action being performed and its purpose
-    setAction,
-    // <Clarify/> window visibility
-    setVisibility,
-    // animation status (used to block unwanted player actions during an animation that could break the animation)
-    animating, setAnimating,
-    setErrorAction
-  } = clarifyStore()
-
-  const [deletedLoading, setDeletedLoading] = useState(true)
-  const [archivedLoading, setArchivedLoading] = useState(true)
+  const {setAction, setVisibility, animating, setAnimating, setErrorAction, deletedLoading, setDeletedLoading, archivedLoading, setArchivedLoading} = clarifyStore(
+    useShallow((state) => ({
+      // action being performed and its purpose
+      setAction: state.setAction,
+      // <Clarify/> window visibility
+      setVisibility: state.setVisibility,
+      // animation status (used to block unwanted player actions during an animation that could break the animation)
+      animating: state.animating,
+      setAnimating: state.setAnimating,
+      setErrorAction: state.setErrorAction,
+      deletedLoading: state.deletedLoading,
+      setDeletedLoading: state.setDeletedLoading,
+      archivedLoading: state.archivedLoading,
+      setArchivedLoading: state.setArchivedLoading,
+  })))
 
   const loadMore = useCallback(() => {
     if (page < lastPage) {
@@ -48,7 +52,7 @@ function trashLogic() {
 
   // triggers the function execution on the first load
   useEffect(() => {if (online && token) {
-    getTrash(path, page,  setDeletedLoading, setArchivedLoading, setLastPage)
+    getTrash(path, page, setDeletedLoading, setArchivedLoading, setLastPage)
   }}, [page, path, online, token])
 
   // refs for correctly setting focus on the checkbox imitation
@@ -61,7 +65,7 @@ function trashLogic() {
   // пока что не используется
   const [selectedNotes, setSelectedNotes] = useState([])
 
-  const selectNote = (note) => {
+  const selectNote = useCallback((note) => {
     setSelectedNotes(prev =>
       prev.includes(note)
         // add
@@ -69,12 +73,12 @@ function trashLogic() {
         // remove
         : [...prev, note]
     )
-  }
+  }, [setSelectedNotes])
 
   const [elementID, setElementID] = useState('')
   // 
 
-  const openAnim = (action) => {
+  const openAnim = useCallback((action) => {
     if (animating == true) {
         return false
     }
@@ -89,7 +93,7 @@ function trashLogic() {
     setTimeout(() => {
         setAnimating(false)
     }, 300)
-    }
+  }, [setAnimating, setAction, setErrorAction, setVisibility])
 
     return {loadMore, lastPage, page, deletedLoading, archivedLoading, path, selectedNotes, catsView, listView, elementID, gridRef, listRef, getTrash, setCatsView, selectNote, setElementID, openAnim}
 }

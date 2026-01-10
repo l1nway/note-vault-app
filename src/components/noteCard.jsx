@@ -1,10 +1,10 @@
 import '../notes/notesList.css'
 
-import React, {useCallback, useMemo} from 'react'
+import React, {useCallback, useMemo, useRef} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {Link, useLocation} from 'react-router'
 import {useTranslation} from 'react-i18next'
-import {motion} from 'framer-motion'
+import {motion, useInView} from 'framer-motion'
 
 import {faTrashCanArrowUp, faTrash as faTrashSolid, faBoxArchive as faBoxArchiveSolid, faFloppyDisk, faTriangleExclamation, faTrashCan, faBoxOpen, faServer, faTowerBroadcast} from '@fortawesome/free-solid-svg-icons'
 
@@ -28,10 +28,23 @@ const allActions = {
     ]
 }
 
+const StatusIcon = React.memo(({visible, icon, className, onClick}) => (
+    <SlideLeft visibility={visible}>
+        <FontAwesomeIcon
+            className={className}
+            icon={icon}
+            onClick={onClick}
+        />
+    </SlideLeft>
+))
+
 const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setTag, setNoteInfo, retryFunction}) {
     const location = useLocation()
     const path = location.pathname.slice(1)
     const {t, i18n} = useTranslation()
+
+    const ref = useRef(null)
+    const visible = useInView(ref, {amount: 0.1, margin: '100px 0px 50px 0px'})
 
     const notesView = notesViewStore(
         state => state.notesView,
@@ -66,16 +79,6 @@ const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setT
             </div>
     )), [note.tags])
 
-    const StatusIcon = React.memo(({visible, icon, className, onClick}) => (
-        <SlideLeft visibility={visible}>
-            <FontAwesomeIcon
-                className={className}
-                icon={icon}
-                onClick={onClick}
-            />
-        </SlideLeft>
-    ))
-
     const click = useCallback((e) =>{
         if (path == 'trash' || path == 'archived') {
             e.preventDefault()
@@ -88,7 +91,30 @@ const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setT
         <motion.div
             tabIndex={0}
             className='note-animated-element'
-            layout='position'
+            style={{ 
+                willChange: 'transform, opacity, height',
+                backfaceVisibility: 'hidden',
+                transform: 'translateZ(0)'
+            }}
+            ref={ref}
+            layoutId={note.id}
+            layout={visible}
+            viewport={{once: false, amount: 0.1, margin: '0px 0px 0px 0px'}}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{
+                layout: { 
+                    type: 'spring', 
+                    stiffness: 300, 
+                    damping: 30
+                },
+                default: { 
+                    duration: 0.3, 
+                    ease: 'easeInOut'
+                },
+                opacity: {duration: 0.3}
+            }}
+            exit={{opacity: 0, scale: 0.8, transition: {duration: 0.3}}}
         >
             <Link
                 tabIndex={-1}

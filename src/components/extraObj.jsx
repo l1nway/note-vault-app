@@ -64,15 +64,54 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
             </ContentLoader>
     , [listView])
 
+    const motionProps = useMemo(() => ({
+        className: `--notransitions note-animated-element ${listView ? '--checked' : ''}`,
+        style: {
+            willChange: 'transform, opacity, height',
+            backfaceVisibility: 'hidden',
+            transform: 'translateZ(0)'
+        },
+        layout: true,
+        viewport: {
+            once: false,
+            amount: 0.1,
+            margin: '0px 0px 0px 0px'
+        },
+        initial: {
+            opacity: 0,
+            scale: 0.9
+        },
+        whileInView: {
+            opacity: 1,
+            scale: 1
+        },
+        transition: {
+            layout: { 
+                type: 'spring', 
+                stiffness: 300, 
+                damping: 30
+            },
+            default: { 
+                duration: 0.3, 
+                ease: 'easeInOut'
+            },
+            opacity: {duration: 0.3}
+        },
+        exit: {
+            opacity: 0,
+            scale: 0.8,
+            transition: {
+                duration: 0.3
+            }
+        }
+    }), [listView])
+
     return (
         <AnimatePresence>
         {/* loading skeleton */}
             {loading ?
                 <motion.div
-                    className={`--notransitions note-animated-element ${listView ? '--checked' : ''}`}
-                    animate={{opacity: 1}}
-                    exit={{opacity: 0}}
-                    transition={{duration: 0.3, ease: 'linear'}}
+                {...motionProps}
                 >
                     {skeleton}
                 </motion.div>
@@ -81,10 +120,7 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
             {(page < lastPage) && !loading ?
                 <motion.div
                     onClick={loadMore}
-                    className={`--notransitions note-animated-element ${listView ? '--checked' : ''}`}
-                    animate={{opacity: 1}}
-                    exit={{opacity: 0}}
-                    transition={{duration: 0.3, ease: 'linear'}}
+                    {...motionProps}
                 >
                     <div
                         className='load-more-button'

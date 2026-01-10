@@ -27,7 +27,7 @@ const useClarifyLogic = (props) => {
     ), [])
     
     // getting all actions and states
-    const {action, setAction, loadingError, setLoadingError, visibility, setVisibility, animating, setAnimating, clarifyLoading, setClarifyLoading, setRetryFunction, currentElementId} = clarifyStore(
+    const {action, setAction, loadingError, setLoadingError, visibility, setVisibility, animating, setAnimating, clarifyLoading, setClarifyLoading, setRetryFunction, currentElementId, deletedLoading, setDeletedLoading, archivedLoading, setArchivedLoading} = clarifyStore(
     useShallow((state) => ({
         // user actions; false unmounts the component
         action: state.action,
@@ -47,6 +47,11 @@ const useClarifyLogic = (props) => {
         // saving a user's action in case it needs to be repeated
         setRetryFunction: state.setRetryFunction,
         currentElementId: state.currentElementId,
+        
+        deletedLoading: state.deletedLoading,
+        setDeletedLoading: state.setDeletedLoading,
+        archivedLoading: state.archivedLoading,
+        setArchivedLoading: state.setArchivedLoading,
     })))
 
     const {online, offlineMode, addOfflineActions, setNotes, setCategories, setTags, setIsSyncing, setTrash, setArchive} = appStore(
@@ -133,8 +138,8 @@ const useClarifyLogic = (props) => {
         notes: getNotes,
         tags: () => getGroups('tags'),
         categories: () => getGroups('categories'),
-        archived: () => getTrash('archived'),
-        trash: () => getTrash('trash')
+        archived: () => getTrash('archived', 1, setDeletedLoading, setArchivedLoading),
+        trash: () => getTrash('trash', 1, setDeletedLoading, setArchivedLoading)
     }), [])
 
     // sending action results to the server (create new, edit existing, archive or delete)

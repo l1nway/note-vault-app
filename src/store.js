@@ -132,6 +132,16 @@ export const clarifyStore = create((set) => ({
   notesMessage: '',
   setNotesMessage: (clarify) => set({notesMessage: clarify}),
 
+  // 
+
+  deletedLoading: false,
+  setDeletedLoading: (deletedLoading) => set({deletedLoading}),
+
+  // 
+  archivedLoading: false,
+  setArchivedLoading: (archivedLoading) => set({archivedLoading}),
+
+  // 
   category: null,
   tag: null,
   search: '',

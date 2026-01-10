@@ -56,21 +56,23 @@ function NoteForm({state, actions, refs}) {
                     setVisibility(prev => ({...prev, category: false}))
                 }}
                 tabIndex='0'
-                key={element.id}
+                key={index}
             >
                 {element.name}
             </div>
-    ), [categories])
+        ), 
+        [categories, setNote, setVisibility]
+    )
 
     const catsDisabled = useMemo(
         () => (categories?.length ?? 0) == 0 || loading || errors.categories,
         [categories, loading]
     )
 
-    const setCategoryOpen = useCallback((categoryOpen) => {
-        setVisibility(prev => ({...prev, category: categoryOpen}))
+    const setCategoryOpen = useCallback(() => {
+        setVisibility(prev => ({...prev, category: !prev.category}))
     }, [setVisibility])
-
+    
     const categorySelect = useSelect({
         disabled: catsDisabled,
         isOpen: visibility.category,
@@ -81,7 +83,7 @@ function NoteForm({state, actions, refs}) {
     const renderTags = useMemo(() => 
         tags?.map((element, index) => 
             <div
-                key={element.id}
+                key={index}
                 className='newnote-tag-element'
                 tabIndex='0'
                 onClick={() => selectTag(element)}
@@ -94,7 +96,7 @@ function NoteForm({state, actions, refs}) {
                     onChange={() => selectTag(element)}
                 />
             </div>
-    ), [tags, t, selectTag, note.selectedTags, tagRef])
+        ), [tags, t, selectTag, note.selectedTags, tagRef])
 
     return (
         <form

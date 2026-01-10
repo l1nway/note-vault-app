@@ -62,12 +62,38 @@ input[type=checkbox] {
     background-color: #151515;
     border-radius: 2vw;
     will-change: transform, opacity;
-    transition: height 300ms, max-width 300ms, min-width 300ms, max-height 300ms, min-height 300ms, border 300ms, opacity 300ms, pading 300ms, border 300ms, margin 300ms;
+    transition: border-color 300ms, background-color 300ms
+        /* height 300ms,
+        max-width 300ms,
+        min-width 300ms,
+        max-height 300ms,
+        min-height 300ms, */
+        /* border 300ms, */
+        /* opacity 300ms, */
+        /* pading 300ms, */
+        /* margin 300ms */
+        ;
+    content-visibility: auto;
+    contain-intrinsic-size: 150px
+}
+
+@media (max-width: 1280px) {
+    .note-animated-element {
+        min-width: 48.5%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .note-animated-element {
+        min-height: 19.5vh;
+        min-width: 46.5%;
+    }
 }
 
 .note-element {
     padding: 1vw;
     border: none !important;
+    
 }
 
 .note-animated-element:hover,
@@ -111,7 +137,10 @@ input[type=checkbox] {
     max-width: 100%;
     max-height: 10vw;
     min-height: 5vw;
-    transition: 
+    transition: border-color 300ms, background-color 300ms;
+    content-visibility: auto;
+    contain-intrinsic-size: 150px;
+    /* transition: 
         height 300ms,
         max-width 300ms,
         min-width 300ms,
@@ -121,7 +150,7 @@ input[type=checkbox] {
         opacity 300ms,
         pading 300ms,
         border 300ms,
-        margin 300ms;
+        margin 300ms; */
 
     @media (max-width: 1024px) {
         min-height: 31vw;
@@ -678,29 +707,6 @@ input[type=checkbox] {
   0%   {opacity: .2;}
   20%  {opacity: 1;}
   100% {opacity: .2;}
-}
-
-@media (max-width: 1280px) {
-    .note-animated-element,
-    .notes-list > .slide-left-enter-done,
-    .notes-list > .slide-left-exit-active,
-    .notes-list > .slide-left-exit,
-    .notes-list > .slide-left-enter,
-    .notes-list > .slide-left-enter-active {
-        min-width: 48.5%;
-    }
-}
-
-@media (max-width: 1024px) {
-    .note-animated-element,
-    .notes-list > .slide-left-enter-done,
-    .notes-list > .slide-left-exit-active,
-    .notes-list > .slide-left-exit,
-    .notes-list > .slide-left-enter,
-    .notes-list > .slide-left-enter-active {
-        min-height: 19.5vh;
-        min-width: 46.5%;
-    }
 }
 
 .fake-link {

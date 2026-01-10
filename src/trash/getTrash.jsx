@@ -4,9 +4,9 @@ import {appStore} from '../store'
 const getTrash = (
     path = 'trash',
     page = 1,
-    setDeletedLoading = null,
-    setArchivedLoading = null,
-    setLastPage = null
+    setDeletedLoading = () => {},
+    setArchivedLoading = () => {},
+    setLastPage = () => {}
 ) => {
     const {setTrash, setArchive} = appStore.getState()
     //
