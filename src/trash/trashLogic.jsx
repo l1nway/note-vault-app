@@ -1,8 +1,8 @@
-import {useState, useEffect, useRef, useMemo} from 'react'
+import {useState, useEffect, useRef, useMemo, useCallback} from 'react'
 import {useLocation} from 'react-router'
 import Cookies from 'js-cookie'
 
-import {clarifyStore, apiStore, appStore} from '../store'
+import {clarifyStore, apiStore} from '../store'
 import getTrash from './getTrash'
 
 function trashLogic() {
@@ -10,7 +10,8 @@ function trashLogic() {
   
   const token = useMemo(() => [localStorage.getItem('token'), Cookies.get('token')].find(t => t && t !== 'null'), [])
 
-  const {trash, archive} = appStore()
+  const [page, setPage] = useState(1)
+  const [lastPage, setLastPage] = useState(0)
 
   // used to determine whether the component will perform the login or registration function
   const location = useLocation()
@@ -28,26 +29,27 @@ function trashLogic() {
     setErrorAction
   } = clarifyStore()
 
-  const [deletedLoading, setDeletedLoading] = useState(false)
-  const [archivedLoading, setArchivedLoading] = useState(false)
+  const [deletedLoading, setDeletedLoading] = useState(true)
+  const [archivedLoading, setArchivedLoading] = useState(true)
 
-  // triggers the function execution on the first load
-  useEffect(() => {if (online) {
-    if (path == 'trash') { 
-      trash?.length == 0 && setDeletedLoading(true)
-    } else 
-      archive?.length == 0 && setArchivedLoading(true)
-      token && getTrash(path, setDeletedLoading, setArchivedLoading)
-  }}, [])
+  const loadMore = useCallback(() => {
+    if (page < lastPage) {
+        setPage(prev => prev + 1)
+    }
+  }, [lastPage])
 
   useEffect(() => {
+    setPage(1)
     if (Cookies.get('offline') != 'true' && !online) {
       alert('нет инета и оффлайн режима')
       path == 'trash' ? setDeletedLoading (false) : setArchivedLoading(false)
-    } else {
-      path == 'trash' ? setDeletedLoading (false) : setArchivedLoading(false)
     }
-  }, [online])
+  }, [online, path])
+
+  // triggers the function execution on the first load
+  useEffect(() => {if (online && token) {
+    getTrash(path, page,  setDeletedLoading, setArchivedLoading, setLastPage)
+  }}, [page, path, online, token])
 
   // refs for correctly setting focus on the checkbox imitation
   const gridRef = useRef(null)
@@ -89,7 +91,7 @@ function trashLogic() {
     }, 300)
     }
 
-    return {deletedLoading, archivedLoading, path, selectedNotes, catsView, listView, elementID, gridRef, listRef, getTrash, setCatsView, selectNote, setElementID, openAnim}
+    return {loadMore, lastPage, page, deletedLoading, archivedLoading, path, selectedNotes, catsView, listView, elementID, gridRef, listRef, getTrash, setCatsView, selectNote, setElementID, openAnim}
 }
 
 export default trashLogic

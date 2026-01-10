@@ -328,7 +328,7 @@
 
 .--disabled:hover,
 .--disabled:focus {
-    /* border-color: var(--del-btn); */
+    border-color: var(--del-btn);
 }
 
 .color-element {

@@ -1,8 +1,8 @@
 import './trash.css'
 
-import {useMemo, useState} from 'react'
-import ContentLoader from 'react-content-loader'
+import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {useShallow} from 'zustand/react/shallow'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlane, faUserSlash, faSpinner, faTrashCan, faTriangleExclamation, faFloppyDisk, faList as faListSolid, faTableCells as faTableCellsSolid} from '@fortawesome/free-solid-svg-icons'
@@ -12,33 +12,48 @@ import SlideDown from '../components/slideDown'
 import SlideLeft from '../components/slideLeft'
 import trashLogic from './trashLogic'
 import NoteCard from '../components/noteCard'
+import ExtraObj from '../components/extraObj'
 
-import {notesViewStore, clarifyStore, appStore, apiStore} from '../store'
+import {notesViewStore, clarifyStore, appStore} from '../store'
 
 function Trash() {
   const {t} = useTranslation()
 
-  const {deletedLoading, archivedLoading, path, selectedNotes, elementID, gridRef, listRef, getTrash, setElementID, openAnim} = trashLogic()
+  const {deletedLoading, archivedLoading, path, selectedNotes, elementID, gridRef, listRef, getTrash, setElementID, openAnim, loadMore, lastPage, page} = trashLogic()
 
-  const {archive, setArchive, trash, setTrash, offlineMode, guestMode} = appStore()
-  
+  const {archive, setArchive, trash, setTrash, offlineMode, guestMode} = appStore(
+    useShallow((state) => ({
+        archive: state.archive,
+        setArchive: state.setArchive,
+        trash: state.trash,
+        setTrash: state.setTrash,
+        offlineMode: state.offlineMode,
+        guestMode: state.guestMode,
+  })))
+
   // global state that stores the display view of notes
-  const {notesView, setNotesView} = notesViewStore()
+  const {notesView, setNotesView} = notesViewStore(
+      useShallow((state) => ({
+          notesView: state.notesView,
+          setNotesView: state.setNotesView,
+  })))
 
   // сonverts values ​​to true or false; for convenience (reducing unnecessary code with tags)
   const listView = notesView == 'list'
 
-  const {
+  const {action, setAction, setVisibility} = clarifyStore(
+    useShallow((state) => ({
         // action being performed and its purpose
-        action, setAction,
+        action: state.action,
+        setAction: state.setAction,
         // <Clarify/> window visibility
-        setVisibility
-    } = clarifyStore()
+        setVisibility: state.setVisibility,
+  })))
 
-  const handleAction = (type, id) => {
+  const handleAction = useCallback((type, id) => {
       setElementID(id)
       openAnim(type)
-  }
+  }, [setElementID, openAnim])
   
   const data = path == 'trash' ? trash : archive
 
@@ -53,7 +68,7 @@ function Trash() {
             />
           ))
         : null
-    }, [path, trash, archive, handleAction]
+    }, [data, handleAction]
   )
 
   return (
@@ -186,44 +201,20 @@ function Trash() {
               </p>
           </div>
       </SlideDown>
-        <SlideDown
-            visibility={path == 'trash' ? deletedLoading : archivedLoading}
-        >
-            <div
-                className='groups-list'
-            >
-                <ContentLoader
-                    className='group-element'
-                    speed={2}
-                    width={300}
-                    height={120}
-                    backgroundColor='#1e2939' 
-                    foregroundColor='#72bf00'
-                    aria-label={undefined}
-                    title={undefined}
-                    preserveAspectRatio='none'
-                >
-                    {/* 
-                        rx & ry -- border-radius
-                        x -- расположение по горизонтали
-                        y -- расположение по вертикали
-                    */}
-                    
-                    <circle cx='25' cy='30' r='25' /> 
-                    <rect x='0' y='70' rx='4' ry='4' width='150' height='25' 
-                    />
-                    <rect x='0' y='105' rx='3' ry='3' width='80' height='15' 
-                    />
-                </ContentLoader>
-            </div>
-        </SlideDown>
       <SlideDown
-        visibility={path == 'trash' ? !deletedLoading : !archivedLoading}
+        visibility={trash.length}
       >
           <div
             className='trash-list'
           >
             {renderTrash}
+            <ExtraObj
+                listView={listView}
+                loading={path == 'trash' ? deletedLoading : archivedLoading}
+                page={page}
+                lastPage={lastPage}
+                loadMore={loadMore}
+            />
           </div>
       </SlideDown>
       {action ?

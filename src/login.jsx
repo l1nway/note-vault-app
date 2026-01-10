@@ -90,17 +90,6 @@ function Login() {
                 <div
                     className='login-main'
                 >
-                    <div
-                        style={{position: 'absolute',
-                            top: 0
-                        }}
-                    >
-                        это для теста пока в разработке
-                        qwerty@qwerty.com
-                        12345678
-                        user@email.com
-                        11111111
-                    </div>
                     {/* login header (logo, title & desc) */}
                     <header
                         className='login-header'

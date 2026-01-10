@@ -41,11 +41,11 @@ input[type=checkbox] {
     height: 100%;
 }
 
-.notes-list > .slideDown-enter-done,
-.notes-list > .slideDown-exit-active,
-.notes-list > .slideDown-exit,
-.notes-list > .slideDown-enter,
-.notes-list > .slideDown-enter-active {
+.notes-list > .slide-left-enter-done,
+.notes-list > .slide-left-exit-active,
+.notes-list > .slide-left-exit,
+.notes-list > .slide-left-enter,
+.notes-list > .slide-left-enter-active {
     max-width: 31.9%;
     min-width: 31.9%;
 }
@@ -61,6 +61,7 @@ input[type=checkbox] {
     border: 0.1vw solid #1a2330;
     background-color: #151515;
     border-radius: 2vw;
+    will-change: transform, opacity;
     transition: height 300ms, max-width 300ms, min-width 300ms, max-height 300ms, min-height 300ms, border 300ms, opacity 300ms, pading 300ms, border 300ms, margin 300ms;
 }
 
@@ -127,13 +128,26 @@ input[type=checkbox] {
     }
 }
 
-.notes-list:has(.list-view:checked) > .slideDown-enter-done,
-.notes-list:has(.list-view:checked) > .slideDown-exit-active,
-.notes-list:has(.list-view:checked) > .slideDown-exit,
-.notes-list:has(.list-view:checked) > .slideDown-enter,
-.notes-list:has(.list-view:checked) > .slideDown-enter-active {
-    max-width: 100%;
+.--checked {
     min-width: 100%;
+    max-width: 100%;
+    max-height: 10vw;
+    min-height: 5vw;
+    transition: 
+        height 300ms,
+        max-width 300ms,
+        min-width 300ms,
+        max-height 300ms,
+        min-height 300ms,
+        border 300ms,
+        opacity 300ms,
+        pading 300ms,
+        border 300ms,
+        margin 300ms;
+
+    @media (max-width: 1024px) {
+        min-height: 31vw;
+    }
 }
 
 /* .--archiving {
@@ -599,26 +613,25 @@ input[type=checkbox] {
 }
 
 .load-more-button {
-    display: flex;
-    font-size: 3vw;
     color: var(--def-btn-hvr);
-    background-color: #151515;
-    padding: 1vw;
-    border-radius: 2vw;
-    border: 0.1vw solid #1a2330;
-    align-items: center;
-    cursor: pointer;
+    display: flex;
     justify-content: center;
-    transition: 300ms color, 300ms border, 300ms opacity;
-    min-height: 100%;   
+    align-items: center;
+    transition: 300ms color;
 
-    &:hover {
-        border: 0.1vw solid var(--def-btn);
+    &:hover{
         color: var(--def-btn);
     }
 }
 
 .load-more-text {
+    display: flex;
+    font-size: 3vw;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    transition: 300ms color, 300ms border, 300ms opacity;
+    min-height: 100%;
     animation: textFade 300ms ease;
     text-wrap: nowrap;
 }
@@ -626,11 +639,11 @@ input[type=checkbox] {
 @keyframes textFade {
     from {
         opacity: 0;
-        transform: translateY(4px);
+        transform: scale(0.9);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1);
     }
 }
 
@@ -669,22 +682,22 @@ input[type=checkbox] {
 
 @media (max-width: 1280px) {
     .note-animated-element,
-    .notes-list > .slideDown-enter-done,
-    .notes-list > .slideDown-exit-active,
-    .notes-list > .slideDown-exit,
-    .notes-list > .slideDown-enter,
-    .notes-list > .slideDown-enter-active {
+    .notes-list > .slide-left-enter-done,
+    .notes-list > .slide-left-exit-active,
+    .notes-list > .slide-left-exit,
+    .notes-list > .slide-left-enter,
+    .notes-list > .slide-left-enter-active {
         min-width: 48.5%;
     }
 }
 
 @media (max-width: 1024px) {
     .note-animated-element,
-    .notes-list > .slideDown-enter-done,
-    .notes-list > .slideDown-exit-active,
-    .notes-list > .slideDown-exit,
-    .notes-list > .slideDown-enter,
-    .notes-list > .slideDown-enter-active {
+    .notes-list > .slide-left-enter-done,
+    .notes-list > .slide-left-exit-active,
+    .notes-list > .slide-left-exit,
+    .notes-list > .slide-left-enter,
+    .notes-list > .slide-left-enter-active {
         min-height: 19.5vh;
         min-width: 46.5%;
     }
@@ -694,4 +707,8 @@ input[type=checkbox] {
     background-color: transparent;
     color: var(--color-accent-fg);
     text-decoration: none;
+}
+
+.--notransitions {
+    transition: none !important;
 }

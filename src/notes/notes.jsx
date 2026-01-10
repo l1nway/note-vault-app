@@ -332,18 +332,19 @@ function Notes() {
                 className='search-settings'
             >
                 <label
-                    className={`input-group ${(notesError) && '--disabled'}`}
+                    className={`input-group ${(notesError || !notes.length) && '--disabled'}`}
                 >
                     <FontAwesomeIcon
                         className='search-icon'
                         icon={faMagnifyingGlassSolid}
                     />
                     <input
+                        tabIndex={notes.length ? 0 : -1}
                         placeholder={t('Search in all notes…')}
                         ref={searchRef}
                         onFocus={() => setSearchFocus(true)}
                         onBlur={() => setSearchFocus(false)}
-                        disabled={notesError}
+                        disabled={notesError || !notes.length}
                         className='search-input'
                         style={{cursor: notesError ? 'not-allowed' : 'pointer'}}
                         type='text'
@@ -361,14 +362,14 @@ function Notes() {
                         </div>
                 </label>
                 <label
-                    className={`select-element ${(notesError) && '--disabled'}`}
-                    tabIndex='0'
+                    className={`select-element ${(notesError || !categories.length) && '--disabled'}`}
+                    tabIndex={`${!notesError && categories.length ? 0 : -1}`}
                     ref={categoryRef}
                     // style={{maxWidth: categoryMaxWidth}}
-                    onClick={(!online && !offlineMode) ? undefined : categorySelect.handleToggle}
+                    onClick={!notesError && categories.length ? categorySelect.handleToggle : undefined}
                     onBlur={categorySelect.handleBlur}
-                    onFocus={(!online && !offlineMode) ? undefined : categorySelect.handleFocus}
-                    onKeyDown={(!online && !offlineMode) ? undefined : categorySelect.handleKeyDown}
+                    onFocus={!notesError && categories.length ? categorySelect.handleFocus : undefined}
+                    onKeyDown={!notesError && categories.length ? categorySelect.handleKeyDown : undefined}
                 >
                     <p
                         className='select-head'
@@ -390,13 +391,17 @@ function Notes() {
                                 }}
                             />
                         </SlideLeft>
-                        <FontAwesomeIcon
-                            className='select-icon'
-                            icon={faArrowUpSolid}
-                            style={{
-                                '--arrow-direction': categoryStatus ? '0deg' : '180deg'
-                            }}
-                        />
+                        <SlideLeft
+                            visibility={!notesError && categories.length}
+                        >
+                            <FontAwesomeIcon
+                                className='select-icon'
+                                icon={faArrowUpSolid}
+                                style={{
+                                    '--arrow-direction': categoryStatus ? '0deg' : '180deg'
+                                }}
+                            />
+                        </SlideLeft>
                     </div>
                     <Options
                         visibility={categoryStatus}
@@ -416,14 +421,14 @@ function Notes() {
                 </label>
                 
                 <label
-                    className={`select-element --mobile ${(notesError) && '--disabled'}`}
-                    tabIndex='0'
+                    className={`select-element --mobile ${(notesError || !tags.length) && '--disabled'}`}
+                    tabIndex={`${!notesError && tags.length ? 0 : -1}`}
                     ref={tagRef}
                     // style={{maxWidth: tagMaxWidth}}
-                    onClick={tagSelect.handleToggle}
+                    onClick={!notesError && tags.length ? tagSelect.handleToggle : null}
                     onBlur={tagSelect.handleBlur}
-                    onFocus={tagSelect.handleFocus}
-                    onKeyDown={tagSelect.handleKeyDown}
+                    onFocus={!notesError && tags.length ? tagSelect.handleFocus : null}
+                    onKeyDown={!notesError && tags.length ? tagSelect.handleKeyDown : null}
                 >
                     <p
                         className='select-head'
@@ -443,13 +448,17 @@ function Notes() {
                                 onClick={() => setTag('All tags')}
                             />
                         </SlideLeft>
-                        <FontAwesomeIcon
-                            className='select-icon'
-                            icon={faArrowUpSolid}
-                            style={{
-                                '--arrow-direction': tagStatus ? '0deg' : '180deg'
-                            }}
-                        />
+                        <SlideLeft
+                            visibility={!notesError && tags.length}
+                        >
+                            <FontAwesomeIcon
+                                className='select-icon'
+                                icon={faArrowUpSolid}
+                                style={{
+                                    '--arrow-direction': tagStatus ? '0deg' : '180deg'
+                                }}
+                            />
+                        </SlideLeft>
                     </div>
                     <Options
                         visibility={tagStatus}
@@ -468,17 +477,18 @@ function Notes() {
                     </Options>
                 </label>
                 <label
-                    className={`notes-view ${(notesError) && '--disabled'}`}
+                    className={`notes-view ${!notes.length && '--disabled'}`}
+                    onClick={e => !notes.length && e.preventDefault()}
                 >
                     <FontAwesomeIcon
-                        tabIndex='0'
-                        className={`view-icon ${(notesError) && '--blocked'}`}
+                        tabIndex={notes.length ? 0 : -1}
+                        className={`view-icon ${(!notes.length) && '--blocked'}`}
                         icon={faTableCellsSolid}
                         ref={gridRef}
                     />
                     <FontAwesomeIcon
-                        tabIndex='0'
-                        className={`view-icon ${(notesError) && '--blocked'}`}
+                        tabIndex={notes.length ? 0 : -1}
+                        className={`view-icon ${(!notes.length) && '--blocked'}`}
                         icon={faListSolid}
                         ref={listRef}
                     />

@@ -676,11 +676,20 @@
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    padding-bottom: 2vw;
+    transition: 300ms opacity;
 
     @media (max-width: 1024px) {
         gap: 3vw;
     }
+}
+
+.slideDown-enter-done:has(> .groups-loading-error),
+.slideDown-exit-active:has(> .groups-loading-error),
+.slideDown-exit:has(> .groups-loading-error),
+.slideDown-enter:has(> .groups-loading-error),
+.slideDown-enter-active:has(> .groups-loading-error) {
+    min-height: auto !important;
+    overflow: visible !important;
 }
 
 .loading-retry-action {

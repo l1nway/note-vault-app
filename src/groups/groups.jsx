@@ -63,7 +63,6 @@ function Groups() {
     }, [items, openAnim, listView])
 
     const saving = useMemo(() => items?.some(item => item?.saving), [items])
-
     const error = useMemo(() => items?.some(item => item?.error), [items])
 
     return(

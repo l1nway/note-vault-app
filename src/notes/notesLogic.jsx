@@ -37,7 +37,6 @@ function notesLogic() {
     const [elementID, setElementID] = useState('')
     const [page, setPage] = useState(1)
     const [lastPage, setLastPage] = useState(0)
-    const [loadMoreText, setLoadMoreText] = useState('Load more')
 
     const debouncedSearch = useDebounce(search, 300)
 
@@ -74,9 +73,9 @@ function notesLogic() {
 
     useEffect(() => {
         if (online && token) {
-            getNotes(queryString, page, setLastPage, setLoadMoreText)
+            getNotes(queryString, page, setLastPage)
         }
-    }, [queryString, token, offlineMode])
+    }, [queryString, token, offlineMode, online])
 
     useEffect(() => {
         if (Cookies.get('offline') != 'true' && !online) {
@@ -89,7 +88,6 @@ function notesLogic() {
     const loadMore = useCallback(() => {
         if (page < lastPage) {
             setPage(prev => prev + 1)
-            setLoadMoreText('Loading')
         }
     }, [lastPage])
 
@@ -111,8 +109,8 @@ function notesLogic() {
         }, 300)
     }, [animating, setAction, setRetryFunction, setClarifyLoading, setVisibility, setAnimating])
 
-    return useMemo(() => ({notesLoading, notesError, notesMessage, action, elementID, setElementID, getNotes, openAnim, queryString, loadMore, page, lastPage, loadMoreText
-    }), [notesLoading, notesError, notesMessage, action, elementID, getNotes, openAnim, queryString, loadMore, page, lastPage, loadMoreText])
+    return useMemo(() => ({notesLoading, notesError, notesMessage, action, elementID, setElementID, getNotes, openAnim, queryString, loadMore, page, lastPage
+    }), [notesLoading, notesError, notesMessage, action, elementID, getNotes, openAnim, queryString, loadMore, page, lastPage])
 }
 
 export default notesLogic

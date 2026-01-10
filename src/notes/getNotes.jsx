@@ -4,10 +4,9 @@ import {appStore, clarifyStore} from '../store'
 const getNotes = async (
     queryString = '',
     page = 1,
-    setLastPage = () => {},
-    setLoadMoreText = () => {}
+    setLastPage = () => {}
 ) => {
-    const {notes, setNotes} = appStore.getState()
+    const {setNotes} = appStore.getState()
     const {setNotesError, setNotesLoading, setNotesMessage} = clarifyStore.getState()
     // 
     const token = [
@@ -20,7 +19,7 @@ const getNotes = async (
     )
 
     try {
-        notes.length == 0 && setNotesLoading(true)
+        setNotesLoading(true)
         setNotesError(false)
 
     const res = await fetch(
@@ -44,7 +43,6 @@ const getNotes = async (
     setNotesError(true)
 } finally {
     setNotesLoading(false)
-    setLoadMoreText('Load more')
 }}
 
 export default getNotes

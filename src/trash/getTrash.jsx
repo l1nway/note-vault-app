@@ -2,9 +2,11 @@ import Cookies from 'js-cookie'
 import {appStore} from '../store'
 
 const getTrash = (
-    path,
-    setDeletedLoading = () => {},
-    setArchivedLoading = () => {}
+    path = 'trash',
+    page = 1,
+    setDeletedLoading = null,
+    setArchivedLoading = null,
+    setLastPage = null
 ) => {
     const {setTrash, setArchive} = appStore.getState()
     //
@@ -17,8 +19,12 @@ const getTrash = (
         token !== 'null'
     )
 
-    const trashUrl = `http://api.notevault.pro/api/v1/notes?${path == 'trash' ? 'deleted' : path}=true`
+    const trashUrl =
+        `http://api.notevault.pro/api/v1/notes` +
+        `?${path == 'trash' ? 'deleted' : 'archived'}=true` +
+        `&page=${page}`
 
+    path == 'trash' ? setDeletedLoading(true) : setArchivedLoading(true)
     fetch(trashUrl, {
         method: 'GET',
         headers: {
@@ -28,11 +34,12 @@ const getTrash = (
     }})
     .then(res => res.json())
     .then(resData => {
+    setLastPage?.(resData.last_page)
     if (path == 'trash') {
-        setTrash(resData.data)
+        page == 1 ? setTrash(resData.data) : setTrash(prev => [...prev, ...resData.data])
         setDeletedLoading(false)
     } else
-        setArchive(resData.data)
+        page == 1 ? setArchive(resData.data) : setArchive(prev => [...prev, ...resData.data])
         setArchivedLoading(false)
 })}
 
