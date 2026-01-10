@@ -1,4 +1,4 @@
-const STATIC_CACHE = 'app-shell-v1'
+const STATIC_CACHE = 'app-shell-v2'
 const DATA_CACHE = 'data-v1'
 
 const APP_SHELL = [
@@ -36,7 +36,7 @@ self.addEventListener('fetch', event => {
 
   if (!url.protocol.startsWith('http')) return
 
-  if (request.url.includes('/api/v1/')) {
+  if (url.pathname.includes('/api/v1/')) {
     event.respondWith(
       fetch(request)
         .then(res => {
@@ -45,16 +45,8 @@ self.addEventListener('fetch', event => {
           return res
         })
         .catch(async () => {
-          const cachedResponse = await caches.match(request)
-          if (cachedResponse) {
-            const headers = new Headers(cachedResponse.headers)
-            headers.append('X-From-Cache', 'true')
-            return new Response(cachedResponse.body, {
-              status: cachedResponse.status,
-              statusText: cachedResponse.statusText,
-              headers
-            })
-          }
+          const cached = await caches.match(request)
+          if (cached) return cached
           return new Response('Offline', {status: 503})
         })
     )
@@ -65,9 +57,11 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch('/index.html')
         .then(res => {
-          const resClone = res.clone()
-          caches.open(STATIC_CACHE).then(cache => cache.put('/index.html', resClone))
-          return res;
+          if (res.ok) {
+            const clone = res.clone()
+            caches.open(STATIC_CACHE).then(cache => cache.put('/index.html', clone))
+          }
+          return res
         })
         .catch(() => caches.match('/index.html'))
     )
@@ -77,12 +71,13 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(request).then(cachedResponse => {
       const fetchPromise = fetch(request).then(networkResponse => {
-        if (networkResponse && networkResponse.status == 200) {
+        if (networkResponse.ok && networkResponse.status == 200) {
           const resClone = networkResponse.clone()
           caches.open(STATIC_CACHE).then(cache => cache.put(request, resClone))
+          return networkResponse
         }
         return networkResponse
-      }).catch(() => {})
+      }).catch(() => cachedResponse)
 
       return cachedResponse || fetchPromise
     })
