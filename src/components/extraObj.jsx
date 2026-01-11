@@ -1,10 +1,13 @@
 import React, {useMemo} from 'react'
 import {motion, AnimatePresence} from 'framer-motion'
 import ContentLoader from 'react-content-loader'
+import {useMediaQuery} from 'react-responsive'
 import {useTranslation} from 'react-i18next'
 
 const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastPage = 1, loadMore = null}) => {
     const {t} = useTranslation()
+    const mobile = useMediaQuery({query: '(max-width: 1024px)'})
+
     const skeleton = useMemo(() => listView
         ?
             <ContentLoader
@@ -64,8 +67,68 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
             </ContentLoader>
     , [listView])
 
+    const mobileSkeleton = useMemo(() => listView
+        ?
+            <ContentLoader
+                className='note-element'
+                speed={2}
+                width={'100%'}
+                backgroundColor='#1e2939' 
+                foregroundColor='#72bf00'
+                aria-label={undefined}
+                title={undefined}
+                preserveAspectRatio='none'
+            >
+                {/* 
+                    rx & ry -- border-radius
+                    x -- расположение по горизонтали
+                    y -- расположение по вертикали
+                */}
+                {/* title */}
+                <rect x='5' y='10' rx='4' ry='4' width='30%' height='20'/>
+                {/* desc */}
+                <rect x='5' y='40' rx='3' ry='3' width='40%' height='20'/>
+                <rect x='5' y='70' rx='3' ry='3' width='40%' height='20'/>
+                <rect x='5' y='100' rx='3' ry='3' width='40%' height='20'/>
+                {/* tags */}
+                <rect x='220' y='10' rx='4' ry='4' width='20%' height='20'/>
+                <rect x='220' y='40' rx='4' ry='4' width='15%' height='20'/>
+                <rect x='220' y='70' rx='4' ry='4' width='15%' height='20'/>
+                <rect x='220' y='100' rx='4' ry='4' width='15%' height='20'/>
+                {/* date */}
+                <rect x='300' y='100' rx='4' ry='4' width='15%' height='20'/>
+            </ContentLoader>
+        :
+            <ContentLoader
+                className='note-element'
+                speed={2}
+                height={'100%'}
+                backgroundColor='#1e2939' 
+                foregroundColor='#72bf00'
+                aria-label={undefined}
+                title={undefined}
+                preserveAspectRatio='none'
+            >
+                {/* 
+                    rx & ry -- border-radius
+                    x -- расположение по горизонтали
+                    y -- расположение по вертикали
+                */}
+                {/* title */}
+                <rect x='5' y='10' rx='4' ry='4' width='160' height='20'/>
+                {/* desc */}
+                <rect x='5' y='50' rx='3' ry='3' width='120' height='20'/>
+                {/* tags */}
+                <rect x='5' y='80' rx='3' ry='3' width='100' height='20'/>
+                <rect x='5' y='110' rx='3' ry='3' width='90' height='20'/>
+                <rect x='5' y='140' rx='3' ry='3' width='90' height='20'/>
+                {/* date */}
+                <rect x='140' y='140' rx='3' ry='3' width='40' height='18'/>
+            </ContentLoader>
+    , [listView])
+
     const motionProps = useMemo(() => ({
-        className: `--notransitions note-animated-element ${listView ? '--checked' : ''}`,
+        className: `note-animated-element ${listView ? '--checked' : ''}`,
         style: {
             willChange: 'transform, opacity, height',
             backfaceVisibility: 'hidden',
@@ -113,7 +176,7 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
                 <motion.div
                 {...motionProps}
                 >
-                    {skeleton}
+                    {mobile ? mobileSkeleton : skeleton}
                 </motion.div>
             : null}
         {/* load more button */}

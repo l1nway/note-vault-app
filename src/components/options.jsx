@@ -11,7 +11,24 @@ function Options({visibility, children, duration = 300, selectRef}) {
     if (selectRef?.current) {
       setSelectHeight(selectRef.current.offsetHeight)
     }
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setSelectHeight(entry.target.offsetHeight)
+      }
+    })
+
+    resizeObserver.observe(selectRef.current)
+    setSelectHeight(selectRef.current.offsetHeight)
+
+    return () => resizeObserver.disconnect()
   }, [selectRef])
+  
+  useEffect(() => {
+    if (nodeRef.current) {
+      nodeRef.current.style.top = `${selectHeight}px`
+    }
+  }, [selectHeight])
 
   const setInitialStyles = useCallback((element) => {
     element.style.position = 'absolute'

@@ -56,7 +56,7 @@ input[type=checkbox] {
 
 @media (max-width: 1024px) {
     .note-animated-element {
-        min-height: 19.5vh;
+        min-height: 42vw;
         min-width: 46.5%;
     }
 }
@@ -184,12 +184,13 @@ input[type=checkbox] {
     max-width: 35vw;
 
     @media (max-width: 1024px) {
-        max-height: 8vw;
-        font-size: 4vw;
+        font-size: 3vw;
         padding: 2vw 0vw;
         min-height: auto;
         max-width: 45vw;
         text-align: start;
+        line-height: normal;
+        max-height: 12vw;
     }
 }
 
@@ -218,6 +219,7 @@ input[type=checkbox] {
     overflow: hidden;
 
     @media (max-width: 1024px) {
+        font-size: 5vw;
         min-width: 80%;
     }
 }
@@ -236,7 +238,6 @@ input[type=checkbox] {
 
     @media (max-width: 1024px) {
         text-align: initial;
-        font-size: 6vw;
     }
 }
 
@@ -261,7 +262,7 @@ input[type=checkbox] {
 
     @media (max-width: 1024px) {
         .note-desc {
-            font-size: 4vw;
+            font-size: 3vw;
             padding: 2vw 0vw;
             white-space: nowrap;
             min-height: 7vw;
@@ -314,6 +315,7 @@ input[type=checkbox] {
         flex-direction: column-reverse;
         align-items: baseline;
         gap: 2vw;
+        font-size: 2.5vw;
   }
 }
 
@@ -373,7 +375,6 @@ input[type=checkbox] {
     transition: background-color 300ms, border-color 300ms;
 
     @media (max-width: 1024px) {
-        font-size: 4vw;
         padding: 1.5vw;
         border-radius: 2vw;
     }
@@ -412,7 +413,6 @@ input[type=checkbox] {
     text-transform: capitalize;
 
     @media (max-width: 1024px) {
-        font-size: 4vw;
         text-overflow: ellipsis;
         display: block;
         overflow: hidden;
@@ -426,7 +426,7 @@ input[type=checkbox] {
     text-align: center;
 
     @media (max-width: 1024px) {
-        font-size: 4vw;
+        font-size: 3vw;
         text-wrap: nowrap;
     }
 }
@@ -610,6 +610,10 @@ input[type=checkbox] {
     min-height: 100%;
     animation: textFade 300ms ease;
     text-wrap: nowrap;
+
+    @media (max-width: 1024px) {
+        font-size: 8vw;
+    }
 }
 
 @keyframes textFade {

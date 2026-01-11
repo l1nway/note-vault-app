@@ -5,7 +5,7 @@ function useSelect({disabled, isOpen, setIsOpen}) {
 
     const handleBlur = useCallback((e) => {
         if (e.currentTarget.contains(e.relatedTarget)) return
-        setIsOpen(false)
+        setIsOpen(false, 'я блядь понятия не имею почему оно работает только с вторым параметром')
     }, [setIsOpen])
 
     const handleFocus = useCallback(() => {

@@ -24,8 +24,9 @@ function Notes() {
     // 
     const online = apiStore(state => state.online)
 
-    const {offlineMode, notes, tags, categories, setTags, setCategories} = appStore(
+    const {offlineMode, notes, tags, categories, setTags, setCategories, questMode} = appStore(
         useShallow(state => ({
+            questMode: state.questMode,
             offlineMode: state.offlineMode,
             notes: state.notes,
             tags: state.tags,
@@ -311,7 +312,7 @@ function Notes() {
                     </SlideLeft>
                     {/* displayed only if the user is not authorized */}
                     <SlideLeft
-                        visibility={!token}
+                        visibility={!token || questMode}
                     >
                         <FontAwesomeIcon
                             className='unauthorized-user-icon'
@@ -373,6 +374,7 @@ function Notes() {
                 >
                     <p
                         className='select-head'
+                        style={{color: category?.name ? 'var(--def-white)' : '#6a7282'}}
                         ref={categoryHeadRef}
                     >
                         {category?.name || t('All categories')}
@@ -432,6 +434,7 @@ function Notes() {
                 >
                     <p
                         className='select-head'
+                        style={{color: tag?.name ? 'var(--def-white)' : '#6a7282'}}
                         ref={tagHeadRef}
                     >
                         {tag?.name ? `#${t(tag?.name)}` : t('All tags')}

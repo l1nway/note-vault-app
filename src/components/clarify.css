@@ -157,6 +157,11 @@
     width: 2.5vw;
     color: var(--blck-bc-fcs);
     animation: spin 1000ms linear infinite;
+
+    @media (max-width: 1024px) {
+        width: 8vw;
+        height: 8vw;
+    }
 }
 
 @keyframes spin {

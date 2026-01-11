@@ -551,9 +551,9 @@
     animation: loading 1200ms ease-in-out infinite;
 
     @media (max-width: 1024px) {
-        padding: 0 1.5vw;
-        height: 4vw;
-        width: 4vw;
+        height: 8vw;
+        width: 8vw;
+        padding-left: 0;
     }
 }
 

@@ -71,6 +71,11 @@ input[type=checkbox] {
     border: 0.1vw solid transparent;
     transition: 300ms border;
     color: var(--blck-bc-fcs);
+
+    @media (max-width: 1024px) {
+        height: 8vw;
+        width: 8vw;
+    }
 }
 
 .notes-new {
@@ -119,8 +124,8 @@ input[type=checkbox] {
 
     @media (max-width: 1024px) {
         display: grid;
-        grid-template-rows: auto auto auto;
-        grid-template-columns: 1fr 1fr 1fr 0.8fr;
+        grid-template-rows: auto;
+        grid-template-columns: 70% 0;
         gap: 3vw;
     }
 }
@@ -237,6 +242,11 @@ input[type=checkbox] {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    transition: 300ms color;
+
+    @media (max-width: 1024px) {
+        padding-left: 1vw;
+    }
 }
 
 .select-buttons {
@@ -253,6 +263,8 @@ input[type=checkbox] {
 
     @media (max-width: 1024px) {
         max-width: auto;
+        width: 6.5vw;
+        height: 6.5vw;
     }
 }
 
@@ -270,6 +282,12 @@ input[type=checkbox] {
     border-radius: 25%;
     width: 1.75vw;
     height: 1.75vw;
+
+    @media (max-width: 1024px) {
+        padding-right: 2vw;
+        width: 6.5vw;
+        height: 6.5vw;
+    }
 }
 
 .select-icon:hover,
