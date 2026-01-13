@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect, useMemo} from 'react'
+import {useState, useRef, useEffect, useMemo, useCallback} from 'react'
 import {useLocation, useNavigate} from 'react-router'
 import {useShallow} from 'zustand/react/shallow'
 import Cookies from 'js-cookie'
@@ -27,26 +27,70 @@ function NoteEditor() {
         setTags: state.setTags,
     })))
 
-    const token = [
+    const token = useMemo(() => {
+        return [
             localStorage.getItem('token'),
             Cookies.get('token')
-        ].find(
-                token => token
-            &&
-                token !== 'null'
-        )
+        ].find(t => t && t !== 'null')
+    }, [])
     
     const {createNote, getNote, editNote, getTags, getCategories} = useApi(token)
     
     const catsDisabled = useMemo(
         () => (categories?.length ?? 0) == 0,
         [categories]
-    )
+    , [categories])
 
-    const placeholder = catsDisabled ? {name: 'No categories created'} : {name: 'Category not selected'}
+    const placeholder = useMemo(() => catsDisabled ? {name: 'No categories created'} : {name: 'Category not selected'}, [catsDisabled])
+    
+    // 
+    const inputRef = useRef(null)
+    const selectRef = useRef(null)
+    const tagRef = useRef(null)
+    const markdownRef = useRef(null)
+
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
+    const [textareaFocus, setTextareaFocus] = useState(false)
+
+    const [errors, setErrors] = useState({
+        input: false,
+        inputMessage: 'Field cannot be empty',
+        global: false,
+        globalMessage: false,
+        categories: false,
+        tags: false,
+        tagsMessage: 'Loading tags'
+    })
+
+    const [note, setNote] = useState({
+        name: '',
+        content: '',
+        category: {name: 'Loading categories'},
+        categories: [],
+        tags: [],
+        selectedTags: [],
+        markdown: false
+    })
+
+    const [visibility, setVisibility] = useState({
+        category: false,
+        tags: false,
+        markdown: false
+    })
+
+    const noteData = useMemo(() => ({
+        title: note.name,
+        content: note.content,
+        is_markdown: note.markdown,
+        category_id: note.category.id,
+        category: note.category.name == 'Category not selected' ? null : note.category,
+        tags: note.selectedTags,
+        tag_ids: note?.selectedTags?.map(t => t.id)
+    }), [note.name, note.content, note.markdown, note.category, note.selectedTags])
 
     // creating new note
-    const newNote = async () => {
+    const newNote = useCallback(async () => {
         // offline creation
         if (offlineMode || !online) {
             const tempId = Date.now()
@@ -126,9 +170,9 @@ function NoteEditor() {
             } finally {
                 setSaving(false)
         }}
-    }
+    }, [offlineMode, online, noteData, setNotes, addOfflineActions, setIsSyncing, navigate, createNote])
 
-    const modifyNote = async () => {
+    const modifyNote = useCallback(async () => {
         if (offlineMode || !online) {
             const tempId = Date.now()
             setNotes(notes => {
@@ -188,9 +232,9 @@ function NoteEditor() {
                 setFlags(location.state, {...noteData, saving: false, error: false})
                 navigate('/notes')
         }
-    }}
+    }}, [offlineMode, online, noteData, setNotes, addOfflineActions, setIsSyncing, navigate, editNote])
 
-    const loadNote = async () => {
+    const loadNote = useCallback(async () => {
         try {
             const resData = await getNote(location.state)
 
@@ -210,9 +254,9 @@ function NoteEditor() {
                 global: true,
                 globalMessage: error
             }))
-    }}
+    }}, [getNote])
 
-    const loadTags = async () => {
+    const loadTags = useCallback(async () => {
         try {
             const tags = await getTags()
             setTags(tags)
@@ -229,9 +273,9 @@ function NoteEditor() {
                 tags: true,
                 tagsMessage: 'Error loading tags'
             }))
-    }}
+    }}, [getTags, setTags])
 
-    const loadCats = async () => {
+    const loadCats = useCallback(async () => {
         try {
             const categories = await getCategories()
             setCategories(categories)
@@ -253,48 +297,12 @@ function NoteEditor() {
             ...prev,
                 category: {name: 'Error loading categories'}
             }))
-    }}
-    
-    // 
-    const inputRef = useRef(null)
-    const selectRef = useRef(null)
-    const tagRef = useRef(null)
-    const markdownRef = useRef(null)
-
-    const [loading, setLoading] = useState(true)
-    const [saving, setSaving] = useState(false)
-    const [textareaFocus, setTextareaFocus] = useState(false)
-
-    const [errors, setErrors] = useState({
-        input: false,
-        inputMessage: 'Field cannot be empty',
-        global: false,
-        globalMessage: false,
-        categories: false,
-        tags: false,
-        tagsMessage: 'Loading tags'
-    })
-
-    const [note, setNote] = useState({
-        name: '',
-        content: '',
-        category: {name: 'Loading categories'},
-        categories: [],
-        tags: [],
-        selectedTags: [],
-        markdown: false
-    })
-
-    const [visibility, setVisibility] = useState({
-        category: false,
-        tags: false,
-        markdown: false
-    })
+    }}, [getCategories, setCategories])
 
     // 
     const markdownTimer = useRef(null)
 
-    const markdownToggle = () => {
+    const markdownToggle = useCallback(() => {
         clearTimeout(markdownTimer.current)
         if (note.markdown) {
             setVisibility(prev => ({...prev, markdown: false}))
@@ -303,17 +311,43 @@ function NoteEditor() {
             setNote(prev => ({...prev, markdown: true}))
             markdownTimer.current = setTimeout(() => setVisibility(prev => ({...prev, markdown: true})), 10)
         }
-    }
+    }, [])
 
     useEffect(() => {
         return () => clearTimeout(markdownTimer.current)
     }, [])
 
-    // 
+    const loadGroups = useCallback(async () => {
+        try {
+            await Promise.all([
+                location.state ? loadNote() : Promise.resolve(),
+                loadCats(),
+                loadTags()
+            ])
+        } catch (e) {
+            console.error(e)
+        } finally {
+            setLoading(false)
+    }}, [loadCats, loadTags, loadNote])
+
+    const retryLoad = useCallback(() => {
+        setNote(prev => ({
+            ...prev,
+            category: {name: 'Loading categories'}
+        }))
+        setErrors(prev => ({
+                ...prev,
+                global: false,
+                categories: true,
+                tags: false,
+                tagsMessage: 'Loading tags'
+            }))
+        setLoading(true)
+        loadGroups()
+    }, [loadGroups])
 
     //
-
-    const setGeneralError = (status) => {
+    const setGeneralError = useCallback((status) => {
         if (status) {
             setLoading(false)
 
@@ -339,9 +373,9 @@ function NoteEditor() {
                 markdown: false
             }))
         }
-    }
+    }, [])
 
-    const turnOfflineMode = () => {
+    const turnOfflineMode = useCallback(() => {
         setNote(prev => ({
                 ...prev,
                 category: placeholder,
@@ -377,9 +411,9 @@ function NoteEditor() {
                     selectedTags: offlineNote.tags
                 }))
             }
-    }}
+    }}, [placeholder, offlineCategories, offlineTags, location.state])
 
-    const turnOnlineMode = () => {
+    const turnOnlineMode = useCallback(() => {
         setErrors(prev => ({
                 ...prev,
                 global: false,
@@ -403,7 +437,7 @@ function NoteEditor() {
                 tagsMessage: 'No tags created'
             }))
         }
-    }
+    }, [loadGroups])
 
     // triggers the function execution on the first load; checked whether the id is transmitted
     useEffect(() => {
@@ -428,38 +462,8 @@ function NoteEditor() {
         }
     }, [online, offlineMode])
 
-    const loadGroups = async () => {
-        try {
-            await Promise.all([
-                location.state ? loadNote() : Promise.resolve(),
-                loadCats(),
-                loadTags()
-            ])
-        } catch (e) {
-            console.error(e)
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    const retryLoad = () => {
-        setNote(prev => ({
-            ...prev,
-            category: {name: 'Loading categories'}
-        }))
-        setErrors(prev => ({
-                ...prev,
-                global: false,
-                categories: true,
-                tags: false,
-                tagsMessage: 'Loading tags'
-            }))
-        setLoading(true)
-        loadGroups()
-    }
-
     // function to add and remove a tag
-    const selectTag = (tag) => {
+    const selectTag = useCallback((tag) => {
         setNote(prev => {
             const selectedTags = prev.selectedTags ?? []
 
@@ -471,11 +475,9 @@ function NoteEditor() {
             return {
                 ...prev,
                 selectedTags: newSelectedTags
-            }
-        })
-    }
+    }})}, [])
 
-    const clearInputs = () => {
+    const clearInputs = useCallback(() => {
         setNote(prev => ({
             ...prev,
             name: '',
@@ -483,8 +485,7 @@ function NoteEditor() {
             content: '',
             markdown: false,
             selectedTags: []
-        }))
-    }
+    }))}, [])
 
     useEffect(() => {
         if (errors.categories) {
@@ -495,26 +496,13 @@ function NoteEditor() {
         }
     }, [errors.categories])
 
-    const noteData = useMemo(() => ({
-        title: note.name,
-        content: note.content,
-        is_markdown: note.markdown,
-        category_id: note.category.id,
-        category: note.category.name == 'Category not selected' ? null : note.category,
-        tag_ids: note?.selectedTags?.map(t => t.id)
-    }), [note.name, note.content, note.markdown, note.category, note.selectedTags])
+    const state = useMemo(() => ({loading, errors, saving, note, visibility, textareaFocus}), [loading, errors, saving, note, visibility, textareaFocus])
 
-    return {
-        state: {
-            loading, errors, saving, note, visibility, textareaFocus
-        },
-        actions: {
-            setErrors, newNote, modifyNote, clearInputs, selectTag, navigate, markdownToggle, loadTags, setLoading, loadCats, retryLoad, setNote, setVisibility, setTextareaFocus
-        },
-        refs: {
-            inputRef, selectRef, tagRef, markdownRef
-        }
-    }
+    const actions = useMemo(() => ({setErrors, newNote, modifyNote, clearInputs, selectTag, navigate, markdownToggle, loadTags, setLoading, loadCats, retryLoad, setNote, setVisibility, setTextareaFocus}), [newNote, modifyNote, clearInputs, selectTag, navigate, markdownToggle, loadTags, loadCats, retryLoad])
+
+    const refs = useMemo(() => ({inputRef, selectRef, tagRef, markdownRef}), [])
+
+    return {state, actions, refs}
 }
 
 export default NoteEditor

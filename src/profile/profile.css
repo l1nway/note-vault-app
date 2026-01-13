@@ -1643,6 +1643,10 @@ button:focus {
     border: 0.1vw solid var(--def-white);
 }
 
+.settings-offline-title {
+    margin-right: 2vw;
+}
+
 .settings-offline-logo {
     opacity: 0;
     max-width: 0vw;

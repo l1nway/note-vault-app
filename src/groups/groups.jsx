@@ -1,49 +1,25 @@
 import './groups.css'
 
 import {useMemo} from 'react'
-import {useShallow} from 'zustand/react/shallow'
-import ContentLoader from 'react-content-loader'
 import {useTranslation} from 'react-i18next'
 import {motion, AnimatePresence} from 'framer-motion'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlane, faTableCells as faTableCellsSolid, faList as faListSolid, faFloppyDisk, faTriangleExclamation, faRotateRight, faTrashCan, faSignal} from '@fortawesome/free-solid-svg-icons'
+import {faPlane, faTableCells as faTableCellsSolid, faList as faListSolid, faFloppyDisk, faTriangleExclamation, faTrashCan, faSpinner} from '@fortawesome/free-solid-svg-icons'
 
 import Clarify from '../components/clarify'
 import SlideDown from '../components/slideDown'
 import SlideLeft from '../components/slideLeft'
 import groupsLogic from './groupsLogic'
 import GroupCard from './groupCard'
-
-import {apiStore, appStore, clarifyStore} from '../store'
+import LoadingError from '../components/loadingError'
+import ExtraObj from '../components/extraObj'
 
 function Groups() {
 
     const {t} = useTranslation()
-    const online = apiStore(state => state.online)
 
-    const {offlineMode, setOfflineMode, tags, categories} = appStore(
-        useShallow((state) => ({
-            offlineMode: state.offlineMode,
-            setOfflineMode: state.setOfflineMode,
-            tags: state.tags,
-            categories: state.categories,
-    })))
-
-    const {action, loadingError, loadingErrorMessage, retryFunction} = clarifyStore(
-        useShallow((state) => ({
-            action: state.action,
-            loadingError: state.loadingError,
-            loadingErrorMessage: state.loadingErrorMessage,
-            retryFunction: state.retryFunction,
-    })))
-
-    const {path, loading, catsView, setCatsView, listView, elementID, setElementID, color, setColor, name, setName, openAnim, clarifyRef, gridRef, listRef} = groupsLogic()
-
-    const items = useMemo(
-        () => (path == 'tags' ? tags : categories),
-        [path, tags, categories]
-    )
+    const {path, loading, catsView, setCatsView, listView, elementID, setElementID, color, setColor, name, setName, openAnim, retryFunction, action, clarifyRef, gridRef, listRef, setLoadingError, getGroups, errorMessage, loadingError, setErrorMessage, items, saving, error, offlineMode, setOfflineMode, online} = groupsLogic()
 
     const renderGroups = useMemo(() => {
         return (items || []).map((element) =>
@@ -62,9 +38,6 @@ function Groups() {
         )
     }, [items, openAnim, listView])
 
-    const saving = useMemo(() => items?.some(item => item?.saving), [items])
-    const error = useMemo(() => items?.some(item => item?.error), [items])
-
     return(
         <div
             className='groups-main'
@@ -81,6 +54,15 @@ function Groups() {
                     >
                         {t(path)}
                     </h1>
+                    {/* displayed during loading */}
+                    <SlideLeft
+                        visibility={loading}
+                    >
+                        <FontAwesomeIcon
+                            className='clarify-loading-icon'
+                            icon={faSpinner}
+                        />
+                    </SlideLeft>
                     <SlideLeft
                         visibility={saving}
                     >
@@ -103,7 +85,7 @@ function Groups() {
                         <span
                             className='notes-error-text'
                         >
-                            {t(loadingErrorMessage)}
+                            {t(errorMessage)}
                         </span>
                     </SlideLeft>
                     <SlideLeft
@@ -151,119 +133,34 @@ function Groups() {
                     </button>
                 </div>
             </div>
+                <LoadingError
+                    pageError={loadingError}
+                    setPageError={setLoadingError}
+                    pageMessage={errorMessage}
+                    setPageMessage={setErrorMessage}
+                    getPage={getGroups}
+                    online={online}
+                    offlineMode={offlineMode}
+                    setOfflineMode={setOfflineMode}
+                    path={path}
+                />
                 <SlideDown
-                    visibility={loading}
-                >
-                    <div
-                        className='groups-list'
-                    >
-                        <ContentLoader
-                            className='group-element'
-                            speed={2}
-                            width={300}
-                            height={120}
-                            backgroundColor='#1e2939' 
-                            foregroundColor='#72bf00'
-                            aria-label={undefined}
-                            title={undefined}
-                            preserveAspectRatio='none'
-                        >
-                            {/* 
-                                rx & ry -- border-radius
-                                x -- расположение по горизонтали
-                                y -- расположение по вертикали
-                            */}
-                            
-                            <circle cx='25' cy='30' r='25' /> 
-                            <rect x='0' y='70' rx='4' ry='4' width='150' height='25' 
-                            />
-                            <rect x='0' y='105' rx='3' ry='3' width='80' height='15' 
-                            />
-                        </ContentLoader>
-                    </div>
-                </SlideDown>
-                <SlideDown
-                    visibility={!loading}
+                    visibility={items?.length}
                 >
                     <motion.div
-                        layout='position'
                         className='groups-list'
                     >
                         <AnimatePresence>
                             {renderGroups}
+                            <ExtraObj
+                                listView={listView}
+                                loading={loading}
+                                // page={page}
+                                // lastPage={lastPage}
+                                // loadMore={loadMore}
+                            />
                         </AnimatePresence>
                     </motion.div>
-                </SlideDown>
-                <SlideDown
-                    visibility={loadingError}
-                >
-                    <div
-                        className='groups-loading-error'
-                        onClick={() => {
-                            online ? turnOnlineMode() : setOfflineMode(true)
-                        }}
-                        // onClick={() => {
-                        //     if (online) {
-                        //         setLoading(true)
-                        //         setLoadingError(false)
-                        // }}}
-                    >
-                        <div
-                            className='loading-error-message'
-                        >
-                            <FontAwesomeIcon
-                                className='loading-error-icon --general'
-                                icon={faTriangleExclamation}
-                            />
-                            <div
-                                className='error-groups'
-                            >
-                                <span>
-                                    {t('Error loading')} {t(path)}.
-                                </span>
-                                <span>
-                                    {t(loadingErrorMessage)}
-                                </span>
-                            </div>
-                        </div>
-                    <SlideDown
-                        visibility={online && loadingError}
-                    >
-                        <label
-                            className='loading-retry-action'
-                        >
-                            <input
-                                type='checkbox'
-                                className='loading-retry-checkbox'
-                                defaultChecked
-                            />
-                            <FontAwesomeIcon
-                                className='loading-retry-icon'
-                                icon={faRotateRight}
-                            />
-                            <span>
-                                {t('retry?')}
-                            </span>
-                        </label>
-                    </SlideDown>
-                    <SlideDown
-                        visibility={!online && loadingError}
-                    >
-                        <div
-                            className='newnote-retry-action'
-                        >
-                            <FontAwesomeIcon
-                                className='newnote-signal-icon'
-                                icon={faSignal}
-                            />
-                            <span
-                                className='newnote-offline-text'
-                            >
-                                {t('Go to offline mode?')}
-                            </span>
-                        </div>
-                    </SlideDown>
-                    </div>
                 </SlideDown>
             {action ?
                 <Clarify

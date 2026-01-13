@@ -133,13 +133,24 @@ export const clarifyStore = create((set) => ({
   setNotesMessage: (clarify) => set({notesMessage: clarify}),
 
   // 
-
   deletedLoading: false,
   setDeletedLoading: (deletedLoading) => set({deletedLoading}),
 
   // 
   archivedLoading: false,
   setArchivedLoading: (archivedLoading) => set({archivedLoading}),
+
+  // 
+  categoriesLoading: false,
+  setCategoriesLoading: (categoriesLoading) => set({categoriesLoading}),
+  categoriesError: false,
+  setCategoriesError: (categoriesError) => set({categoriesError}),
+
+  // 
+  tagsLoading: false,
+  setTagsLoading: (tagsLoading) => set({tagsLoading}),
+  tagsError: false,
+  setTagsError: (tagsError) => set({tagsError}),
 
   // 
   category: null,
@@ -155,8 +166,6 @@ export const clarifyStore = create((set) => ({
 
   // 
   clarifyLoading: true,
-  loadingError: false,
-  loadingErrorMessage: '',
   retryFunction: null,
   currentElementId: null,
 
@@ -165,8 +174,6 @@ export const clarifyStore = create((set) => ({
   setVisibility: (clarify) => set({visibility: clarify}),
   setAnimating: (clarify) => set({animating: clarify}),
   setClarifyLoading: (clarify) => set({clarifyLoading: clarify}),
-  setLoadingError: (clarify) => set({loadingError: clarify}),
-  setLoadingErrorMessage: (clarify) => set({loadingErrorMessage: clarify}),
   setRetryFunction: (fn) => set({retryFunction: fn}),
   setCurrentElementId: (id) => set({currentElementId: id})
 }))

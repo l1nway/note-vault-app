@@ -5,14 +5,14 @@ import {useTranslation} from 'react-i18next'
 import SlideDown from './slideDown'
 import Cookies from 'js-cookie'
 
-const LoadingError = React.memo(({pageError, setPageError, pageMessage, getPage, online, offlineMode, setOfflineMode, path}) => {
+const LoadingError = React.memo(({pageError, setPageError, pageMessage, setPageMessage, getPage, online, offlineMode, setOfflineMode, path}) => {
     const {t} = useTranslation()
 
     const [offline, setOffline] = useState(Cookies.get('offline') == 'true')
 
     const errorButton = useCallback(() => {
         if (online) {
-            getPage()
+            getPage(path, setPageMessage)
             return
         }
         setOfflineMode(true)

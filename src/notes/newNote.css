@@ -268,6 +268,10 @@
     justify-content: center;
     gap: 2vw;
     padding-top: 1vw;
+
+    @media (max-width: 1024px) {
+        padding-bottom: 2vw;
+    }
 }
 
 .newnote-retry-icon{
@@ -292,6 +296,11 @@
     color: var(--def-white);
     width: 5vw;
     height: 5vw;
+
+    @media (max-width: 1024px) {
+        width: 9vw;
+        height: 9vw;
+    }
 }
 
 .newnote-signal-icon::after {
@@ -310,6 +319,10 @@
 .newnote-offline-text {
     font-size: 3vw;
     color: var(--def-white);
+
+    @media (max-width: 1024px) {
+        font-size: 7vw;
+    }
 }
 
 .newnote-form {
@@ -550,6 +563,7 @@
     align-items: center;
     padding: 0vw 0vw 0vw 1vw;
     font-size: 1.5vw;
+    transition: 300ms font-size;
 
     @media (max-width: 1024px) {
         font-size: 6vw;
@@ -657,7 +671,7 @@
 .newnote-select-option {
     padding: 0.4vw 0.5vw;
     border-radius: 1vw;
-    transition: background-color 300ms, border-radius 300ms, 300ms height;
+    transition: background-color 300ms, border-radius 300ms, font-size 300ms, 300ms height;
 }
 
 .newnote-select-option:hover,
@@ -1224,4 +1238,8 @@
     padding: 1vw;
     cursor: pointer;
     color: white;
+
+    @media (max-width: 1024px) {
+        font-size: 5vw;
+    }
 }

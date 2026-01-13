@@ -8,18 +8,23 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
     const {t} = useTranslation()
     const mobile = useMediaQuery({query: '(max-width: 1024px)'})
 
+    const skeletonProps = useMemo(() => ({
+        className: 'note-element',
+        speed: 2,
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#1e2939', 
+        foregroundColor: '#72bf00',
+        preserveAspectRatio: 'none',
+    }), [])
+
+    const loaderProps = useMemo(() => ({rx:'4', ry:'4'}), [])
+
     const skeleton = useMemo(() => listView
         ?
             <ContentLoader
-                className='note-element'
-                speed={2}
-                width={'100%'}
-                height={78}
-                backgroundColor='#1e2939' 
-                foregroundColor='#72bf00'
-                aria-label={undefined}
-                title={undefined}
-                preserveAspectRatio='none'
+                className='--checked'
+                {...skeletonProps}
             >
                 {/* 
                     rx & ry -- border-radius
@@ -27,27 +32,19 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
                     y -- расположение по вертикали
                 */}
                 {/* title */}
-                <rect x='5' y='0' rx='4' ry='4' width='30%' height='20'/>
+                <rect {...loaderProps} x='1%' y='1%'width='30%' height='45%'/>
                 {/* desc */}
-                <rect x='5' y='30' rx='3' ry='3' width='40%' height='20'/>
+                <rect {...loaderProps} x='1%' y='60%' width='40%' height='40%'/>
                 {/* tags */}
-                <rect x='66%' y='15' rx='3' ry='3' width='70' height='25'/>
-                <rect x='74%' y='15' rx='3' ry='3' width='50' height='25'/>
-                <rect x='80%' y='15' rx='3' ry='3' width='50' height='25'/>
+                <rect {...loaderProps} x='60%' y='28%' width='8%' height='50%'/>
+                <rect {...loaderProps} x='69%' y='28%' width='9%' height='50%'/>
+                <rect {...loaderProps} x='79%' y='28%' width='7%' height='50%'/>
                 {/* date */}
-                <rect x='86%' y='20' rx='3' ry='3' width='60' height='18'/>
+                <rect {...loaderProps} x='87%' y='28%' width='5%' height='50%'/>
             </ContentLoader>
         :
             <ContentLoader
-                className='note-element'
-                speed={2}
-                width={345}
-                height={120}
-                backgroundColor='#1e2939' 
-                foregroundColor='#72bf00'
-                aria-label={undefined}
-                title={undefined}
-                preserveAspectRatio='none'
+                {...skeletonProps}
             >
                 {/* 
                     rx & ry -- border-radius
@@ -55,29 +52,22 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
                     y -- расположение по вертикали
                 */}
                 {/* title */}
-                <rect x='5' y='5' rx='4' ry='4' width='200' height='20'/>
+                <rect {...loaderProps} x='1%' y='5%' width='80%' height='28%'/>
                 {/* desc */}
-                <rect x='5' y='34' rx='3' ry='3' width='320' height='20'/>
+                <rect {...loaderProps} x='1%' y='40%' width='70%' height='25%'/>
                 {/* tags */}
-                <rect x='5' y='65' rx='3' ry='3' width='70' height='25'/>
-                <rect x='85' y='65' rx='3' ry='3' width='50' height='25'/>
-                <rect x='145' y='65' rx='3' ry='3' width='50' height='25'/>
+                <rect {...loaderProps} x='1%' y='75%' width='20%' height='20%'/>
+                <rect {...loaderProps} x='23%' y='75%' width='20%' height='20%'/>
+                <rect {...loaderProps} x='45%' y='75%' width='20%' height='20%'/>
                 {/* date */}
-                <rect x='275' y='71' rx='3' ry='3' width='40' height='18'/>
+                <rect {...loaderProps} x='85%' y='75%' width='15%' height='20%'/>
             </ContentLoader>
     , [listView])
 
     const mobileSkeleton = useMemo(() => listView
         ?
             <ContentLoader
-                className='note-element'
-                speed={2}
-                width={'100%'}
-                backgroundColor='#1e2939' 
-                foregroundColor='#72bf00'
-                aria-label={undefined}
-                title={undefined}
-                preserveAspectRatio='none'
+                {...skeletonProps}
             >
                 {/* 
                     rx & ry -- border-radius
@@ -85,29 +75,22 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
                     y -- расположение по вертикали
                 */}
                 {/* title */}
-                <rect x='5' y='10' rx='4' ry='4' width='30%' height='20'/>
+                <rect {...loaderProps} x='1%' y='7%' width='30%' height='17%'/>
                 {/* desc */}
-                <rect x='5' y='40' rx='3' ry='3' width='40%' height='20'/>
-                <rect x='5' y='70' rx='3' ry='3' width='40%' height='20'/>
-                <rect x='5' y='100' rx='3' ry='3' width='40%' height='20'/>
+                <rect {...loaderProps} x='1%' y='35%' width='40%' height='15%'/>
+                <rect {...loaderProps} x='1%' y='55%' width='40%' height='15%'/>
+                <rect {...loaderProps} x='1%' y='75%' width='40%' height='15%'/>
                 {/* tags */}
-                <rect x='220' y='10' rx='4' ry='4' width='20%' height='20'/>
-                <rect x='220' y='40' rx='4' ry='4' width='15%' height='20'/>
-                <rect x='220' y='70' rx='4' ry='4' width='15%' height='20'/>
-                <rect x='220' y='100' rx='4' ry='4' width='15%' height='20'/>
+                <rect {...loaderProps} x='50%' y='7%' width='25%' height='15%'/>
+                <rect {...loaderProps} x='50%' y='35%' width='20%' height='15%'/>
+                <rect {...loaderProps} x='50%' y='55%' width='20%' height='15%'/>
+                <rect {...loaderProps} x='50%' y='75%' width='20%' height='15%'/>
                 {/* date */}
-                <rect x='300' y='100' rx='4' ry='4' width='15%' height='20'/>
+                <rect {...loaderProps} x='75%' y='75%' width='15%' height='15%'/>
             </ContentLoader>
         :
             <ContentLoader
-                className='note-element'
-                speed={2}
-                height={'100%'}
-                backgroundColor='#1e2939' 
-                foregroundColor='#72bf00'
-                aria-label={undefined}
-                title={undefined}
-                preserveAspectRatio='none'
+                {...skeletonProps}
             >
                 {/* 
                     rx & ry -- border-radius
@@ -115,15 +98,15 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
                     y -- расположение по вертикали
                 */}
                 {/* title */}
-                <rect x='5' y='10' rx='4' ry='4' width='160' height='20'/>
+                <rect {...loaderProps} x='5%' y='5%' width='70%' height='15%'/>
                 {/* desc */}
-                <rect x='5' y='50' rx='3' ry='3' width='120' height='20'/>
+                <rect {...loaderProps} x='5%' y='25%' width='60%' height='15%'/>
                 {/* tags */}
-                <rect x='5' y='80' rx='3' ry='3' width='100' height='20'/>
-                <rect x='5' y='110' rx='3' ry='3' width='90' height='20'/>
-                <rect x='5' y='140' rx='3' ry='3' width='90' height='20'/>
+                <rect {...loaderProps} x='5%' y='60%' width='30%' height='15%'/>
+                <rect {...loaderProps} x='40%' y='60%' width='30%' height='15%'/>
+                <rect {...loaderProps} x='5%' y='80%' width='40%' height='15%'/>
                 {/* date */}
-                <rect x='140' y='140' rx='3' ry='3' width='40' height='18'/>
+                <rect {...loaderProps} x='70%' y='80%' width='25%' height='15%'/>
             </ContentLoader>
     , [listView])
 

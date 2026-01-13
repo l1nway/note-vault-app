@@ -284,7 +284,6 @@ input[type=checkbox] {
     height: 1.75vw;
 
     @media (max-width: 1024px) {
-        padding-right: 2vw;
         width: 6.5vw;
         height: 6.5vw;
     }

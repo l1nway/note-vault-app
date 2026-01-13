@@ -24,6 +24,7 @@ function SlideLeft({visibility, children, duration = 300, unmount}) {
                     overflow: 'hidden',
                     // display: 'inline-block',
                     transition: `width ${duration}ms ease`,
+                    display: 'grid',
                     // verticalAlign: 'top'
                 }}
             >

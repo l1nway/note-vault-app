@@ -5,11 +5,12 @@ function useSelect({disabled, isOpen, setIsOpen}) {
 
     const handleBlur = useCallback((e) => {
         if (e.currentTarget.contains(e.relatedTarget)) return
-        setIsOpen(false, 'я блядь понятия не имею почему оно работает только с вторым параметром')
+        setIsOpen(false, 'force rerender if its in object')
     }, [setIsOpen])
 
     const handleFocus = useCallback(() => {
         if (disabled) return
+        if (document.hidden || !document.hasFocus()) return
         if (!isOpen) {
             setIsOpen(true)
             justFocused.current = true

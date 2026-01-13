@@ -28,12 +28,13 @@ function NotesList() {
             setNoteInfo: state.setNoteInfo
     })))
 
-    const {action, notesError, notesLoading, notesMessage, setTag, setCategory, setNotesError, retryFunction} = clarifyStore(
+    const {action, notesError, notesLoading, notesMessage, setNotesMessage, setTag, setCategory, setNotesError, retryFunction} = clarifyStore(
         useShallow((state) => ({
             action: state.action,
             notesError: state.notesError,
             notesLoading: state.notesLoading,
             notesMessage: state.notesMessage,
+            setNotesMessage: state.setNotesMessage,
             setTag: state.setTag,
             setCategory: state.setCategory,
             setNotesError: state.setNotesError,
@@ -74,6 +75,7 @@ function NotesList() {
                 pageError={notesError}
                 setPageError={setNotesError}
                 pageMessage={notesMessage}
+                setPageMessage={setNotesMessage}
                 getPage={getNotes}
                 online={online}
                 offlineMode={offlineMode}
