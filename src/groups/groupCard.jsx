@@ -1,9 +1,9 @@
 import './groups.css'
 
-import React, {useCallback, useMemo} from 'react'
+import React, {useCallback, useMemo, useRef} from 'react'
 import {useShallow} from 'zustand/react/shallow'
 import {useLocation, useNavigate} from 'react-router'
-import {motion} from 'framer-motion'
+import {motion, useInView} from 'framer-motion'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTowerBroadcast, faServer, faPenToSquare, faTrash as faTrashSolid, faTag, faFloppyDisk, faTriangleExclamation, faTrashCan, faTrashCanArrowUp} from '@fortawesome/free-solid-svg-icons'
@@ -17,6 +17,9 @@ function GroupCard({element, openAnim, setElementID, setName, setColor, listView
     const {pathname} = useLocation()
     const path = pathname.slice(1)
     const navigate = useNavigate()
+
+    const ref = useRef(null)
+    const visible = useInView(ref, {amount: 0.1, margin: '100px 0px 50px 0px'})
 
     const {animating, setTag, setCategory} = clarifyStore(
         useShallow(state => ({
@@ -65,17 +68,36 @@ function GroupCard({element, openAnim, setElementID, setName, setColor, listView
     return (
         <motion.div
             tabIndex={0}
-            className={`group-element ${isPending
-                ? '--disappearance'
-                : ''
-            }`}
-            key={element.id}
+            className={`group-element`}
+            style={{ 
+                willChange: 'transform, opacity, height',
+                backfaceVisibility: 'hidden',
+                transform: 'translateZ(0)'
+            }}
+            ref={ref}
+            layoutId={element.id}
+            layout={visible}
+            viewport={{once: false, amount: 0.1, margin: '0px 0px 0px 0px'}}
+            initial={{opacity: 0, scale: 0.9}}
+            whileInView={{opacity: 1, scale: 1}}
+            transition={{
+                layout: {
+                    type: 'spring', 
+                    stiffness: 300, 
+                    damping: 30
+                },
+                default: {
+                    duration: 0.3, 
+                    ease: 'easeInOut'
+                },
+                opacity: {duration: 0.3}
+            }}
+            exit={{opacity: 0, scale: 0.8, transition: {duration: 0.3}}}
             state={{
                 sort: path,
                 value: element
             }}
             onClick={e => redirect(e, element)}
-            layout='position'
         >
             {/* input for css only */}
             <input

@@ -1,7 +1,12 @@
 import Cookies from 'js-cookie'
 import {clarifyStore, appStore} from '../store'
 
-const getGroups = async (path, setErrorMessage = () => {}) => {
+const getGroups = async (
+    path,
+    setErrorMessage = () => {},
+    page = 1,
+    setLastPage = () => {}
+) => {
     const {setTagsError, setCategoriesError, setTagsLoading, setCategoriesLoading} = clarifyStore.getState()
     const {setCategories, setTags} = appStore.getState()
 
@@ -33,6 +38,7 @@ const getGroups = async (path, setErrorMessage = () => {}) => {
     setLoadingError(false)
     try {
         const res = await fetch(`https://api.notevault.pro/api/v1/${path}`, {
+            // &page=${page}
             method: 'GET',
             headers: {
                 'content-type': 'application/json',
@@ -43,6 +49,8 @@ const getGroups = async (path, setErrorMessage = () => {}) => {
 
         const resData = await res.json()
         setGroups(resData)
+        console.log(resData)
+        setLastPage?.(resData.last_page)
         setLoadingError(false)
     } catch (error) {
         setErrorMessage(error)

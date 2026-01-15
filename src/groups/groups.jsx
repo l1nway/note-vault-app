@@ -19,7 +19,7 @@ function Groups() {
 
     const {t} = useTranslation()
 
-    const {path, loading, catsView, setCatsView, listView, elementID, setElementID, color, setColor, name, setName, openAnim, retryFunction, action, clarifyRef, gridRef, listRef, setLoadingError, getGroups, errorMessage, loadingError, setErrorMessage, items, saving, error, offlineMode, setOfflineMode, online} = groupsLogic()
+    const {path, loading, catsView, setCatsView, listView, elementID, setElementID, color, setColor, name, setName, openAnim, retryFunction, action, clarifyRef, gridRef, listRef, setLoadingError, getGroups, errorMessage, loadingError, setErrorMessage, items, saving, error, offlineMode, setOfflineMode, online, page, lastPage, loadMore} = groupsLogic()
 
     const renderGroups = useMemo(() => {
         return (items || []).map((element) =>
@@ -150,16 +150,14 @@ function Groups() {
                     <motion.div
                         className='groups-list'
                     >
-                        <AnimatePresence>
-                            {renderGroups}
-                            <ExtraObj
-                                listView={listView}
-                                loading={loading}
-                                // page={page}
-                                // lastPage={lastPage}
-                                // loadMore={loadMore}
-                            />
-                        </AnimatePresence>
+                        {renderGroups}
+                        <ExtraObj
+                            listView={listView}
+                            loading={loading}
+                            page={page}
+                            lastPage={lastPage}
+                            loadMore={loadMore}
+                        />
                     </motion.div>
                 </SlideDown>
             {action ?

@@ -560,11 +560,11 @@
     }
 }
 
-.rcp-interactive {
-    padding: 1vw !important;
+.custom-color-picker {
+    padding: 1vw;
 
     @media (max-width: 1024px) {
-        padding: 0vw 3vw !important;
+        /* padding: 0vw 3vw !important; */
     }
 }
 

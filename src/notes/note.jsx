@@ -155,7 +155,6 @@ function Note() {
         <div
             className='note-main'
         >
-            {/* HEADER */}
                 <div
                     className='note-header'
                 >

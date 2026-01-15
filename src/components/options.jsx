@@ -1,7 +1,7 @@
 import {CSSTransition} from 'react-transition-group'
 import {useRef, useState, useEffect, useCallback, memo} from 'react'
 
-function Options({visibility, children, duration = 300, selectRef}) {
+function Options({visibility, children, duration = 300, selectRef, onAnimationDone}) {
   
   const nodeRef = useRef(null)
 
@@ -61,7 +61,8 @@ function Options({visibility, children, duration = 300, selectRef}) {
     if (!el) return
     el.style.height = 'auto'
     el.style.transition = ''
-  }, [])
+    if (onAnimationDone) onAnimationDone()
+  }, [onAnimationDone])
 
   const handleExit = useCallback(() => {
     const el = nodeRef.current

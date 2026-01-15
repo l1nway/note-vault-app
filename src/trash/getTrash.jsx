@@ -34,13 +34,13 @@ const getTrash = (
     }})
     .then(res => res.json())
     .then(resData => {
-    setLastPage?.(resData.last_page)
-    if (path == 'trash') {
-        page == 1 ? setTrash(resData.data) : setTrash(prev => [...prev, ...resData.data])
-        setDeletedLoading(false)
-    } else
-        page == 1 ? setArchive(resData.data) : setArchive(prev => [...prev, ...resData.data])
-        setArchivedLoading(false)
-})}
+        setLastPage?.(resData.last_page)
+            if (path == 'trash') {
+                page == 1 ? setTrash(resData.data) : setTrash(prev => [...prev, ...resData.data])
+                setDeletedLoading(false)
+            } else
+                page == 1 ? setArchive(resData.data) : setArchive(prev => [...prev, ...resData.data])
+                setArchivedLoading(false)
+        })}
 
 export default getTrash

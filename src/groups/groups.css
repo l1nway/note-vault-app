@@ -249,7 +249,7 @@
     max-width: 32%;
     min-width: 24%;
     padding: 1vw 1.5vw;
-    transition: 
+    /* transition: 
         height 300ms,
         width 300ms,
         max-width 300ms,
@@ -260,7 +260,7 @@
         opacity 300ms,
         pading 300ms,
         padding 300ms,
-        margin 300ms;
+        margin 300ms; */
 }
 
 .group-element:hover,

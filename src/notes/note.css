@@ -213,6 +213,7 @@
 }
 
 .note-info-tag {
+    text-wrap: nowrap;
     background-color: var(--blck-bc);
     padding: 0.5vw 1vw;
     border-radius: 1vw;

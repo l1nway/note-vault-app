@@ -297,6 +297,9 @@ input[type=checkbox] {
 }
 
 .select-list {
+    max-height: 350px;
+    overflow: auto;
+    scrollbar-gutter: stable;
     z-index: 1;
     transition: 300ms border, 300ms background-color, 300ms opacity, pading 300ms;
     background-color: var(--select-background);

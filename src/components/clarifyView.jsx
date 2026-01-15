@@ -236,7 +236,8 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
                     </div>
                 </SlideDown>
                 <SlideDown
-                    visibility={picker && color.hex != props.color}
+                    visibility={false}
+                    // visibility={picker && color.hex != props.color}
                 >
                     <label
                         className='clarify-custom-save'

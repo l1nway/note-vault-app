@@ -7,7 +7,7 @@ import Cookies from 'js-cookie'
 
 import Navigation from './navigation'
 import Login from './login'
-import Test from './test'
+// import Test from './test'
 
 import {apiStore, appStore, pendingStore} from './store'
 import useOfflineSync from './components/useOfflineSync'
@@ -97,7 +97,7 @@ function App() {
               <Route path='/login' element={<Login/>}/>
               <Route path='/register' element={<Login/>}/>
               <Route path='/*' element={<Navigation/>}/>
-              <Route path='/select' element={<Test/>}/>
+              {/* <Route path='/select' element={<Test/>}/> */}
             </Routes>
           </div>
         </CSSTransition>

@@ -59,6 +59,15 @@ function groupsLogic() {
     
     const saving = useMemo(() => items?.some(item => item?.saving), [items])
     const error = useMemo(() => items?.some(item => item?.error), [items])
+
+    const [page, setPage] = useState(1)
+    const [lastPage, setLastPage] = useState(0)
+
+    const loadMore = useCallback(() => {
+        if (page < lastPage) {
+            setPage(prev => prev + 1)
+        }
+    }, [lastPage])
     
     const loadingError = useMemo(
         () => (path == 'tags' ? tagsError : categoriesError),
@@ -89,7 +98,7 @@ function groupsLogic() {
 
     useEffect(() => {
         if (!online || !token) return
-        getGroups(path, setErrorMessage)
+        getGroups(path, setErrorMessage, page, setLastPage)
     }, [online, token, path])
 
     useEffect(() => {
@@ -119,8 +128,8 @@ function groupsLogic() {
         }, 300)
     }, [animating, setAnimating, setAction, setRetryFunction, setClarifyLoading, setCurrentElementId, setVisibility])
     
-    return useMemo(() => ({path, loading, catsView, setCatsView, listView, elementID, setElementID, color, setColor, name, setName, openAnim, retryFunction, action, clarifyRef, gridRef, listRef, setLoadingError, getGroups, errorMessage, loadingError, setErrorMessage, items, saving, error, offlineMode, setOfflineMode, online}),
-    [path, loading, catsView, setCatsView, listView, elementID, setElementID, color, setColor, name, setName, openAnim, retryFunction, action, clarifyRef, gridRef, listRef, setLoadingError, getGroups, errorMessage, loadingError, setErrorMessage, items, saving, error, offlineMode, setOfflineMode, online])
+    return useMemo(() => ({path, loading, catsView, setCatsView, listView, elementID, setElementID, color, setColor, name, setName, openAnim, retryFunction, action, clarifyRef, gridRef, listRef, setLoadingError, getGroups, errorMessage, loadingError, setErrorMessage, items, saving, error, offlineMode, setOfflineMode, online, loadMore, page, lastPage}),
+    [path, loading, catsView, setCatsView, listView, elementID, setElementID, color, setColor, name, setName, openAnim, retryFunction, action, clarifyRef, gridRef, listRef, setLoadingError, getGroups, errorMessage, loadingError, setErrorMessage, items, saving, error, offlineMode, setOfflineMode, online, loadMore, page, lastPage])
 }
 
 export default groupsLogic

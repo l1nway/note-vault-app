@@ -1,7 +1,26 @@
-import {useRef, useCallback, useMemo} from 'react'
+import {useState, useRef, useCallback, useMemo, useEffect} from 'react'
 
-function useSelect({disabled, isOpen, setIsOpen}) {
+function useSelect({
+    disabled,
+    isOpen,
+    setIsOpen, 
+    options,
+    selectOption,
+    selected
+}) {
     const justFocused = useRef(false)
+    const [highlightedIndex, setHighlightedIndex] = useState(-1)
+
+    useEffect(() => {
+        if (isOpen) {
+            const index = selected 
+                ? options.findIndex(o => o.id == selected.id) 
+                : -1
+            setHighlightedIndex(index >= 0 ? index : 0)
+        } else {
+            setHighlightedIndex(-1)
+        }
+    }, [isOpen, selected])
 
     const handleBlur = useCallback((e) => {
         if (e.currentTarget.contains(e.relatedTarget)) return
@@ -30,13 +49,52 @@ function useSelect({disabled, isOpen, setIsOpen}) {
     }, [disabled, isOpen, setIsOpen])
 
     const handleKeyDown = useCallback((e) => {
-        if (e.key == 'Escape') {
-            setIsOpen(false)
-        }
-    }, [setIsOpen])
+        if (disabled) return
 
-    return useMemo(() => ({handleBlur, handleFocus, handleToggle, handleKeyDown}),
-    [handleBlur, handleFocus, handleToggle, handleKeyDown])
+        switch (e.key) {
+            case 'Enter':
+            case ' ':
+                e.preventDefault()
+                if (isOpen) {
+                    if (highlightedIndex !== -1 && options[highlightedIndex]) {
+                        selectOption(options[highlightedIndex], e)
+                    }
+                } else {
+                    setIsOpen(true)
+                }
+                break
+            
+            case 'Escape':
+                e.preventDefault()
+                setIsOpen(false)
+                break
+
+            case 'ArrowDown':
+                e.preventDefault()
+                if (!isOpen) {
+                    setIsOpen(true)
+                } else {
+                    setHighlightedIndex()
+                }
+                break
+
+            case 'ArrowUp':
+                e.preventDefault()
+                if (!isOpen) {
+                    setIsOpen(true)
+                } else {
+                    setHighlightedIndex()
+                }
+                break
+                
+            case 'Tab':
+                if (isOpen) setIsOpen(false)
+                break
+        }
+    }, [disabled, isOpen, setIsOpen, highlightedIndex, options, selectOption])
+
+    return useMemo(() => ({handleBlur, handleFocus, handleToggle, handleKeyDown, highlightedIndex, setHighlightedIndex}),
+    [handleBlur, handleFocus, handleToggle, handleKeyDown, highlightedIndex, setHighlightedIndex])
 }
 
 export default useSelect
