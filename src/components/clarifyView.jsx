@@ -44,9 +44,9 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
 
     const [inputNull, setInputNull] = useState(false)
 
-    useEffect(() => {
-        props?.setColor?.(color?.hex)
-    }, [color])
+    // useEffect(() => {
+    //     props?.setColor?.(color?.hex)
+    // }, [color])
 
     const clarifyCancel = useCallback(() => {
         closeAnim()

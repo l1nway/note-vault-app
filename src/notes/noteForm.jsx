@@ -369,6 +369,7 @@ function NoteForm({state, actions, refs}) {
                         className='newnote-markdown'
                         tabIndex='0'
                         ref={markdownRef}
+                        onClick={() => markdownToggle()}
                         style={{
                                     '--color': note.markdown ? 'var(--def-white)' : 'var(--blck-bc-fcs)',
                                     pointerEvents: errors.global && 'none'
@@ -390,12 +391,6 @@ function NoteForm({state, actions, refs}) {
                                 }}
                             />
                         </div>
-                        <input
-                            type='checkbox'
-                            disabled={loading || errors.global}
-                            checked={note.markdown}
-                            onChange={markdownToggle}
-                        />
                     </label>
                 </div>
                     {!note.markdown ? (

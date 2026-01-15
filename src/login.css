@@ -39,7 +39,10 @@
     gap: 3vw;
 
     @media (max-width: 1024px) {
+        justify-content: flex-start;
         background: none;
+        height: 100%;
+        overflow-y: auto;
     }
 
     @media (max-width: 1400px) {
@@ -278,7 +281,7 @@ button:focus {
     padding-top: 1vw;
 
     @media (max-width: 1024px) {
-        padding: 3vw 0vw 0vw;
+        padding: 3vw 0vw;
         flex-direction: column;
         width: 100%;
     }
@@ -391,6 +394,8 @@ button:focus {
         border-radius: 3vw;
         height: 10vw;
         font-size: 5vw;
+        margin-top: 8vw;
+        margin-bottom: 4vw;
     }
 }
 

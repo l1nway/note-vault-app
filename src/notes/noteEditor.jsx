@@ -304,13 +304,20 @@ function NoteEditor() {
 
     const markdownToggle = useCallback(() => {
         clearTimeout(markdownTimer.current)
-        if (note.markdown) {
-            setVisibility(prev => ({...prev, markdown: false}))
-            markdownTimer.current = setTimeout(() => setNote(prev => ({...prev, markdown: false})), 301)
-        } else {
-            setNote(prev => ({...prev, markdown: true}))
-            markdownTimer.current = setTimeout(() => setVisibility(prev => ({...prev, markdown: true})), 10)
-        }
+
+        setNote(prev => {
+            const next = !prev.markdown
+
+            if (next) {
+                markdownTimer.current = setTimeout(() => {
+                    setVisibility(v => ({...v, markdown: true}))
+                }, 10)
+            } else {
+                setVisibility(v => ({...v, markdown: false}))
+            }
+
+            return {...prev, markdown: next}
+        })
     }, [])
 
     useEffect(() => {

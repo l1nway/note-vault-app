@@ -75,7 +75,7 @@ function GroupCard({element, openAnim, setElementID, setName, setColor, listView
                 transform: 'translateZ(0)'
             }}
             ref={ref}
-            layoutId={element.id}
+            layoutId={path + element.id}
             layout={visible}
             viewport={{once: false, amount: 0.1, margin: '0px 0px 0px 0px'}}
             initial={{opacity: 0, scale: 0.9}}
