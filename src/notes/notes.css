@@ -131,6 +131,7 @@ input[type=checkbox] {
 }
 
 .input-group {
+    height: 4vw;
     border: 0.1vw solid #364153;
     border-radius: 1vw;
     padding: 1vw 0;
@@ -143,9 +144,14 @@ input[type=checkbox] {
     position: relative;
     cursor: pointer;
 
+    &:hover,
+    &:focus-within {
+        border-color: #5ea500;
+    }
+
     @media (max-width: 1024px) {
         height: 10vw;
-        font-size: 5vw;
+        font-size: 6vw;
         width: 100%;
         display: flex;
         align-items: center;
@@ -153,12 +159,12 @@ input[type=checkbox] {
         grid-row: 1;
         grid-column: 1 / 5;
         border-radius: 3vw;
-    }
-}
+        transition: 300ms height;
 
-.input-group:focus-within,
-.input-group:hover {
-    border-color: #5ea500;
+        &:focus-within {
+            height: 14vw;
+        }
+    }
 }
 
 .search-input {
@@ -197,29 +203,48 @@ input[type=checkbox] {
     padding: 0 1vw;
 }
 
-.select-element {
-    height: 4.25vw;
-    justify-content: space-between;
-    white-space: nowrap;
-    font-size: 1.75vw;
-    padding: 1vw;
-    border: 0.1vw solid #364153;
-    border-radius: 1vw;
-    background-color: #1f1f1f;
-    color: #6a7282;
-    position: relative;
-    transition: border 300ms, opacity 300ms, filter 300ms, pading 300ms, max-width 300ms;
-    min-width: 25%;
-    text-wrap: nowrap;
+.notes-select {
     display: flex;
+    align-items: center;
+    --rac-arrow-padding: 0;
+    --rac-duration: 300ms;
+    --rac-select-color: #6a7282;
+    --rac-select-height: 4vw;
+    --rac-select-padding: 0.5vw 1vw;
+    --rac-list-background: #1f1f1f;
+    --rac-scroll-color: var(--blck-bc-hvr);
+    --rac-scroll-track: var(--blck-bc);
+    --rac-arrow-height: 1.75vw;
+    --rac-arrow-width: 1.75vw;
+    --rac-cancel-height: 1.75vw;
+    --rac-cancel-width: 1.75vw;
+    font-size: 1.75vw;
+    white-space: nowrap;
+    --rac-select-border: 0.1vw solid #364153;
+    border-radius: 1vw;
+    --rac-select-background: #1f1f1f;
+    min-width: 25%;
+
+    --rac-option-hover: #777;
+    --rac-option-highlight: #606060;
+    --rac-option-selected: #4a4a4a;
+
+    &:hover,
+    &:focus {
+        outline: none;
+        border: 0.1vw solid #5ea500;
+    }
 
     @media (max-width: 1024px) {
+        --rac-arrow-height: 6.5vw;
+        --rac-arrow-width: 6.5vw;
+        --rac-select-height: 10vw;
+        --rac-cancel-height: 6.5vw;
+        --rac-cancel-width: 6.5vw;
         grid-row: 2;
         grid-column: 1 / 5;
         border-radius: 3vw;
-        height: 10vw;
         font-size: 5vw;
-        min-width: 100%;
     }
 }
 
@@ -228,16 +253,9 @@ input[type=checkbox] {
     grid-column: 1 / 4;
 }
 
-.select-element:focus-within,
-.select-element:hover {
-    outline: none;
-    box-shadow: none;
-    border-color: #5ea500;
-}
-
-.select-head {
+.rac-select-title {
     margin: 0;
-    display: inline-block;
+    display: inline-flex;
     width: fit-content;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -249,80 +267,18 @@ input[type=checkbox] {
     }
 }
 
-.select-buttons {
-    display: flex;
-}
-
-.cancel-select {
-    transition: opacity 300ms, border 300ms, max-width 300ms;
-    opacity: var(--opacity);
-    border: 0.1vw solid transparent;
-    border-radius: 25%;
-    width: 1.75vw;
-    height: 1.75vw;
-
-    @media (max-width: 1024px) {
-        max-width: auto;
-        width: 6.5vw;
-        height: 6.5vw;
-    }
-}
-
-.cancel-select:hover,
-.cancel-select:focus {
-    border: 0.1vw solid var(--def-btn);
-    outline: none;
-    border: 0.1vw solid transparent;
-}
-
-.select-icon {
-    transition: transform 300ms, border 300ms;
-    transform: rotate(var(--arrow-direction));
-    border: 0.1vw solid transparent;
-    border-radius: 25%;
-    width: 1.75vw;
-    height: 1.75vw;
-
-    @media (max-width: 1024px) {
-        width: 6.5vw;
-        height: 6.5vw;
-    }
-}
-
-.select-icon:hover,
-.select-icon:focus {
-    outline: none;
-    border-radius: 0.5vw;
-    border: 0.1vw solid transparent;
-}
-
-.select-list {
+.rac-select-list {
     max-height: 350px;
-    overflow: auto;
-    scrollbar-gutter: stable;
-    z-index: 1;
-    transition: 300ms border, 300ms background-color, 300ms opacity, pading 300ms;
-    background-color: var(--select-background);
-    border: var(--select-border);
+    color: var(--def-white);
     padding: 1vw;
     border-radius: 1vw;
-    width: 100%;
-    opacity: var(--opacity);
 }
 
-.select-option {
+.rac-select-option {
     padding: 0.4vw 0.5vw;
     border-radius: 1vw;
-    transition: background-color 300ms, border-radius 300ms;
     text-overflow: ellipsis;
     overflow: hidden;
-}
-
-.select-option:hover,
-.select-option:focus {
-    outline: none;
-    background-color: white;
-    border-radius: 0.5vw;
 }
 
 .notes-view {

@@ -445,14 +445,14 @@ a {
 .navbar-name {
     text-wrap: nowrap;
     margin: 0;
-    font-size: 1.25vw;
+    font-size: 1vw;
 }
 
 .navbar-email {
     text-wrap: nowrap;
     margin: 0;
     max-width: 110px;
-    font-size: 1vw;
+    font-size: 0.5vw;
 }
 
 .logout-icon {

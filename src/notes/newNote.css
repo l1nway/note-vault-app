@@ -555,28 +555,46 @@
 }
 
 .newnote-category-select {
+    --rac-list-background: #252525;
+    --rac-scroll-color: var(--blck-bc);
+    --rac-scroll-track: var(--blck-bc-hvr);
+    --rac-arrow-padding: 0;
+    --rac-arrow-height: 1em;
+    --rac-arrow-width: 1em;
+    --rac-cancel-height: 1em;
+    --rac-cancel-width: 1em;
+
+    --rac-option-hover: #777;
+    --rac-option-highlight: #606060;
+    --rac-option-selected: #4a4a4a;
     height: 4vw;
-    position: relative;
     width: 100%;
     background-color: var(--blck-bc-hvr);
     color: var(--def-white);
     border: 0.1vw solid transparent;
     outline: none;
     border-radius: 1vw;
-    caret-color: var(--def-white);
-    transition: 300ms border;
-    justify-content: space-between;
     display: flex;
     align-items: center;
-    padding: 0vw 0vw 0vw 1vw;
+    padding: 1vw;
     font-size: 1.5vw;
-    transition: 300ms font-size;
 
     @media (max-width: 1024px) {
         font-size: 6vw;
         height: 10vw;
         border-radius: 2vw;
         padding: 2vw;
+    }
+}
+
+.rac-select-cancel {
+    padding: 1vw;
+    height: 2.5em;
+    width: 2.5em;
+
+    @media (max-width: 1024px) {
+        height: 1.5em;
+        width: 1.5em;
     }
 }
 
@@ -664,10 +682,8 @@
     border: 0.1vw solid transparent;
 }
 
-.newnote-select-list {
+.rac-select-list {
     z-index: 1;
-    transition: 300ms border, 300ms background-color, 300ms opacity, 300ms pading, 300ms height;
-    background-color: var(--select-background);
     border: var(--select-border);
     padding: 1vw;
     border-radius: 1vw;

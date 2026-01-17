@@ -1,5 +1,6 @@
 
 import {useTranslation} from 'react-i18next'
+import {Select} from 'react-animated-select'
 import {useMemo, useCallback} from 'react'
 
 import MDEditor from '@uiw/react-md-editor'
@@ -8,8 +9,6 @@ import {faTriangleExclamation, faXmark, faArrowUp as faArrowUpSolid, faBookmark 
 
 import SlideDown from '../components/slideDown'
 import SlideLeft from '../components/slideLeft'
-import Options from '../components/options'
-import useSelect from '../components/useSelect'
 
 import {appStore} from '../store'
 import {apiStore} from '../store'
@@ -22,60 +21,19 @@ function NoteForm({state, actions, refs}) {
     const tags = appStore(state => state.tags)
 
     const {loading, errors, note, visibility} = state
-    const {setVisibility, selectTag, markdownToggle, retryLoad, setNote, setErrors, setTextareaFocus} = actions
+    const {selectTag, markdownToggle, retryLoad, setNote, setErrors, setTextareaFocus} = actions
 
-    const {inputRef, selectRef, tagRef, markdownRef} = refs
+    const {inputRef, tagRef, markdownRef} = refs
 
     const tagsDisabled = useMemo(
         () => (tags?.length ?? 0) == 0,
         [tags]
     )
 
-    const openSelect = useMemo(() => (
-        note.category.name !== 'Category not selected' &&
-        note.category.name !== 'Error loading categories' &&
-        note.category.name !== 'No categories created' &&
-        note.category.name !== 'Loading categories'
-    ), [note.category.name])
-
-    const clearSelect = useMemo(() => (
-        note.category.name !== 'Error loading categories' &&
-        note.category.name !== 'No categories created' &&
-        note.category.name !== 'Loading categories'
-    ), [note.category.name])
-
-    const renderCategories = useMemo(() => 
-        categories?.map((element, index) =>
-            <div
-                className='newnote-select-option'
-                onClick={() => {
-                    setNote(prev => ({
-                        ...prev,
-                        category: element
-                    }))
-                    setVisibility(prev => ({...prev, category: false}))
-                }}
-                tabIndex='0'
-                key={element.id}
-            >
-                {element.name}
-            </div>
-    ), [categories])
-
     const catsDisabled = useMemo(
         () => (categories?.length ?? 0) == 0 || loading || errors.categories,
         [categories, loading]
     )
-
-    const setCategoryOpen = useCallback((categoryOpen) => {
-        setVisibility(prev => ({...prev, category: categoryOpen}))
-    }, [setVisibility])
-
-    const categorySelect = useSelect({
-        disabled: catsDisabled,
-        isOpen: visibility.category,
-        setIsOpen: setCategoryOpen
-    })
 
     // display list of tags
     const renderTags = useMemo(() => 
@@ -188,10 +146,6 @@ function NoteForm({state, actions, refs}) {
                     ${loading ? '--loading' : ''}
                     `
                 }
-                onClick={!catsDisabled && categorySelect.handleToggle}
-                onBlur={!catsDisabled && categorySelect.handleBlur}
-                onFocus={!catsDisabled && categorySelect.handleFocus}
-                onKeyDown={!catsDisabled && categorySelect.handleKeyDown}
             >
                 <div
                     className='newnote-category-title'
@@ -212,73 +166,29 @@ function NoteForm({state, actions, refs}) {
                         />
                     </SlideLeft>
                 </div>
-                <div
-                    className={`newnote-category-select 
-                        ${catsDisabled && !errors.categories ? '--loading-hvr' : ''} 
-                        ${errors.categories ? '--cats-error-hvr' : ''}`
+                <Select
+                    ArrowIcon={
+                        <FontAwesomeIcon
+                            className='select-icon'
+                            icon={faArrowUpSolid}
+                        />
                     }
-                    tabIndex={note.categories?.length == 0 ? -1 : 0}
-                    ref={selectRef}
-                >
-                    <div
-                        className='category-select-title'
-                    >
-                        {t(note.category?.name)}
-                        <SlideLeft
-                            visibility={loading}
-                        >
-                            <span className='loading-dots'>
-                                <i></i><i></i><i></i>
-                            </span>
-                        </SlideLeft>
-                    </div>
-                    <div
-                        className='newnote-select-buttons'
-                    >
-                        <SlideLeft
-                            visibility={openSelect}
-                        >
-                            <FontAwesomeIcon
-                                className='newnote-category-cancel'
-                                icon={faXmark}
-                                tabIndex='0'
-                                onClick={() => setNote(prev => ({
-                                    ...prev,
-                                    category: {name: 'Category not selected'}
-                                }))}
-                            />
-                        </SlideLeft>
-                        <SlideLeft
-                            visibility={clearSelect}
-                            >
-                            <FontAwesomeIcon
-                                className={`newnote-category-arrow 
-                                    ${(catsDisabled && !errors.categories) ? '--loading-hvr' : ''} 
-                                    ${errors.categories ? '--cats-error-hvr' : ''}`
-                                }
-                                icon={faArrowUpSolid}
-                                style={{
-                                    '--arrow-direction': visibility.category ? '0deg' : '180deg'
-                                }}
-                            />
-                        </SlideLeft>
-                    </div>
-                    <Options
-                        visibility={visibility.category}
-                        selectRef={selectRef}
-                    >
-                        <div
-                            className='newnote-select-list'
-                            style={{
-                                '--select-border': visibility.category ? '0.1vw solid #2a2f38' : '0.1vw solid transparent',
-                                '--select-background': visibility.category ? '#1f1f1f' : 'transparent',
-                                '--opacity': visibility.category ? 1 : 0
-                            }}
-                        >
-                            {renderCategories}
-                        </div>
-                    </Options>
-                </div>
+                    className='newnote-category-select'
+                    placeholder={t('Category not selected')}
+                    emptyText={t('No categories created')}
+                    loadingText={t('Categories loading')}
+                    errorText={t('Error loading categories')}
+                    disabledText={t('No categories created')}
+                    loading={loading}
+                    error={errors.categories}
+                    disabled={catsDisabled}
+                    options={categories}
+                    onChange={(e) => 
+                        setNote(prev => ({
+                            ...prev,
+                            category: e
+                        }))}
+                />
             </label>
             {/* TAG PICKER */}
             <label

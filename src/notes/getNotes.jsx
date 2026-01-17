@@ -19,8 +19,8 @@ const getNotes = async (
     )
 
     try {
-        setNotesLoading(true)
-        setNotesError(false)
+        setNotesLoading?.(true)
+        setNotesError?.(false)
 
     const res = await fetch(
     `https://api.notevault.pro/api/v1/notes${queryString}`,
@@ -35,14 +35,14 @@ const getNotes = async (
     if (!res.ok) throw new Error('Fetch failed')
     
     const resData = await res.json()
-    page == 1 ? setNotes(resData.data) : setNotes(prev => [...prev, ...resData.data])
+    page == 1 ? setNotes?.(resData.data) : setNotes?.(prev => [...prev, ...resData.data])
 
     setLastPage?.(resData.last_page)
 } catch (error) {
-    setNotesMessage(error.message)
-    setNotesError(true)
+    setNotesMessage?.(error.message)
+    setNotesError?.(true)
 } finally {
-    setNotesLoading(false)
+    setNotesLoading?.(false)
 }}
 
 export default getNotes

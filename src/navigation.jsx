@@ -247,8 +247,8 @@ function Navigation() {
             store.setState({}, true)
         })
 
-        navigate('/login')
-    }, [navigate])
+        window.location.href = '/login'
+    }, [])
 
     return(
         <>

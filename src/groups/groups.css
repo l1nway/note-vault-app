@@ -461,6 +461,9 @@
 }
 
 .group-title-top {
+    max-width: 14vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
@@ -533,6 +536,8 @@
     @media (max-width: 1024px) {
         min-height: 8vw;
         min-width: 8vw;
+        max-width: 8vw;
+        max-height: 8vw;
     }
 }
 

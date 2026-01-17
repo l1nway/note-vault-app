@@ -7,9 +7,8 @@ import Cookies from 'js-cookie'
 
 import Navigation from './navigation'
 import Login from './login'
-// import Test from './test'
 
-import {apiStore, appStore, pendingStore} from './store'
+import {apiStore, appStore} from './store'
 import useOfflineSync from './components/useOfflineSync'
 
 function App() {
@@ -56,6 +55,7 @@ function App() {
   // — framer-motion
   // — react-i18next
   // — TanStack Query
+  // — react-responsive
   // — React Hotkeys Hook
   // — react-color-palette
   // — use-gesture by pmndrs
@@ -97,7 +97,6 @@ function App() {
               <Route path='/login' element={<Login/>}/>
               <Route path='/register' element={<Login/>}/>
               <Route path='/*' element={<Navigation/>}/>
-              {/* <Route path='/select' element={<Test/>}/> */}
             </Routes>
           </div>
         </CSSTransition>

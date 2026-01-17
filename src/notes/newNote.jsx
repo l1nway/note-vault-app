@@ -52,28 +52,28 @@ function NewNote() {
     const [offline, setOffline] = useState(Cookies.get('offline') == 'true')
 
     const hotkeys = useMemo(() => [{
-        key: 'mod+z, esc',
+        key: 'esc',
         trigger: () => {
             if (textareaFocus) return
             navigate(-1)
         }
     },{
-        key: 'mod+s, alt+s, shift+s',
+        key: 'alt+s',
         trigger: () => saveButton()
     },{
-        key: 'mod+n, alt+n, shift+n',
+        key: 'alt+n',
         trigger: () => inputRef.current?.focus()
     },{
-        key: 'mod+c, alt+c, shift+c',
+        key: 'alt+c',
         trigger: () => {
             selectRef.current?.focus()
             setVisibility(prev => ({...prev, category: !prev.category}))
         }
     },{
-        key: 'mod+t, alt+t, shift+t',
+        key: 'alt+t',
         trigger: () => tagRef.current?.focus()
     },{
-        key: 'mod+m, alt+m, shift+m',
+        key: 'alt+m',
         trigger: () => {
             if (textareaFocus) return
             markdownRef.current?.focus()
