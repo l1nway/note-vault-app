@@ -49,7 +49,6 @@ const getGroups = async (
 
         const resData = await res.json()
         setGroups(resData)
-        console.log(resData)
         setLastPage?.(resData.last_page)
         setLoadingError(false)
     } catch (error) {

@@ -188,7 +188,7 @@ function authLogic() {
             guestact: "let's try"
         },
         login: {
-            title: 'welcome back',
+            title: 'Welcome back',
             desc: 'sign in to access your notes',
             button: 'sign in',
             google: 'sign with Google',

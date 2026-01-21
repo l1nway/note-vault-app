@@ -1,19 +1,42 @@
-
-import {useState, useEffect, useRef, useCallback, useMemo} from 'react'
+import {useState, useEffect, useRef, useCallback, useMemo, ReactNode} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {useShallow} from 'zustand/react/shallow'
 import {faXmark, faSpinner, faTriangleExclamation, faArrowUp as faArrowUpSolid, faBookmark as faBookmarkSolid} from '@fortawesome/free-solid-svg-icons'
 import {ColorPicker, useColor} from 'react-color-palette'
 import 'react-color-palette/css'
 
-import SlideLeft from './slideLeft'
+import SlideLeftJSX from './slideLeft'
 
 import {pendingStore, apiStore, appStore} from '../store'
 import {clarifyValue} from './clarifyTexts'
 import SlideDown from './slideDown'
 import {shake, clearShake} from '../components/shake'
 
-const ClarifyView = ({t, logic, props, renderColors}) => {
+type ViewProps = {
+    t: (key: string) => string
+    logic: {
+        state: any
+        actions: any
+        pathData: any
+    }
+    props: {
+        name: string | undefined
+        setName?: ((value: string) => void | undefined) | undefined
+        color?: string | undefined
+        setColor?: ((value: string) => void | undefined) | undefined
+        setID?: ((value: string) => void | undefined) | undefined
+    }
+    renderColors: ReactNode[]
+}
+
+const SlideLeft = SlideLeftJSX as React.FC<{
+    visibility: boolean
+    children: React.ReactNode
+    duration?: number
+    unmount?: boolean
+}>
+
+const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
 
     const online = apiStore(state => state.online)
     const schedule = pendingStore(state => state.schedule)
@@ -30,7 +53,9 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
     const {path, effectivePath} = pathData
     const {closeAnim, get, setLoadingError, setClarifyLoading, offlineChange, change} = actions
 
-    const clarify = clarifyValue[effectivePath]?.[action]
+    const clarify = clarifyValue
+        [effectivePath as keyof typeof clarifyValue]?.
+        [action as keyof typeof clarifyValue[keyof typeof clarifyValue]]
 
     const [color, setColor] = useColor(props.color ? props.color : 'white')
 
@@ -40,13 +65,13 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
 
     const disabled = useMemo(() => loadingError || (!offlineMode && !online) || clarifyLoading || ((action == 'new' || action == 'edit') && props.name == ''), [loadingError, offlineMode, online, clarifyLoading, action, props.name])
 
-    const inputRef = useRef(null)
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const [inputNull, setInputNull] = useState(false)
 
-    // useEffect(() => {
-    //     props?.setColor?.(color?.hex)
-    // }, [color])
+    useEffect(() => {
+        if (color?.hex) props?.setColor?.(color.hex)
+    }, [color, props])
 
     const clarifyCancel = useCallback(() => {
         closeAnim()
@@ -62,35 +87,23 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
             shake(inputRef.current)
             return
         }
-
-        // const context = {
-        //     id: props.id,
-        //     action: action,
-        //     name: props.name,
-        //     color: props.color,
-        //     path: path
-        // }
         
         offlineChange()
-        // if (action == 'force') {
-        //     schedule({
-        //         ...context,
-        //         onTimeout: () => offlineChange(context), 
-        //         onCommit: () => change(context) 
-        //     })
-        //     closeAnim()
-        // }
         
         props?.setName?.('')
         props?.setColor?.('')
         props?.setID?.('')
     }, [disabled, props, action, path, offlineChange, schedule, change, setArchive, setTrash, notes, online, closeAnim])
 
-    const clarifyInput = useCallback((e) => {
-        props.setName(e.target.value)
-        setInputNull(false)
-        clearShake(inputRef.current)
-    })
+    const clarifyInput = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            props.setName?.(e.target.value)
+            setInputNull(false)
+
+            if (inputRef.current) {
+                clearShake(inputRef.current)
+            }
+        },[props.setName])
 
     return (
         <div
@@ -107,7 +120,7 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
                 onClick={(e) => e.stopPropagation()}
                 style={{
                     '--loading': clarifyLoading ? '4px' : '0'
-                }}
+                } as React.CSSProperties}
             >
                 <div
                     className='clarify-head'
@@ -148,7 +161,7 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
                         onClick={closeAnim}
                         className='clarify-close'
                         icon={faXmark}
-                        tabIndex='0'
+                        tabIndex={0}
                     />
                 </div>
 
@@ -213,7 +226,7 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
                         icon={faArrowUpSolid}
                         style={{
                             '--arrow-direction': picker ? '0deg' : '180deg'
-                        }}
+                        } as React.CSSProperties & Record<string, string>}
                     />
                 </button>
                 <SlideDown
@@ -230,7 +243,6 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
                         <ColorPicker
                             color={color}
                             onChange={setColor}
-                            hideControls={false} 
                             hideInput={false}
                         />
                     </div>
@@ -241,7 +253,7 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
                 >
                     <label
                         className='clarify-custom-save'
-                        tabIndex='0'
+                        tabIndex={0}
                     >
                         <input
                             type='checkbox'
@@ -260,8 +272,8 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
                                 className='save-checkbox-icon'
                                 icon={faBookmarkSolid}
                                 style={{
-                                    '--opacity': save ? 1 : 0
-                                }}
+                                    '--opacity': save ? '1' : '0'
+                                } as React.CSSProperties & Record<string, string>}
                             />
                         </div>
                     </label>
@@ -289,7 +301,7 @@ const ClarifyView = ({t, logic, props, renderColors}) => {
                             : {
                                   '--btn-bg': 'var(--def-btn)',
                                   '--btn-bg-hvr': 'var(--def-btn-hvr)',
-                              }
+                              }  as React.CSSProperties & Record<string, string>
                     }
                 >
                     {t(clarify?.button)}

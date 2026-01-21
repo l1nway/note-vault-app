@@ -179,6 +179,7 @@ function NoteForm({state, actions, refs}) {
                     loadingText={t('Categories loading')}
                     errorText={t('Error loading categories')}
                     disabledText={t('No categories created')}
+                    value={note.category}
                     loading={loading}
                     error={errors.categories}
                     disabled={catsDisabled}

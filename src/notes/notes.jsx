@@ -34,7 +34,7 @@ function Notes() {
             setCategories: state.setCategories
     })))
 
-    const {notesError, setAction, setVisibility, animating, setAnimating, notesLoading, notesMessage, setClarifyLoading, retryFunction, setRetryFunction, setTag, setCategory, search, setSearch} = clarifyStore(
+    const {notesError, setAction, setVisibility, animating, setAnimating, notesLoading, notesMessage, setClarifyLoading, retryFunction, setRetryFunction, tag, setTag, setCategory, category, search, setSearch} = clarifyStore(
         useShallow(state => ({
             notesError: state.notesError,
             setAction: state.setAction,
@@ -326,6 +326,7 @@ function Notes() {
                     options={categories}
                     disabled={!categories?.length}
                     error={notesError}
+                    value={category?.id}
                     errorText={t('Error loading categories')}
                     disabledText={t('No categories created')}
                     placeholder={t('All categories')}
@@ -342,6 +343,7 @@ function Notes() {
                         />
                     }
                     offset={0}
+                    value={tag}
                     className='notes-select --mobile'
                     options={tags}
                     disabled={!tags?.length}

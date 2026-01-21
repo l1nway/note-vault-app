@@ -396,7 +396,7 @@
 
 .--input {
     position: absolute !important;
-    left: 23.5% !important;
+    left: 19% !important;
     top: 60% !important;
     padding: 0 !important;
     align-items: baseline !important;
@@ -555,9 +555,9 @@
 }
 
 .newnote-category-select {
-    --rac-list-background: #252525;
-    --rac-scroll-color: var(--blck-bc);
-    --rac-scroll-track: var(--blck-bc-hvr);
+    --rac-list-background: #111111;
+    --rac-scroll-color: var(--blck-bc-hvr);
+    --rac-scroll-track: var(--blck-bc);
     --rac-arrow-padding: 0;
     --rac-arrow-height: 1em;
     --rac-arrow-width: 1em;
@@ -585,6 +585,15 @@
         border-radius: 2vw;
         padding: 2vw;
     }
+}
+
+.rac-error-style {
+    border: var(--rac-select-border-error) !important;
+}
+
+.rac-disabled-style,
+.rac-loading-style {
+    opacity: 1;
 }
 
 .rac-select-cancel {
@@ -683,12 +692,15 @@
 }
 
 .rac-select-list {
-    z-index: 1;
     border: var(--select-border);
     padding: 1vw;
     border-radius: 1vw;
     width: 100%;
     opacity: var(--opacity);
+    
+    @media (max-width: 1024px) {
+        padding: 2.5vw 2.5vw;
+    }
 }
 
 .newnote-select-option {
@@ -880,7 +892,6 @@
 .newnote-content-textarea,
 .newnote-content-markdown {
     width: 100%;
-    height: 15vw;
     min-height: 5vw;
     /* max-height: 15vw; */
     font-size: 2vw;

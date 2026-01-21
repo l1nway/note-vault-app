@@ -36,13 +36,6 @@ function NoteEditor() {
     
     const {createNote, getNote, editNote, getTags, getCategories} = useApi(token)
     
-    const catsDisabled = useMemo(
-        () => (categories?.length ?? 0) == 0,
-        [categories]
-    , [categories])
-
-    const placeholder = useMemo(() => catsDisabled ? {name: 'No categories created'} : {name: 'Category not selected'}, [catsDisabled])
-    
     // 
     const inputRef = useRef(null)
     const selectRef = useRef(null)
@@ -66,7 +59,6 @@ function NoteEditor() {
     const [note, setNote] = useState({
         name: '',
         content: '',
-        category: {name: 'Loading categories'},
         categories: [],
         tags: [],
         selectedTags: [],
@@ -121,15 +113,6 @@ function NoteEditor() {
             try {
                 // flagging that saving is occurring
                 setSaving(true)
-                // optimistic note creation
-                // setNotes(notes => [{
-                //     ...noteData,
-                //     id: tempId,
-                //     tempId,
-                //     syncing: true,
-                //     syncAction: 'create',
-                //     created_at: new Date().toISOString(),
-                // }, ...notes])
 
                 // server responds successfully -- the synchronization flag is removed
                 const serverNote = await createNote(noteData)
@@ -241,13 +224,15 @@ function NoteEditor() {
             setNote(prev => ({
                 ...prev,
                 name: resData.title,
-                category: resData.category ?? placeholder,
+                category: resData.category,
                 content: resData.content,
                 markdown: resData.is_markdown === 1,
                 selectedTags: resData.tags
             }))
             setVisibility(v => ({...v, markdown: resData.is_markdown == 1}))
             setErrors(error => ({...error, global: false}))
+
+            console.log(resData.category)
         } catch (error) {
             setErrors(prev => ({
                 ...prev,
@@ -281,8 +266,7 @@ function NoteEditor() {
             setCategories(categories)
             setNote(prev => ({
                 ...prev,
-                categories,
-                category: placeholder
+                categories
             }))
             setErrors(prev => ({
                 ...prev,
@@ -292,10 +276,6 @@ function NoteEditor() {
             setErrors(prev => ({
                 ...prev,
                 categories: true
-            }))
-            setNote(prev => ({
-            ...prev,
-                category: {name: 'Error loading categories'}
             }))
     }}, [getCategories, setCategories])
 
@@ -338,10 +318,6 @@ function NoteEditor() {
     }}, [loadCats, loadTags, loadNote])
 
     const retryLoad = useCallback(() => {
-        setNote(prev => ({
-            ...prev,
-            category: {name: 'Loading categories'}
-        }))
         setErrors(prev => ({
                 ...prev,
                 global: false,
@@ -385,7 +361,6 @@ function NoteEditor() {
     const turnOfflineMode = useCallback(() => {
         setNote(prev => ({
                 ...prev,
-                category: placeholder,
                 categories: offlineCategories,
                 tags: offlineTags
             }))
@@ -411,14 +386,14 @@ function NoteEditor() {
                     ...prev,
                     name: offlineNote.title,
                     categories: offlineCategories,
-                    category: offlineNote.category ?? placeholder,
+                    category: offlineNote.category,
                     content: offlineNote.content,
                     markdown: offlineNote.is_markdown == 1,
                     tags: offlineTags,
                     selectedTags: offlineNote.tags
                 }))
             }
-    }}, [placeholder, offlineCategories, offlineTags, location.state])
+    }}, [offlineCategories, offlineTags, location.state])
 
     const turnOnlineMode = useCallback(() => {
         setErrors(prev => ({
@@ -436,8 +411,7 @@ function NoteEditor() {
         } else {
             setLoading(false)
             setNote(prev => ({
-                ...prev,
-                category: placeholder
+                ...prev
             }))
             setErrors(prev => ({
                 ...prev,
@@ -459,8 +433,7 @@ function NoteEditor() {
         if (offlineMode) {
             turnOfflineMode()
             setNote(prev => ({
-                ...prev,
-                category: placeholder
+                ...prev
             }))
         }
 
@@ -488,20 +461,11 @@ function NoteEditor() {
         setNote(prev => ({
             ...prev,
             name: '',
-            category: placeholder,
+            category: '',
             content: '',
             markdown: false,
             selectedTags: []
     }))}, [])
-
-    useEffect(() => {
-        if (errors.categories) {
-            setNote(prev => ({
-                ...prev,
-                category: {name: 'Error loading categories'}
-            }))
-        }
-    }, [errors.categories])
 
     const state = useMemo(() => ({loading, errors, saving, note, visibility, textareaFocus}), [loading, errors, saving, note, visibility, textareaFocus])
 

@@ -176,11 +176,11 @@ input[type=checkbox] {
     outline: none;
     box-shadow: none;
     text-overflow: ellipsis;
+    color: white;
 
     @media (max-width: 1024px) {
         font-size: 5vw;
         height: 9vw;
-        color: white;
     }
 }
 
@@ -223,7 +223,7 @@ input[type=checkbox] {
     --rac-select-border: 0.1vw solid #364153;
     border-radius: 1vw;
     --rac-select-background: #1f1f1f;
-    min-width: 25%;
+    min-width: 28%;
 
     --rac-option-hover: #777;
     --rac-option-highlight: #606060;

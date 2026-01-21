@@ -7,6 +7,7 @@ import Cookies from 'js-cookie'
 
 import Navigation from './navigation'
 import Login from './login'
+import RAC from './rac'
 
 import {apiStore, appStore} from './store'
 import useOfflineSync from './components/useOfflineSync'
@@ -97,6 +98,7 @@ function App() {
               <Route path='/login' element={<Login/>}/>
               <Route path='/register' element={<Login/>}/>
               <Route path='/*' element={<Navigation/>}/>
+              <Route path='/react-animated-select' element={<RAC/>}/>
             </Routes>
           </div>
         </CSSTransition>

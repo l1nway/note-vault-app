@@ -4,7 +4,8 @@ import {initReactI18next} from 'react-i18next'
 const resources = {
   ru: {
     translation: {
-      'welcome back': 'добро пожаловать, снова',
+      'Auto switch to offline mode' : 'Автоматическое переключение в автономный режим',
+      'Welcome back': 'Добро пожаловать, снова',
       'sign in to access your notes': 'выполните авторизацию, чтобы получить доступ к своим записям',
       'password': 'пароль',
       'remember me': 'запомнить меня',
@@ -282,7 +283,8 @@ const resources = {
 
   pl: {
     translation: {
-      'welcome back': 'Witaj ponownie',
+      'Auto switch to offline mode': 'Automatyczne przełączanie w tryb offline',
+      'Welcome back': 'Witaj ponownie',
       'sign in to access your notes': 'Zaloguj się, aby uzyskać dostęp do swoich notatek',
       'password': 'hasło',
       'remember me': 'zapamiętaj mnie',
