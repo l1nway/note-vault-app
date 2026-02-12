@@ -97,8 +97,8 @@ const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setT
             layoutId={note.id}
             layout={visible}
             viewport={{once: false, amount: 0.1, margin: '0px 0px 0px 0px'}}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{opacity: 0, scale: 0.9}}
+            whileInView={{opacity: 1, scale: 1}}
             transition={{
                 layout: { 
                     type: 'spring', 

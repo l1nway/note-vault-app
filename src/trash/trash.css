@@ -70,7 +70,7 @@
     border: 0.1vw solid var(--blck-bc-hvr);
     border-radius: 1vw;
     background-color: var(--blck-bc);
-    color: #6a7282;
+    color: #F0EDF5;
     transition: border 300ms;
     z-index: 0;
 
@@ -130,24 +130,17 @@
 }
 
 .trash-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
     display: flex;
     flex-direction: row;
-    gap: 1vw;
     flex-wrap: wrap;
     /* justify-content: space-between; */
     width: 100%;
     display: flex;
     min-height: 0;
     padding-bottom: 1.25vw;
-}
-
-.trash-main > .slideDown-enter-done,
-.trash-main > .slideDown-exit-active,
-.trash-main > .slideDown-exit,
-.trash-main > .slideDown-enter,
-.trash-main > .slideDown-enter-active {
-    overflow-y: auto !important;
-    scrollbar-gutter: stable;
 }
 
 .trash-button-checkbox {
@@ -187,7 +180,7 @@ input[type=checkbox] {
 .view-icon:hover {
     outline: none;
     box-shadow: none;
-    border-color: #5ea500;
+    border-color: var(--def-btn-hvr);
     /* border-color: blueviolet; */
 }
 
@@ -201,7 +194,7 @@ input[type=checkbox] {
     padding: 1vw;
     border: 0.1vw solid #1a2330;
     border-radius: 2vw;
-    background-color: #151515;
+    background-color: var(--blck-bc);
     transition: 
         border 300ms,
         max-height 300ms,
@@ -270,7 +263,7 @@ input[type=checkbox] {
     max-height: 3.5vw;
     color: #808692;
     padding-bottom: 1vw;
-    background-color: #151515;
+    background-color: var(--blck-bc);
 }
 
 .trash-title,

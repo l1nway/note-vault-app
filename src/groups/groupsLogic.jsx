@@ -101,14 +101,6 @@ function groupsLogic() {
         getGroups(path, setErrorMessage, page, setLastPage)
     }, [online, token, path])
 
-    useEffect(() => {
-        if (!online && Cookies.get('offline') !== 'true') {
-            setLoadingError(true)
-            setErrorMessage('No internet connection')
-            setLoading(false)
-        }
-    }, [online, setLoadingError, setErrorMessage])
-
     const openAnim = useCallback((action, id) => {
         if (animating == true) {
             return false

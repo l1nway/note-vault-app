@@ -291,18 +291,3 @@ input:focus {
     outline: none;
     background-color: var(--del-btn-hvr);
 }
-
-button {
-    cursor: pointer;
-    transition: 300ms background-color, 300ms border;
-}
-
-button:focus {
-    transition: 300ms background-color, 300ms border;
-    outline: none;
-    border: 0.25vw solid var(--blck-bc-fcs);
-
-    @media (max-width: 1024px) {
-        border: 1vw solid var(--blck-bc-fcs);
-    }
-}

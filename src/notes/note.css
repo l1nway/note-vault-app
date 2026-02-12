@@ -241,7 +241,7 @@
 }
 
 .note-info .wmde-markdown {
-    background-color: black;
+    background-color: transparent;
 
     @media (max-width: 1024px) {
         padding: 0vw 0vw 4vw;

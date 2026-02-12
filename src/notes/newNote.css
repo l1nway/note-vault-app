@@ -1,35 +1,33 @@
 .newnote-main {
     padding: 15px 2vw 0 2vw;
-    height: 100%;
     overflow: hidden;
+    height: 82vh;
     width: 100%;
 
     @media (max-width: 1024px) {
+        flex-direction: column;
+        padding: 0 2vw 0 2vw;
+        height: fit-content;
+        overflow-y: auto;
         display: flex;
-        flex-direction: column-reverse;
-        gap: 8vw;
-        overflow: auto;
+        width: 100%;
     }
 }
 
 .back-notes {
+    border: 0.1vw solid transparent;
+    background-color: transparent;
+    align-items: center;
+    border-radius: 1vw;
     font-size: 2vw;
     display: flex;
-    align-items: center;
-    gap: 1vw;
-    border: 0.1vw solid transparent;
-    border-radius: 1vw;
     padding: 0.5vw;
     color: gray;
-    background-color: transparent;
+    gap: 1vw;
     transition:
         300ms border,
         300ms background-color,
         300ms color;
-
-    @media (max-width: 1024px) {
-        display: none;
-    }
 }
 
 .back-notes:hover,
@@ -45,7 +43,7 @@
     justify-content: space-between;
 
     @media (max-width: 1024px) {
-        padding-top: 4vw;
+        display: none;
     }
 }
 
@@ -164,13 +162,6 @@
 .newnote-buttons {
     gap: 1vw;
     display: flex;
-
-    @media (max-width: 1024px) {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 3vw;
-    }
 }
 
 .newnote-cancel-button {
@@ -410,7 +401,6 @@
 .newnote-input {
     width: 100%;
     background-color: var(--blck-bc-hvr);
-    color: var(--def-white);
     border: 0.1vw solid transparent;
     outline: none;
     padding: 1vw;
@@ -420,6 +410,21 @@
     height: 4.5vw;
     font-size: 2vw;
     transition: 300ms;
+    caret-color: blueviolet;
+    color: white;
+
+    &:hover {
+        border-color: rgba(255, 182, 255, 0.25);
+    }
+
+    &:focus {
+        background-color: rgba(50, 20, 40, 0.85);
+        border-color: #fdc4e1;
+    }
+
+    &::placeholder {
+        color: #F0EDF5;
+    }
 
     @media (max-width: 1024px) {
         font-size: 6vw;
@@ -427,12 +432,6 @@
         border-radius: 2vw;
         padding: 2vw;
     }
-}
-
-.newnote-input:focus,
-.newnote-input:hover {
-    outline: none;
-    border: 0.1vw solid var(--def-btn);
 }
 
 .newnote-input:disabled {
@@ -462,14 +461,14 @@
 }
 
 .--loading-input-error {
-    border: 0.1vw solid var(--del-btn-hvr) !important;
+    border: 0.1vw solid var(--del-btn) !important;
 }
 
 .newnote-input-error {
     font-size: 1.5vw;
     padding: 1vw 1vw 0vw;
     display: flex;
-    color: var(--del-btn-hvr);
+    color: var(--del-btn);
 
     @media (max-width: 1024px) {
         font-size: 6vw;
@@ -580,7 +579,7 @@
     font-size: 1.5vw;
 
     @media (max-width: 1024px) {
-        font-size: 6vw;
+        font-size: 5vw;
         height: 10vw;
         border-radius: 2vw;
         padding: 2vw;
@@ -591,9 +590,19 @@
     border: var(--rac-select-border-error) !important;
 }
 
-.rac-disabled-style,
+
 .rac-loading-style {
     opacity: 1;
+}
+.rac-disabled-style {
+    opacity: 0.75;
+    filter: grayscale(0.6) saturate(0.8);
+    cursor: not-allowed !important;
+
+    &:hover,
+    &:focus {
+        border-color: rgba(255, 182, 255, 0.25);
+    }
 }
 
 .rac-select-cancel {
@@ -649,7 +658,6 @@
 
 .newnote-category-arrow:hover,
 .newnote-category-arrow:focus {
-    border: 0.1vw solid var(--def-btn);
     outline: none;
 }
 
@@ -775,12 +783,13 @@
 }
 
 .newnote-tag-element {
-    background-color: var(--blck-bc-fcs);
+    background-color: var(--rcp-border);
     padding: 0.5vw 1vw;
     border-radius: 1vw;
     font-size: 1.5vw;
     border: 0.1vw solid transparent;
     transition: 300ms background-color, 300ms border;
+    cursor: pointer;
 
     @media (max-width: 1024px) {
         font-size: 6vw;
@@ -790,22 +799,22 @@
 }
 
 .newnote-tag-element:has(input:checked) {
-    background-color: var(--def-btn-hvr);
-    border: 0.1vw solid (--blck-bc-fcs);
+    background-color: var(--blck-bc);
+    border-color: var(--blck-bc-fcs);
 }
 
 .newnote-tag-element:hover,
 .newnote-tag-element:focus {
     outline: none;
     background-color: var(--blck-bc-hvr);
-    border: 0.1vw solid transparent;
+    border-color: var(--blck-bc-hvr);
 }
 
 .newnote-tag-element:has(input:checked):hover,
 .newnote-tag-element:has(input:checked):focus {
     outline: none;
-    background-color: var(--def-btn);
-    border: 0.1vw solid var(--blck-bc-hvr);
+    background-color: var(--blck-bc-hvr);
+    border-color: var(--blck-bc-fcs);
 }
 
 .tags-error-message {
@@ -900,7 +909,6 @@
 @media (max-width: 1024px) {
     .newnote-content-textarea,
     .newnote-content-markdown {
-        height: 30vw;
         max-height: 90vw;
         font-size: 3vw;
         min-height: 200px !important;
@@ -923,7 +931,7 @@
     height: 200px;
 
     @media (max-width: 1024px) {
-        font-size: 6vw;
+        font-size: 5vw;
     }
 }
 
@@ -1017,6 +1025,21 @@
     display: flex;
 }
 
+.w-md-editor-toolbar li {
+    
+    @media (max-width: 1024px) {
+        padding: 1rem 0rem !important;
+    }
+}
+
+.newnote-md-editor .w-md-editor-toolbar button {
+    
+    @media (max-width: 1024px) {
+        min-width: 2.5rem !important;
+        min-height: 2.5rem !important;
+    }
+}
+
 .newnote-content-markdown .w-md-editor {
     width: 100%;
     /* height: var(--dynamic-height) !important; */
@@ -1041,7 +1064,6 @@
     border-bottom: 0.1vw solid rgba(255, 255, 255, 0.08);
     border-radius: 1vw 1vw 0 0;
     
-
     @media (max-width: 1024px) {
         display: flex;
         flex-direction: row;

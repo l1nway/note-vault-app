@@ -234,10 +234,6 @@ function ProfileSettings() {
         }
     }, [tempFile])
 
-    const [offline, setOffline] = useState(
-        Cookies.get('offline') == 'true'
-    ) 
-
     return (
         <div
             className='profile-settings'
@@ -247,32 +243,6 @@ function ProfileSettings() {
             >
                 {t('Account settings')}
             </h2>
-            <label
-                className='settings-offline-mode'
-            >
-                <div
-                    className='settings-offline-title'
-                >
-                    {t('Auto switch to offline mode')}
-                </div>
-                <div
-                    className='settings-offline-checkbox'
-                >
-                    <input
-                        type='checkbox'
-                        className='settings-offline-techbox'
-                        checked={offline}
-                        onChange={e => {
-                            setOffline(e.target.checked)
-                            Cookies.set('offline', e.target.checked, {expires: 1})
-                        }}
-                    />
-                    <FontAwesomeIcon
-                        icon={faPlaneCircleCheck}
-                        className='settings-offline-logo'
-                    />
-                </div>
-            </label>
             <div
                 className='settings-buttons'
             >

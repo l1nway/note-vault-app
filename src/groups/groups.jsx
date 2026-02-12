@@ -2,7 +2,7 @@ import './groups.css'
 
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {motion, AnimatePresence} from 'framer-motion'
+import {motion} from 'framer-motion'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlane, faTableCells as faTableCellsSolid, faList as faListSolid, faFloppyDisk, faTriangleExclamation, faTrashCan, faSpinner} from '@fortawesome/free-solid-svg-icons'
@@ -144,22 +144,28 @@ function Groups() {
                     setOfflineMode={setOfflineMode}
                     path={path}
                 />
-                <SlideDown
-                    visibility={items?.length}
+                <motion.div
+                    className='groups-list'
                 >
-                    <motion.div
-                        className='groups-list'
-                    >
-                        {renderGroups}
-                        <ExtraObj
-                            listView={listView}
-                            loading={loading}
-                            page={page}
-                            lastPage={lastPage}
-                            loadMore={loadMore}
-                        />
-                    </motion.div>
-                </SlideDown>
+                    {!loading && !items?.length &&
+                        <div
+                            style={{display: 'flex', flexDirection: 'column'}}
+                            onClick={() => openAnim('new')}
+                            className='group-element'
+                        >
+                            <h2 className='group-title'>{t(`No ${path} yet`)}</h2>
+                            <p className='group-amount'>{t(`Create a ${path == 'tags' ? 'tag' : 'category'}?`)}</p>
+                        </div>
+                    }
+                    {renderGroups}
+                    <ExtraObj
+                        listView={listView}
+                        loading={loading}
+                        page={page}
+                        lastPage={lastPage}
+                        loadMore={loadMore}
+                    />
+                </motion.div>
             {action ?
                 <Clarify
                     ref={clarifyRef}

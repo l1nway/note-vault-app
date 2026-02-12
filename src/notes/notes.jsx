@@ -1,17 +1,18 @@
 import {useState, useEffect, useRef, useCallback, useMemo} from 'react'
-import {Select} from 'react-animated-select'
 import {useShallow} from 'zustand/react/shallow'
-import {Link} from 'react-router'
+import {Select} from 'react-animated-select'
 import {useTranslation} from 'react-i18next'
+import {Link} from 'react-router'
 
 import Cookies from 'js-cookie'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlane, faSpinner, faTrashCan, faTriangleExclamation, faMagnifyingGlass as faMagnifyingGlassSolid, faUserSlash, faArrowUp as faArrowUpSolid, faTableCells as faTableCellsSolid, faList as faListSolid, faXmark, faFloppyDisk} from '@fortawesome/free-solid-svg-icons'
+import {faPlane, faSpinner, faTrashCan, faTriangleExclamation, faMagnifyingGlass as faMagnifyingGlassSolid, faUserSlash, faArrowUp as faArrowUpSolid, faTableCells as faTableCellsSolid, faList as faListSolid, faFloppyDisk} from '@fortawesome/free-solid-svg-icons'
 
-import NotesList from './notesList'
 import SlideLeft from '../components/slideLeft'
 import Hotkey from '../components/hotkey'
+import NotesList from './notesList'
+import {Plus} from 'lucide-react'
 
 import {apiStore, appStore, clarifyStore, notesViewStore} from '../store'
 
@@ -65,7 +66,7 @@ function Notes() {
     const listRef = useRef(null)
     // ref is used to prevent a bug where focus is set on first load
     const firstRender = useRef(true)
-    const searchRef = useRef()
+    const searchRef = useRef(null)
     const categoryRef = useRef(null)
     const tagRef = useRef(null)
 
@@ -201,7 +202,9 @@ function Notes() {
         <div
             className='notes-main'
         >
-            {/* header  */}
+            <Link className='notes-new-mobile' to='new'>
+                <Plus className='notes-new-mobile-button'/>
+            </Link>
             <div
                 className='notes-top'
             >
@@ -210,7 +213,6 @@ function Notes() {
                 >
                     <h1
                         className='notes-title'
-                        title='браузерная подсказка'
                     >
                         {t('All notes')}
                     </h1>
@@ -288,6 +290,7 @@ function Notes() {
                 >
                     <FontAwesomeIcon
                         className='search-icon'
+                        style={{color: search ? '#fdc4e1' : '#F0EDF5'}}
                         icon={faMagnifyingGlassSolid}
                     />
                     <input
@@ -298,7 +301,7 @@ function Notes() {
                         onBlur={() => setSearchFocus(false)}
                         disabled={notesError || (!search && !notes?.length)}
                         className='search-input'
-                        style={{cursor: notesError || (!search && !notes?.length) ? 'not-allowed' : 'pointer'}}
+                        style={{cursor: notesError || (!search && !notes?.length) ? 'not-allowed' : 'text'}}
                         type='text'
                         value={search}
                         onChange={e => setSearch(e.target.value)}
@@ -314,13 +317,15 @@ function Notes() {
                         </div>
                 </label>
                 <Select
+                    tabIndex={categories?.length ? 0 : -1}
                     ArrowIcon={
                         <FontAwesomeIcon
                             className='select-icon'
                             icon={faArrowUpSolid}
                         />
                     }
-                    loading={notesLoading}
+                    loading={notesLoading && !categories?.length}
+                    optionsClassName='notes-select-options'
                     className='notes-select'
                     offset={0}
                     options={categories}
@@ -335,7 +340,9 @@ function Notes() {
                     onChange={setCategory}
                 />
                 <Select
-                    loading={notesLoading}
+                    tabIndex={tags?.length ? 0 : -1}
+                    loading={notesLoading && !tags?.length}
+                    optionsClassName='notes-select-options'
                     ArrowIcon={
                         <FontAwesomeIcon
                             className='select-icon'

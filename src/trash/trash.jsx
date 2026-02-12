@@ -178,45 +178,29 @@ function Trash() {
           </SlideLeft>
         </div>
       </header>
-        <SlideDown
-          visibility={listView}
+        <div
+          className='trash-list'
         >
-          <div
-            className='groups-table'
-          >
-              <p
-                className='tab-element'
-              >
-                {t('title & description')}
-              </p>
-              <p
-                className='tab-element'
-              >
-                {t(`${path == 'trash' ? 'archiving' : 'deleting'} date`)}
-              </p>
-              <p
-                className='tab-element'
-              >
-                {t('restore')}
-              </p>
-          </div>
-      </SlideDown>
-      <SlideDown
-        visibility={trash.length}
-      >
-          <div
-            className='trash-list'
-          >
-            {renderTrash}
-            <ExtraObj
-                listView={listView}
-                loading={path == 'trash' ? deletedLoading : archivedLoading}
-                page={page}
-                lastPage={lastPage}
-                loadMore={loadMore}
-            />
-          </div>
-      </SlideDown>
+          {((path == 'trash' ? !deletedLoading : !archivedLoading) && !trash.length) &&
+            <div className='note-animated-element'>
+              <div className='note-element'>
+                  <div className='note-top-group'>
+                      <h2 className='note-title'>
+                          {path == 'trash' ? t('Trash is empty') : t('Archive is empty')}
+                      </h2>
+                  </div>
+              </div>
+            </div>
+          }
+          {renderTrash}
+          <ExtraObj
+              listView={listView}
+              loading={path == 'trash' ? deletedLoading : archivedLoading}
+              page={page}
+              lastPage={lastPage}
+              loadMore={loadMore}
+          />
+        </div>
       {action ?
         <Clarify
           id={elementID}

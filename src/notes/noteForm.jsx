@@ -167,6 +167,7 @@ function NoteForm({state, actions, refs}) {
                     </SlideLeft>
                 </div>
                 <Select
+                    optionsClassName='notes-select-options'
                     ArrowIcon={
                         <FontAwesomeIcon
                             className='select-icon'

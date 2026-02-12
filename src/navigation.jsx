@@ -3,19 +3,15 @@ import {Link, useLocation, Route, Routes, useNavigate, Navigate} from 'react-rou
 import {useTranslation} from 'react-i18next'
 import {CSSTransition, TransitionGroup} from 'react-transition-group'
 import Cookies from 'js-cookie'
+import Privacy from './privacy'
 
 import './navigation.css'
 import './App.css'
 
+import {NotebookPen, FolderOpen, Tag, Archive, Trash2, NotebookText, LogOut, UserPen, Cookie, MoveLeft, Notebook} from 'lucide-react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faBook as faBookSolid} from '@fortawesome/free-solid-svg-icons'
-import {faNoteSticky as faNoteStickySolid} from '@fortawesome/free-solid-svg-icons'
-import {faFolder as faFolderSolid} from '@fortawesome/free-solid-svg-icons'
-import {faTag as faTagSolid} from '@fortawesome/free-solid-svg-icons'
-import {faBoxArchive as faBoxArchiveSolid} from '@fortawesome/free-solid-svg-icons'
-import {faTrash as faTrashSolid} from '@fortawesome/free-solid-svg-icons'
 import {faUser as faUserSolid} from '@fortawesome/free-solid-svg-icons'
-import {faArrowRightFromBracket as faArrowRightFromBracketSolid} from '@fortawesome/free-solid-svg-icons'
+import Dropdown from './dropdown'
 
 import {appStore, profileStore, notesViewStore, screenStore, clarifyStore, pendingStore, editorStore, settingStore, tokenStore} from './store'
 
@@ -136,7 +132,7 @@ function Navigation() {
     }
 
     const nodeRef = nodeRefs.current[locationKey]
-
+    
     useEffect(() => {
         setNowLink(location.pathname)
     }, [location])
@@ -145,28 +141,30 @@ function Navigation() {
         {
             title: 'All notes',
             link: '/notes',
-            icon: faNoteStickySolid,
-            color: '#f7e983'
+            icon: 
+                <Notebook 
+                    className='nav-icon'
+                    style={{color: '#f7e983'}}
+                />
         },{
             title: 'categories',
             link: '/categories',
-            icon: faFolderSolid,
-            color: '#ffce01'
+            icon: <FolderOpen 
+                className='nav-icon'
+                style={{color: '#f7e983'}}
+            />
         },{
             title: 'tags',
             link: '/tags',
-            icon: faTagSolid,
-            color: 'azure'
+            icon: <Tag style={{color: 'azure'}} className='nav-icon'/>
         },{
             title: 'archive',
             link: '/archived',
-            icon: faBoxArchiveSolid,
-            color: '#ffdaaa'
+            icon: <Archive style={{color: '#ffdaaa'}} className='nav-icon'/>
         },{
             title: 'trash',
             link: '/trash',
-            icon: faTrashSolid,
-            color: '#e5010b'
+            icon: <Trash2 style={{color: '#e5010b'}} className='nav-icon'/>
         }
     ], [])
 
@@ -197,11 +195,7 @@ function Navigation() {
                     <div
                         className='nav-title'
                     >
-                        <FontAwesomeIcon
-                            className='nav-icon'
-                            icon={element.icon}
-                            style={{color: element.color}}
-                        />
+                        {element.icon}
                         <div
                             className='nav-text'
                         >
@@ -250,6 +244,41 @@ function Navigation() {
         window.location.href = '/login'
     }, [])
 
+    const mobile = {
+        '/profile': {
+            label: 'Profile',
+            icon: <UserPen style={{color: 'azure'}} className='nav-icon' />
+        },
+        '/privacy': {
+            label: 'Privacy',
+            icon: <Cookie style={{color: 'azure'}} className='nav-icon' />
+        },
+        '/notes/new': {
+            label: 'New note',
+            icon: <NotebookPen style={{color: 'rgb(247, 233, 131)'}} className='nav-icon'/>
+        },
+        '/notes/edit': {
+            label: 'Edit note',
+            icon: <NotebookPen style={{color: 'rgb(247, 233, 131)'}} className='nav-icon'/>
+        },
+        '/notes/note':{
+            label: 'Note',
+            icon: <Notebook style={{color: 'rgb(247, 233, 131)'}} className='nav-icon'/>
+        }
+    }
+
+    const currentTitle = useMemo(
+        () => navlinks.find(l => location.pathname.startsWith(l.link))?.title,
+        [navlinks, location.pathname]
+    )
+
+    const currentNav = useMemo(
+        () => navlinks.find(l => location.pathname.startsWith(l.link)),
+        [navlinks, location.pathname]
+    )
+    
+    const dropdownRef = useRef(null)
+
     return(
         <>
             <div
@@ -258,43 +287,77 @@ function Navigation() {
                         <div
                             className='nav-logo'
                         >
-                            <FontAwesomeIcon
-                                className='logo-pic'
-                                icon={faBookSolid}
-                            />
-                            <div>
+                            <NotebookText className='logo-pic'/>
+                            <div className='nav-main-title'>
                                 Note Vault
                             </div>
-                        </div>
-
-                        <div
-                            className='nav-group'
-                            onClick={() => setMenu(!menu)}
-                            ref={navRef}
-                            tabIndex='1'
-                        >
-                            <div
-                                className={`hamburger-icon ${menu ? 'open' : ''}`}
-                            >
-                                <span/>
-                                <span/>
-                                <span/>
-                                <span/>
-                            </div>
-
-                            <div
-                                className={`nav-links ${menu ? 'visible' : ''}`}
-                                ref={navLinksWrapper}
-                            >
-                                {renderLinks}
-                                {ghost.active && (
-                                    <div
-                                        className={ghost.className}
-                                        style={ghost.style}
-                                    />
-                                )}
+                            <div className='nav-mobile-title'>
+                                {Object.entries(mobile).find(([key]) => location.pathname.startsWith(key)) 
+                                    ? (() => {
+                                        const item = Object.entries(mobile).find(([key]) => location.pathname.startsWith(key))[1]
+                                        return <>{item.icon}{item.label}</>
+                                    })()
+                                    : <>{currentNav?.icon}{t(currentTitle)}</>}
                             </div>
                         </div>
+                            <Link
+                                className={`nav-group nav-arrowwww ${
+                                    location.pathname !== '/notes/new' &&
+                                    location.pathname !== '/profile' &&
+                                    !location.pathname.startsWith('/notes/edit') &&
+                                    !location.pathname.startsWith('/notes/note') ? 'nav-group-mobile' : ''
+                                }`}
+                                style={{color: 'var(--def-white)'}}
+                                to='../notes'
+                            >
+                                <MoveLeft className='nav-icon'/>
+                            </Link>
+                            <div
+                                className={`nav-group ${
+                                    location.pathname === '/notes/new' ||
+                                    location.pathname === '/profile' ||
+                                    location.pathname.startsWith('/notes/edit') ||
+                                    location.pathname.startsWith('/notes/note') ? 'nav-group-mobile' : ''
+                                }`}
+                                onClick={() => setMenu(!menu)}
+                                ref={navRef}
+                                tabIndex='1'
+                            >
+                                <div
+                                    className={`hamburger-icon ${menu ? 'open' : ''}`}
+                                >
+                                    <span/>
+                                    <span/>
+                                    <span/>
+                                    <span/>
+                                </div>
+
+                                <Dropdown
+                                    className='nav-dropdown'
+                                    toggle={() => setMenu(!menu)}
+                                    visibility={menu}
+                                    ref={dropdownRef}
+                                >
+                                    {renderLinks}
+                                </Dropdown>
+
+                                <div
+                                    className='nav-links'
+                                    ref={navLinksWrapper}
+                                >
+                                    {renderLinks}
+                                    {ghost.active && (
+                                        <div
+                                            className={ghost.className}
+                                            style={ghost.style}
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        
+                    <Link to='../privacy' className='nav-privacy-link'>
+                        Privacy Policy
+                    </Link>
                     <div
                         className='nav-profile'
                         onClick={() => setMenu(false)}
@@ -307,7 +370,7 @@ function Navigation() {
                             {auth.token ?
                                 <img
                                     className='profile-img'
-                                    src={auth.avatar}
+                                    src={`${auth.avatar}?t=${Date.now()}`}
                                 />
                             :
                                 <FontAwesomeIcon
@@ -343,9 +406,8 @@ function Navigation() {
                         {/* logout button present only if the user is logged in*/}
                         {auth.token
                             ? 
-                                <FontAwesomeIcon
+                                <LogOut
                                     className='logout-icon'
-                                    icon={faArrowRightFromBracketSolid}
                                     onClick={() => logout()}
                                 />
                             :
@@ -386,6 +448,7 @@ function Navigation() {
                                 <Route path='tags' element={<Groups/>}/>
                                 <Route path='archived' element={<Trash/>}/>
                                 <Route path='trash' element={<Trash/>}/>
+                                <Route path='privacy' element={<Privacy/>}/>
                             </Routes>
                         </div>
                     </CSSTransition>

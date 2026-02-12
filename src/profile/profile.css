@@ -10,6 +10,7 @@ button {
 }
 
 .profile-main {
+    gap: 2vw;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -27,6 +28,7 @@ button {
 
     @media (max-width: 1024px) {
         justify-content: center;
+        display: none;
     }
 }
 
@@ -47,47 +49,52 @@ button {
 }
 
 .profile-block {
-    background-color: var(--blck-bc);
+    align-self: center;
+    gap: 3vw;
     padding: 1vw;
     display: flex;
     text-align: center;
-    width: 75%;
-    margin: 1vw auto 1.5vw;
-    border-radius: 1.5vw;
-    border: 0.1vw solid var(--blck-bc-hvr);
-    flex-direction: column;
+    width: 95%;
     height: auto;
     overflow-y: auto;
     scrollbar-gutter: stable;
 
-    /* TABLET */
-    @media (min-width: 769px) and (max-width: 1024px) {
-        width: 95%;
-    }
-    /* MOBILE */
     @media (max-width: 1024px) {
         margin: 0;
-        padding: 4vw;
+        padding: 0vw 4vw 4vw 4vw;
         max-width: 100%;
         width: 100%;
         justify-content: flex-start;
+        gap: 0;
+    }
+
+    @media (max-width: 1280px) {
+        flex-direction: column;
+        gap: 0;
     }
 }
 
 .profile-avatar {
-    align-items: center;
+    justify-content: center;
     display: flex;
     flex-direction: column;
     border: 0.25vw dotted var(--file-hover);
-    border-radius: 1vw;
+    border-radius: 10px;
     transition: 300ms border;
-    width: 100%;
-    padding: 1vw 0vw;
+    padding: 0.5vw 0vw;
     cursor: pointer;
+    align-items: center;
+    width: 45%;
+    height: 25vw;
     
     @media (max-width: 1024px) {
         border: 1vw dotted var(--file-hover);
         border-radius: 3vw;
+    }
+
+    @media (max-width: 1280px) {
+        width: 100%;
+        height: auto;
     }
 }
 
@@ -145,14 +152,17 @@ button {
 }
 
 .avatar-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     bottom: -0.5vw;
     right: -1vw;
     background-color: var(--bc-color);
     border: 0.25vw solid transparent;
     border-radius: 50%;
-    width: 6vw;
-    height: 6vw;
+    width: 3vw;
+    height: 3vw;
     transition: 300ms background-color, 300ms border;
 
     @media (max-width: 1024px) {
@@ -176,8 +186,8 @@ button {
 }
 
 .upload-icon {
-    width: 3vw;
-    height: 3vw;
+    width: 1.75vw;
+    height: 1.75vw;
 
     @media (max-width: 1024px) {
         width: 10vw;
@@ -188,14 +198,17 @@ button {
 .avatar-edit {
     position: absolute;
     bottom: -0.5vw;
-    right: 11vw;
+    right: 14vw;
     background-color: var(--bc-color);
     border: 0.25vw solid transparent;
     border-radius: 50%;
-    width: 6vw;
-    height: 6vw;
+    width: 3vw;
+    height: 3vw;
     transition: 300ms background-color, 300ms border;
     pointer-events: var(--pointer);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     @media (max-width: 1024px) {
         display: none;
@@ -216,8 +229,8 @@ button {
 }
 
 .edit-icon {
-    width: 3vw;
-    height: 3vw;
+    width: 1.75vw;
+    height: 1.75vw;
 
     @media (max-width: 1024px) {
         width: 10vw;
@@ -258,7 +271,11 @@ button {
 
 .profile-values {
     border-bottom: 0.1vw solid var(--blck-bc-hvr);
-    padding: 0vw 0vw 2vw;
+    padding: 0vw 0vw 1vw;
+
+    @media (max-width: 1024px) {
+        padding: 0vw 0vw 4vw;
+    }
 }
 
 .profile-name {
@@ -286,9 +303,9 @@ button {
 
 .name-title {
     color: var(--blck-bc-fcs);
-    font-size: 1.75vw;
+    font-size: 1vw;
     margin: 0;
-    padding: 1vw 0vw;
+    padding: 0.5vw 0vw;
     text-wrap: nowrap;
 
     @media (max-width: 1024px) {
@@ -299,14 +316,14 @@ button {
 
 .name-status {
     margin: 0;
-    font-size: 1.75vw;
+    font-size: 1vw;
     text-wrap: nowrap;
     animation: status-change 300ms ease;
 }
 
 @media (max-width: 1024px) {
     .name-status {
-        font-size: 5vw;
+        font-size: 4vw;
     }
 }
 
@@ -333,14 +350,14 @@ button {
 
 .name-input {
     border: 0.1vw solid var(--blck-bc-hvr);
-    height: 4vw;
-    border-radius: 1vw;
+    height: 3vw;
+    border-radius: 10px;
     background-color: var(--blck-bc);
     width: 100%;
     transition: 300ms border;
     color: white;
     padding: 0vw 0.75vw;
-    font-size: 2vw;
+    font-size: 1.25vw;
 
     @media (max-width: 1024px) {
         height: 10vw;
@@ -378,9 +395,9 @@ button {
 
 .profile-email-title {
     color: var(--blck-bc-fcs);
-    font-size: 1.75vw;
+    font-size: 1vw;
     margin: 0;
-    padding: 1vw 0vw;
+    padding: 0.5vw 0vw;
     text-wrap: nowrap;
 
     @media (max-width: 1024px) {
@@ -393,7 +410,7 @@ button {
     color: var(--del-btn);
     display: flex;
     justify-content: center;
-    font-size: 2vw;
+    font-size: 1.25vw;
     padding: 1vw 0vw 0vw 0vw;
 
     @media (max-width: 1024px) {
@@ -410,12 +427,12 @@ button {
     border: 0.1vw solid var(--blck-bc-hvr);
     background-color: var(--blck-bc);
     width: 100%;
-    height: 4vw;
-    border-radius: 1vw;
+    height: 3vw;
+    border-radius: 10px;
     transition: 300ms border;
     color: white;
     padding: 0vw 0.75vw;
-    font-size: 2vw;
+    font-size: 1.25vw;
 
     @media (max-width: 1024px) {
         height: 10vw;
@@ -441,16 +458,16 @@ input:focus {
 }
 
 .verify-button {
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--blck-bc);
     border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
+    border-radius: 10px;
     margin: 0vw 0.5vw 0vw 0vw;
     color: var(--def-white);
     transition: 300ms border, 300ms background-color;
-    margin: 1vw 0vw;
+    margin: 0.5vw 0vw;
 
     @media (max-width: 1024px) {
         border: 1vw solid var(--blck-bc-hvr);
@@ -480,7 +497,7 @@ input:focus {
     color: var(--def-btn);
     display: flex;
     justify-content: center;
-    font-size: 2vw;
+    font-size: 1.25vw;
 
     @media (max-width: 1024px) {
         font-size: 5vw;
@@ -508,19 +525,18 @@ input:focus {
 }
 
 .values-save {
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 50%;
     background-color: var(--def-btn);
-    border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
+    border: transparent;
+    border-radius: 10px;
     margin: 0vw 0.5vw 0vw 0vw;
     color: var(--blck-bc);
     transition: 300ms border, 300ms background-color;
     text-transform: capitalize;
 
     @media (max-width: 1024px) {
-        border: 1vw solid var(--blck-bc-hvr);
         width: 100%;
         border-radius: 3vw;
         height: 10vw;
@@ -536,19 +552,18 @@ input:focus {
 }
 
 .values-cancel {
-    font-size: 1.5vw;
+    font-size: 1.25vw;
     width: 50%;
-    height: 4vw;
+    height: 3vw;
     background-color: var(--del-btn);
-    border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
+    border: transparent;
+    border-radius: 10px;
     margin: 0vw 0vw 0vw 0.5vw;
     color: var(--def-white);
     transition: 300ms border, 300ms background-color;
     text-transform: capitalize;
 
     @media (max-width: 1024px) {
-        border: 1vw solid var(--blck-bc-hvr);
         width: 100%;
         border-radius: 3vw;
         height: 10vw;
@@ -562,23 +577,14 @@ input:focus {
     background-color: var(--del-btn-hvr);
 }
 
-button {
-    cursor: pointer;
-    transition: 300ms background-color, 300ms border;
-}
-
-button:focus {
-    transition: 300ms background-color, 300ms border;
-    outline: none;
-    border: 0.25vw solid var(--blck-bc-fcs);
-
-    @media (max-width: 1024px) {
-        border: 1vw solid var(--blck-bc-fcs);
-    }
+.profile-elements {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .settings-title {
-    padding: 1vw 0vw 0vw;
+    padding: 0.5vw 0vw 0.25vw;
     text-wrap: nowrap;
     margin: 0;
 
@@ -600,19 +606,19 @@ button:focus {
 
 .settings-password {
     position: relative;
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--blck-bc);
-    border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
+    border: transparent;
+    border-radius: 10px;
     margin: 0vw 0.5vw 0vw 0vw;
     color: var(--def-white);
     transition: 300ms border, 300ms background-color;
-    margin: 1vw 0vw;
+    margin: 0.5vw 0vw;
 
     @media (max-width: 1024px) {
-        border: 1vw solid var(--blck-bc-hvr);
+        border: transparent;
         width: 100%;
         border-radius: 3vw;
         height: 10vw;
@@ -627,7 +633,6 @@ button:focus {
     background-color: var(--blck-bc-hvr);
 
     @media (max-width: 1024px) {
-        border: 1vw solid transparent;
     }
 }
 
@@ -635,7 +640,7 @@ button:focus {
     text-transform: initial;
     color: var(--def-btn);
     margin: 0;
-    font-size: 1.25vw;
+    font-size: 1vw;
 
     @media (max-width: 1024px) {
         padding-top: 3vw;
@@ -645,16 +650,16 @@ button:focus {
 
 .settings-accounts {
     position: relative;
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--blck-bc);
     border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
+    border-radius: 10px;
     margin: 0vw 0.5vw 0vw 0vw;
     color: var(--def-white);
     transition: 300ms border, 300ms background-color;
-    margin: 1vw 0vw;
+    margin: 0.5vw 0vw;
 
     @media (max-width: 1024px) {
         border: 1vw solid var(--blck-bc-hvr);
@@ -678,13 +683,13 @@ button:focus {
 
 .settings-delete {
     position: relative;
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--del-btn);
     border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
-    margin: 1vw 0vw;
+    border-radius: 10px;
+    margin: 0.5vw 0vw;
     color: white;
     transition: 300ms border, 300ms background-color;
 
@@ -742,7 +747,7 @@ button:focus {
     align-items: center;
     display: flex;
     flex-direction: column;
-    padding: 2vw;
+    padding: 1vw;
     background-color: var(--blck-bc);
     border-radius: 2vw;
     width: 75%;
@@ -801,12 +806,12 @@ button:focus {
         align-content: center;
         justify-content: center;
         gap: 3% 6%;
-        padding: 3vw 1.75vw;
+        padding: 3vw 1vw;
     }
 }
 
 .editor-help {
-    font-size: 1.5vw;
+    font-size: 1.25vw;
     color: var(--blck-bc-fcs);
     text-align: center;
     position: relative;
@@ -875,7 +880,7 @@ button:focus {
         justify-content: center;
         grid-area: avatar;
         justify-self: center;
-        --ui-multiplier: 1.25;
+        --ui-multiplier: 1;
         transition: transform 300ms;
         transform: scale(
             calc(var(--transform) * var(--ui-multiplier))
@@ -962,7 +967,7 @@ button:focus {
 }
 
 .zoom-title {
-    font-size: 1.5vw;
+    font-size: 1.25vw;
     text-transform: capitalize;
     color: var(--blck-bc-fcs);
 
@@ -973,7 +978,7 @@ button:focus {
 
 .zoom-range {
     padding: 0.25vw;
-    margin: 1vw 0vw;
+    margin: 0.5vw 0vw;
     border: 0.1vw solid transparent;
     width: 100%;
     height: 3vw;
@@ -1055,7 +1060,7 @@ button:focus {
 }
 
 .rotate-title {
-    font-size: 1.5vw;
+    font-size: 1.25vw;
     text-transform: capitalize;
     color: var(--blck-bc-fcs);
 
@@ -1066,7 +1071,7 @@ button:focus {
 
 .rotate-range {
     padding: 0.25vw;
-    margin: 1vw 0vw;
+    margin: 0.5vw 0vw;
     border: 0.1vw solid transparent;
     width: 100%;
     height: 3vw;
@@ -1135,15 +1140,15 @@ button:focus {
 }
 
 .save-button {
-    height: 4vw;
+    height: 3vw;
     margin-bottom: 1vw;
     width: 100%;
     background-color: var(--def-btn);
     border: 0.1vw solid var(--blck-bc-hvr);
     /* min-height: 3.5vw; */
-    border-radius: 1vw;
+    border-radius: 10px;
     text-transform: capitalize;
-    font-size: 1.5vw;
+    font-size: 1.25vw;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1164,14 +1169,14 @@ button:focus {
 }
 
 .cancel-button {
-    height: 4vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--blck-bc);
     border: 0.1vw solid var(--blck-bc-hvr);
     color: white;
-    border-radius: 1vw;
+    border-radius: 10px;
     text-transform: capitalize;
-    font-size: 1.5vw;
+    font-size: 1.25vw;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1198,9 +1203,9 @@ button:focus {
     @media (max-width: 1024px) {
         width: 100%;
         background-color: var(--del-btn);
-        border-radius: 1vw;
+        border-radius: 10px;
         text-transform: capitalize;
-        font-size: 1.5vw;
+        font-size: 1.25vw;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1217,7 +1222,6 @@ button:focus {
 .delete-button:focus {
     outline: none;
     background-color: var(--del-btn-hvr);
-    border: 1vw solid var(--blck-bc-fcs);
 }
 
 .password-main {
@@ -1239,8 +1243,8 @@ button:focus {
 
 .profile-password-title {
     color: var(--blck-bc-fcs);
-    padding: 1.25vw 0vw;
-    font-size: 1.75vw;
+    padding: 0.5vw 0vw;
+    font-size: 1vw;
 
     @media (max-width: 1024px) {
         font-size: 6vw;
@@ -1260,10 +1264,10 @@ button:focus {
 
 .profile-password-input {
     border: 0.1vw solid var(--blck-bc-hvr);
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
-    border-radius: 1vw;
+    border-radius: 10px;
     background-color: var(--blck-bc);
     width: 100%;
     transition: 300ms border;
@@ -1289,7 +1293,7 @@ button:focus {
     padding: 1vw 0vw 0vw 0vw;
     color: var(--del-btn);
     margin: 0;
-    font-size: 1.25vw;
+    font-size: 1vw;
     
     @media (max-width: 1024px) {
         font-size: 4.5vw;
@@ -1298,12 +1302,12 @@ button:focus {
 }
 
 .profile-password-save {
-    font-size: 1.5vw;
-    height: 4vw;
+    border: transparent;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--def-btn);
-    border: 0.25vw solid var(--def-btn-hvr);
-    border-radius: 1vw;
+    border-radius: 10px;
     margin: 0vw 0.5vw 0vw 0vw;
     color: white;
     transition: 300ms border, 300ms background-color, 300ms color;
@@ -1322,11 +1326,9 @@ button:focus {
 .profile-password-save:disabled {
     background-color: var(--blck-bc-fcs);
     color: var(--blck-bc);
-    border: 0.25vw solid var(--del-btn);
     cursor: not-allowed;
 
     @media (max-width: 1024px) {
-        border: 1vw solid var(--del-btn);
         margin-top: 5vw;
     }
 }
@@ -1346,7 +1348,6 @@ button:focus {
     border-radius: 25%;
     position: absolute;
     right: 1vw;
-    top: 1vw;
 
     @media (max-width: 1024px) {
         border: 1vw solid transparent;
@@ -1354,23 +1355,22 @@ button:focus {
 }
 
 .language-settings {
+    border: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--blck-bc);
-    border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
+    border-radius: 10px;
     margin: 0vw 0.5vw 0vw 0vw;
     color: var(--def-white);
-    transition: 300ms border, 300ms background-color;
-    margin: 1vw 0vw;
+    transition: 300ms background-color;
+    margin: 0.5vw 0vw;
 
     @media (max-width: 1024px) {
-        border: 1vw solid var(--blck-bc-hvr);
         width: 100%;
         border-radius: 3vw;
         height: 10vw;
@@ -1385,7 +1385,6 @@ button:focus {
     background-color: var(--blck-bc-hvr);
 
     @media (max-width: 1024px) {
-        border: 1vw solid transparent;
     }
 }
 
@@ -1402,11 +1401,11 @@ button:focus {
 }
 
 .slctd-lang {
-    font-size: 2vw;
+    font-size: 1.25vw;
     text-transform: capitalize;
     border: 0.25vw solid transparent;
     border-radius: 2vw;
-    padding: 2vw;
+    padding: 1vw;
     width: 25%;
     cursor: pointer;
     transition: 300ms border;
@@ -1459,20 +1458,23 @@ button:focus {
 }
 
 .logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--blck-bc);
-    border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
+    border: transparent;
+    border-radius: 10px;
     margin: 0vw 0.5vw 0vw 0vw;
     color: var(--def-white);
     transition: 300ms border, 300ms background-color;
-    margin: 1vw 0vw;
+    margin: 0.5vw 0vw;
 
     @media (max-width: 1024px) {
-        border: 1vw solid var(--blck-bc-hvr);
+        border: transparent;
         width: 100%;
         border-radius: 3vw;
         height: 10vw;
@@ -1487,26 +1489,25 @@ button:focus {
     background-color: var(--blck-bc-hvr);
 
     @media (max-width: 1024px) {
-        border: 1vw solid transparent;
+        
     }
 }
 
 .logout-cancel {
+    border: transparent;
     position: relative;
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--blck-bc);
-    border: 0.25vw solid var(--def-btn-hvr);
-    border-radius: 1vw;
+    border-radius: 10px;
     margin: 0vw 0.5vw 0vw 0vw;
     color: var(--def-white);
     transition: 300ms border, 300ms background-color;
-    margin: 1vw 0vw;
+    margin: 0.5vw 0vw;
     text-transform: capitalize;
 
     @media (max-width: 1024px) {
-        border: 1vw solid var(--def-btn-hvr);
         width: 100%;
         border-radius: 3vw;
         height: 10vw;
@@ -1519,26 +1520,24 @@ button:focus {
     background-color: var(--blck-bc-hvr);
 
     @media (max-width: 1024px) {
-        border: 1vw solid transparent;
     }
 }
 
 .logout-true {
+    border: transparent;
     position: relative;
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
-    background-color: var(--blck-bc);
-    border: 0.25vw solid var(--del-btn-hvr);
-    border-radius: 1vw;
+    background-color: var(--del-btn);
+    border-radius: 10px;
     margin: 0vw 0.5vw 0vw 0vw;
     color: var(--def-white);
     transition: 300ms border, 300ms background-color;
-    margin: 1vw 0vw;
+    margin: 0.5vw 0vw;
     cursor: help;
 
     @media (max-width: 1024px) {
-        border: 1vw solid var(--del-btn-hvr);
         width: 100%;
         border-radius: 3vw;
         height: 10vw;
@@ -1554,12 +1553,12 @@ button:focus {
     background-color: var(--blck-bc-hvr);
 
     @media (max-width: 1024px) {
-        border: 1vw solid transparent;
     }
 }
 
 .profile-date {
     color: var(--blck-bc-fcs);
+    margin: 1vw 0vw 0vw;
 
     @media (max-width: 1024px) {
         padding: 3vw 0vw 0vw;
@@ -1567,12 +1566,12 @@ button:focus {
 }
 
 .user-preferences {
-    font-size: 1.5vw;
-    height: 4vw;
+    font-size: 1.25vw;
+    height: 3vw;
     width: 100%;
     background-color: var(--blck-bc);
     border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
+    border-radius: 10px;
     color: var(--def-white);
     transition: 300ms border, 300ms background-color;
     display: flex;
@@ -1603,12 +1602,12 @@ button:focus {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 1.5vw;
+    font-size: 1.25vw;
     padding: 1vw;
-    margin: 1vw 0vw;
-    height: 4vw;
+    margin: 0.5vw 0vw;
+    height: 3vw;
     border: 0.25vw solid var(--blck-bc-hvr);
-    border-radius: 1vw;
+    border-radius: 10px;
     cursor: pointer;
 
     @media (max-width: 1024px) {
@@ -1622,8 +1621,8 @@ button:focus {
 }
 
 .settings-offline-checkbox {
-    width: 3vw;
-    height: 3vw;
+    width: 2vw;
+    height: 2vw;
     border-radius: 25%;
     border: 0.1vw solid var(--blck-bc-fcs);
     display: flex;
@@ -1655,8 +1654,8 @@ button:focus {
 }
 
 .settings-offline-techbox:checked + .settings-offline-logo {
-    max-width: 2.5vw;
-    max-height: 2.5vw;
+    max-width: 1.5vw;
+    max-height: 1.5vw;
     opacity: 1;
 
     @media (max-width: 1024px) {

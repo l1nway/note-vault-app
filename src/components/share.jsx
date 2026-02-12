@@ -117,7 +117,7 @@ function Share() {
                                 onClick={(e) => e.stopPropagation()}
                                 style={{
                                     '--select-border': durationStatus ? '0.1vw solid #2a2f38' : '0.1vw solid transparent',
-                                    '--select-background': durationStatus ? '#1f1f1f' : 'transparent',
+                                    '--select-background': durationStatus ? 'var(--blck-bc)' : 'transparent',
                                     '--opacity': durationStatus ? 1 : 0
                                 }}
                             >

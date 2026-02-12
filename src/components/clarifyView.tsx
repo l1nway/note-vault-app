@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef, useCallback, useMemo, ReactNode} from 'react'
+import {useState, useRef, useCallback, useMemo, ReactNode} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {useShallow} from 'zustand/react/shallow'
 import {faXmark, faSpinner, faTriangleExclamation, faArrowUp as faArrowUpSolid, faBookmark as faBookmarkSolid} from '@fortawesome/free-solid-svg-icons'
@@ -68,10 +68,6 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
     const [inputNull, setInputNull] = useState(false)
-
-    useEffect(() => {
-        if (color?.hex) props?.setColor?.(color.hex)
-    }, [color, props])
 
     const clarifyCancel = useCallback(() => {
         closeAnim()
@@ -242,7 +238,7 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
                     >
                         <ColorPicker
                             color={color}
-                            onChange={setColor}
+                            onChange={(e) => {setColor(e); props?.setColor?.(e.hex)}}
                             hideInput={false}
                         />
                     </div>

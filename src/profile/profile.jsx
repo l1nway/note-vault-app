@@ -8,6 +8,8 @@ import {faRotateRight, faSignal, faFloppyDisk, faTriangleExclamation, faTrashCan
 
 import {apiStore, appStore, profileStore} from '../store'
 
+import {SquarePen, Trash2, ImageUp} from 'lucide-react'
+
 import Editor from './editor'
 import User from './user'
 import Settings from './settings'
@@ -27,16 +29,13 @@ function Profile() {
 
     // 
     const {
-        profileLoading, setProfileLoading,
-        profileSaving, setProfileSaving,
-        profileError, setProfileError,
-        profileMessage, setProfileMessage,
+        profileLoading, profileSaving, profileError, profileMessage, 
         // state for a file in the editor
         tempFile, setTempFile,
         // state if the uploaded file is not an image
-        fileError, setFileError,
+        fileError,
         // state for a final file
-        setFile, file
+        file
     } = profileStore()
 
     // 
@@ -52,7 +51,6 @@ function Profile() {
             >
                 <h1
                     className='profile-title'
-                    onClick={() => console.log(tempFile)}
                 >
                     {t('profile')}
                 </h1>
@@ -207,7 +205,7 @@ function Profile() {
                                 style={{
                                     '--icon-display': file == null ? 'none' : '1'
                                 }}
-                                src={file ? file : null}
+                                src={file ? `${file}?t=${Date.now()}` : null}
                             />
                             <button
                                 className='avatar-upload'
@@ -221,10 +219,11 @@ function Profile() {
                                     file == null ? fileRef.current.click() : delAvatar()
                                 }}
                             >
-                                <FontAwesomeIcon
+                                {file ? <Trash2 className='upload-icon'/> : <ImageUp className='upload-icon'/>}
+                                {/* <FontAwesomeIcon
                                     className='upload-icon'
                                     icon={file == null ? faUploadSolid : faTrashSolid}
-                                />
+                                /> */}
                             </button>
                             <button
                                 className='avatar-edit'
@@ -239,10 +238,11 @@ function Profile() {
                                     setTempFile(file)
                                 )}
                             >
-                                <FontAwesomeIcon
+                                {file && <SquarePen className='edit-icon'/>}
+                                {/* <FontAwesomeIcon
                                     className='edit-icon'
                                     icon={file == null ? null : faPenToSquare}
-                                />
+                                /> */}
                             </button>
                         </div>
                         <SlideDown
@@ -260,6 +260,7 @@ function Profile() {
                             {t('click to change avatar')}
                         </p>
                     </label>
+                    <div className='profile-elements'>
                         <SlideDown
                             visibility={file != null}
                         >
@@ -287,20 +288,20 @@ function Profile() {
                         >
                             {t(file == null ? 'upload' : 'delete')}
                         </button>
-                    {/* change name & email */}
-                    <User/>
-                    {/* account settings */}
-                    <Settings/>
-                    <div
-                        className='profile-date'
-                    >
-                        {t('Account created')} {new Date(accDate).toLocaleDateString(i18n.language, {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric'
-                        })}
+                        {/* change name & email */}
+                        <User/>
+                        {/* account settings */}
+                        <Settings/>
+                        <div
+                            className='profile-date'
+                        >
+                            {t('Account created')} {new Date(accDate).toLocaleDateString(i18n.language, {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                            })}
+                        </div>
                     </div>
-                    {/* slideDown window for specific settings */}
                 </div>
         </div>
     )

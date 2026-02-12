@@ -44,8 +44,7 @@ function trashLogic() {
 
   useEffect(() => {
     setPage(1)
-    if (Cookies.get('offline') != 'true' && !online) {
-      alert('нет инета и оффлайн режима')
+    if (!online) {
       path == 'trash' ? setDeletedLoading (false) : setArchivedLoading(false)
     }
   }, [online, path])

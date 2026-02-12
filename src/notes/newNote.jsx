@@ -4,7 +4,8 @@ import Cookies from 'js-cookie'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {useTranslation} from 'react-i18next'
 import {useLocation} from 'react-router'
-import {useState, useMemo, useCallback} from 'react'
+import {useState, useMemo} from 'react'
+import {Plus, Save} from 'lucide-react'
 
 import {faArrowUp as faArrowUpSolid, faFloppyDisk, faXmark, faTriangleExclamation, faSpinner, faRotateRight, faSignal, faPlane, faPlaneCircleCheck} from '@fortawesome/free-solid-svg-icons'
 
@@ -101,10 +102,19 @@ function NewNote() {
         <div
             className='newnote-main'
         >
+            <div
+                className='notes-new-mobile'
+                onClick={saveButton}
+            >
+                {!location.state ?
+                    <Plus className='notes-new-mobile-button'/> :
+                    <Save className='notes-new-mobile-button'/>
+                }
+            </div>
             {/* HEADER */}
             <div
                 className='newnote-header'
-            >   
+            >
                 <div
                     className='newnote-top'
                 >

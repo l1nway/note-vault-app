@@ -4,7 +4,9 @@ import {motion} from 'framer-motion'
 import React, {useMemo, useCallback} from 'react'
 import {useShallow} from 'zustand/react/shallow'
 import {useLocation} from 'react-router'
+import {Link} from 'react-router'
 
+import {useTranslation} from 'react-i18next'
 import {appStore, clarifyStore, notesViewStore} from '../store'
 
 import Clarify from '../components/clarify'
@@ -17,6 +19,7 @@ import SlideDown from '../components/slideDown'
 function NotesList() {
     const location = useLocation()
     const path = location.pathname.slice(1)
+    const {t} = useTranslation()
 
     const {notes, setNotes, online, offlineMode, setOfflineMode, setNoteInfo} = appStore(
         useShallow((state) => ({
@@ -72,38 +75,49 @@ function NotesList() {
     return(
         <>
             <LoadingError
-                pageError={notesError}
+                setPageMessage={setNotesMessage}
+                setOfflineMode={setOfflineMode}
                 setPageError={setNotesError}
                 pageMessage={notesMessage}
-                setPageMessage={setNotesMessage}
+                offlineMode={offlineMode}
+                pageError={notesError}
                 getPage={getNotes}
                 online={online}
-                offlineMode={offlineMode}
-                setOfflineMode={setOfflineMode}
                 path={path}
             />
-            <SlideDown
-                visibility={notes?.length}
+            <motion.div
+                className='notes-list'
             >
-                <motion.div
-                    className='notes-list'
-                >
-                    {renderNotes}
-                    <ExtraObj
-                        listView={listView}
-                        loading={notesLoading}
-                        page={page}
-                        lastPage={lastPage}
-                        loadMore={loadMore}
-                    />
-                </motion.div>
-            </SlideDown>
+                {!notesLoading && !notes.length ?
+                    <Link
+                        className='note-animated-element'
+                        to='./new'
+                    >
+                        <div className='note-element'>
+                            <div className='note-top-group'>
+                                <h2 className='note-title'>
+                                    {t('No notes yet')}
+                                </h2>
+                                <p className='note-desc'>{t('Create a note?')}</p>
+                            </div>
+                        </div>
+                    </Link>
+                : null}
+                {renderNotes}
+                <ExtraObj
+                    loading={notesLoading}
+                    listView={listView}
+                    lastPage={lastPage}
+                    loadMore={loadMore}
+                    page={page}
+                />
+            </motion.div>
             {action ?
                 <Clarify
-                    id={elementID}
                     setID={setElementID}
                     getNotes={getNotes}
                     setNotes={setNotes}
+                    id={elementID}
                 />
             : null}
         </>

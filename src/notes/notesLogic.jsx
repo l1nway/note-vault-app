@@ -9,11 +9,11 @@ import getNotes from './getNotes'
 import useDebounce from './useDebounce'
 
 function notesLogic() {
-    const online = apiStore(state => state.online)
     const offlineMode = apiStore(state => state.offlineMode)
+    const online = apiStore(state => state.online)
 
     // managing windows for deleting, archiving and editing
-    const {action, setAction, animating, setAnimating, setNotesError, notesError, notesLoading, setNotesLoading, setNotesMessage, notesMessage, category, tag, search, setVisibility, setClarifyLoading, setRetryFunction} = clarifyStore(
+    const {action, setAction, animating, setAnimating, notesError, notesLoading, notesMessage, category, tag, search, setVisibility, setClarifyLoading, setRetryFunction} = clarifyStore(
         useShallow(state => ({
             action: state.action,
             setAction: state.setAction,
@@ -35,8 +35,8 @@ function notesLogic() {
 
     //
     const [elementID, setElementID] = useState('')
-    const [page, setPage] = useState(1)
     const [lastPage, setLastPage] = useState(0)
+    const [page, setPage] = useState(1)
 
     const debouncedSearch = useDebounce(search, 300)
 
@@ -76,14 +76,6 @@ function notesLogic() {
             getNotes(queryString, page, setLastPage)
         }
     }, [queryString, token, offlineMode, online])
-
-    useEffect(() => {
-        if (Cookies.get('offline') != 'true' && !online) {
-            setNotesError(true)
-            setNotesMessage('No internet connection')
-            setNotesLoading(false)
-        }
-    }, [online])
 
     const loadMore = useCallback(() => {
         if (page < lastPage) {
