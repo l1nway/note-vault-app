@@ -9,12 +9,11 @@ import {Link} from 'react-router'
 import {useTranslation} from 'react-i18next'
 import {appStore, clarifyStore, notesViewStore} from '../store'
 
+import LoadingError from '../components/loadingError'
+import NoteCard from '../components/noteCard'
+import ExtraObj from '../components/extraObj'
 import Clarify from '../components/clarify'
 import notesLogic from './notesLogic'
-import NoteCard from '../components/noteCard'
-import LoadingError from '../components/loadingError'
-import ExtraObj from '../components/extraObj'
-import SlideDown from '../components/slideDown'
 
 function NotesList() {
     const location = useLocation()
@@ -49,7 +48,7 @@ function NotesList() {
     // сonverts values ​​to true or false; for convenience (reducing unnecessary code with tags)
     const listView = notesView == 'list'
 
-    const {elementID, setElementID, getNotes, openAnim, loadMore, page, lastPage} = notesLogic()
+    const {elementID, setElementID, getNotes, openAnim, loadMore, page, lastPage, filteredNotes} = notesLogic()
 
     const handleAction = useCallback((type, id) => {
         setElementID(id)
@@ -58,7 +57,7 @@ function NotesList() {
 
     // displaying a sorted list
     const renderNotes = useMemo(() => {
-        const source = notes
+        const source = (online && !offlineMode) ? notes : filteredNotes
         return source?.map((element, index) =>
             <NoteCard
                 key={element.id}
@@ -70,7 +69,10 @@ function NotesList() {
                 retryFunction={retryFunction}
                 listView={listView}
             />
-    )}, [notes, handleAction, setCategory, setTag, listView])
+    )}, [filteredNotes, online, offlineMode, notes, handleAction, setCategory, setTag, listView])
+
+    const source = (online && !offlineMode) ? notes : filteredNotes
+    const empty = !notesLoading && source?.length === 0
 
     return(
         <>
@@ -88,7 +90,7 @@ function NotesList() {
             <motion.div
                 className='notes-list'
             >
-                {!notesLoading && !notes.length ?
+                {empty &&
                     <Link
                         className='note-animated-element'
                         to='./new'
@@ -102,7 +104,7 @@ function NotesList() {
                             </div>
                         </div>
                     </Link>
-                : null}
+                }
                 {renderNotes}
                 <ExtraObj
                     loading={notesLoading}

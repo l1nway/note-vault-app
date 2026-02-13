@@ -4,7 +4,7 @@ import {useState, useEffect, useMemo, useCallback} from 'react'
 import {useShallow} from 'zustand/react/shallow'
 import Cookies from 'js-cookie'
 
-import {apiStore, clarifyStore} from '../store'
+import {apiStore, clarifyStore, appStore} from '../store'
 import getNotes from './getNotes'
 import useDebounce from './useDebounce'
 
@@ -33,7 +33,13 @@ function notesLogic() {
             setRetryFunction: state.setRetryFunction
     })))
 
+    const {notes} = appStore(
+        useShallow((state) => ({
+            notes: state.notes
+    })))
+
     //
+    const [filteredNotes, setFilteredNotes] = useState((!online || offlineMode) ? notes : null)
     const [elementID, setElementID] = useState('')
     const [lastPage, setLastPage] = useState(0)
     const [page, setPage] = useState(1)
@@ -72,10 +78,35 @@ function notesLogic() {
     }, [category, tag, debouncedSearch])
 
     useEffect(() => {
-        if (online && token) {
+        if (online && !offlineMode && token) {
             getNotes(queryString, page, setLastPage)
+            setFilteredNotes(null)
         }
     }, [queryString, token, offlineMode, online])
+
+    useEffect(() => {
+        if (!online || offlineMode) {
+            let localData = notes || []
+
+            if (category?.id) {
+                localData = localData.filter(note => note.category?.id === category.id)
+            }
+
+            if (tag?.id) {
+                localData = localData.filter(note => note.tags?.some(t => t.id === tag.id))
+            }
+
+            if (debouncedSearch) {
+                const q = debouncedSearch.toLowerCase()
+                localData = localData.filter(note => 
+                    note.title?.toLowerCase().includes(q) || 
+                    (note.content && note.content.toLowerCase().includes(q))
+                )
+            }
+
+            setFilteredNotes(localData)
+        }
+    }, [debouncedSearch, category, tag, notes, offlineMode, online])
 
     const loadMore = useCallback(() => {
         if (page < lastPage) {
@@ -101,8 +132,8 @@ function notesLogic() {
         }, 300)
     }, [animating, setAction, setRetryFunction, setClarifyLoading, setVisibility, setAnimating])
 
-    return useMemo(() => ({notesLoading, notesError, notesMessage, action, elementID, setElementID, getNotes, openAnim, queryString, loadMore, page, lastPage
-    }), [notesLoading, notesError, notesMessage, action, elementID, getNotes, openAnim, queryString, loadMore, page, lastPage])
+    return useMemo(() => ({notesLoading, notesError, notesMessage, action, elementID, setElementID, getNotes, openAnim, queryString, loadMore, page, lastPage, filteredNotes
+    }), [notesLoading, notesError, notesMessage, action, elementID, getNotes, openAnim, queryString, loadMore, page, lastPage, filteredNotes])
 }
 
 export default notesLogic

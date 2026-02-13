@@ -67,10 +67,10 @@ function Note() {
     const buttons = useMemo(() => [{
             name: 'edit',
             icon: faPenToSquare
-        },{
-            name: 'share',
-            icon: faShareNodes,
-            disabled: true
+        // },{
+        //     name: 'share',
+        //     icon: faShareNodes,
+        //     disabled: true
         },{
             name: 'archive',
             icon: faBoxArchive
@@ -126,7 +126,9 @@ function Note() {
                 className='note-button-icon'
                 icon={element.icon}
             />
-            {element.name}
+            <span className='note-button-text'>
+                {element.name}
+            </span>
         </button>
         ), 
         [buttons, setAction, setVisibility, setAct, setVisible, navigate, location]
@@ -161,16 +163,16 @@ function Note() {
                     <div
                         className='newnote-top'
                     >
-                        <Link
+                        <div
+                            onClick={() => navigate(-1)}
                             className='back-notes'
-                            to='../notes'
                         >
                             <FontAwesomeIcon
                                 className='title-arrow'
                                 icon={faArrowUpSolid}
                             />
                             {t('Back to notes')}
-                        </Link>
+                        </div>
                         <SlideLeft
                             visibility={error}
                         >
@@ -219,20 +221,25 @@ function Note() {
                         <div
                             className='note-info-dates'
                         >
-                            <div
-                                className='note-info-created'
-                            >
-                                {t('Created')}: {new Date(noteInfo.created_at).toLocaleDateString(i18n.language, {
-                                    month: 'short', day: 'numeric', year: 'numeric'})}
+                            <div className='note-dates'>
+                                <div
+                                    className='note-info-created'
+                                >
+                                    {t('Created')}: {new Date(noteInfo.created_at).toLocaleDateString(i18n.language, {
+                                        month: 'short', day: 'numeric', year: 'numeric'})}
+                                </div>
+                                <div
+                                    className='note-info-circle'
+                                />
+                                <div
+                                    className='note-info-updated'
+                                >
+                                    {t('Updated')}: {new Date(noteInfo.updated_at).toLocaleDateString(i18n.language, {
+                                        month: 'short', day: 'numeric', year: 'numeric'})}
+                                </div>
                             </div>
-                            <div
-                                className='note-info-circle'
-                            />
-                            <div
-                                className='note-info-updated'
-                            >
-                                {t('Updated')}: {new Date(noteInfo.updated_at).toLocaleDateString(i18n.language, {
-                                    month: 'short', day: 'numeric', year: 'numeric'})}
+                            <div className='note-mobile-buttons'>
+                                {renderButtons}
                             </div>
                         </div>
                         <div

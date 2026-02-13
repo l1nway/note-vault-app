@@ -3,10 +3,12 @@ import {motion, AnimatePresence} from 'framer-motion'
 import ContentLoader from 'react-content-loader'
 import {useMediaQuery} from 'react-responsive'
 import {useTranslation} from 'react-i18next'
+import {apiStore} from '../store'
 
 const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastPage = 1, loadMore = null}) => {
     const {t} = useTranslation()
     const mobile = useMediaQuery({query: '(max-width: 1024px)'})
+    const online = apiStore(state => state.online)
 
     const skeletonProps = useMemo(() => ({
         className: 'note-element',
@@ -163,7 +165,7 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
                 </motion.div>
             : null}
         {/* load more button */}
-            {(page < lastPage) && !loading ?
+            {(page < lastPage) && !loading && online ?
                 <motion.div
                     onClick={loadMore}
                     {...motionProps}

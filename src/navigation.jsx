@@ -2,6 +2,7 @@ import {useEffect, useState, useRef, createRef, useMemo, useCallback} from 'reac
 import {Link, useLocation, Route, Routes, useNavigate, Navigate} from 'react-router'
 import {useTranslation} from 'react-i18next'
 import {CSSTransition, TransitionGroup} from 'react-transition-group'
+import {motion, AnimatePresence} from 'framer-motion'
 import Cookies from 'js-cookie'
 import Privacy from './privacy'
 
@@ -291,16 +292,25 @@ function Navigation() {
                             <div className='nav-main-title'>
                                 Note Vault
                             </div>
-                            <div className='nav-mobile-title'>
-                                {Object.entries(mobile).find(([key]) => location.pathname.startsWith(key)) 
-                                    ? (() => {
-                                        const item = Object.entries(mobile).find(([key]) => location.pathname.startsWith(key))[1]
-                                        return <>{item.icon}{item.label}</>
-                                    })()
-                                    : <>{currentNav?.icon}{t(currentTitle)}</>}
-                            </div>
+                            <AnimatePresence mode='wait'>
+                                <motion.div
+                                    className='nav-mobile-title'
+                                    initial={{y: 10, opacity: 0}}
+                                    animate={{y: 0, opacity: 1}}
+                                    transition={{duration: 0.2}}
+                                    exit={{y: -10, opacity: 0}}
+                                    key={location.pathname} 
+                                >
+                                    {Object.entries(mobile).find(([key]) => location.pathname.startsWith(key)) 
+                                        ? (() => {
+                                            const item = Object.entries(mobile).find(([key]) => location.pathname.startsWith(key))[1]
+                                            return <>{item.icon}{item.label}</>
+                                        })()
+                                        : <>{currentNav?.icon}{t(currentTitle)}</>}
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
-                            <Link
+                            <div
                                 className={`nav-group nav-arrowwww ${
                                     location.pathname !== '/notes/new' &&
                                     location.pathname !== '/profile' &&
@@ -308,10 +318,10 @@ function Navigation() {
                                     !location.pathname.startsWith('/notes/note') ? 'nav-group-mobile' : ''
                                 }`}
                                 style={{color: 'var(--def-white)'}}
-                                to='../notes'
+                                onClick={() => navigate(-1)}
                             >
                                 <MoveLeft className='nav-icon'/>
-                            </Link>
+                            </div>
                             <div
                                 className={`nav-group ${
                                     location.pathname === '/notes/new' ||
@@ -435,7 +445,7 @@ function Navigation() {
                             <Routes
                                 location={location}
                             >
-                                <Route path="*" element={<Navigate to='/notes' replace/>}/>
+                                <Route path='*' element={<Navigate to='/notes' replace/>}/>
                                 <Route 
                                     path='profile'
                                     element={auth.token || guestMode ? <Profile/> : <Navigate to='/login' replace />} 

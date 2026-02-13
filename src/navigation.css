@@ -431,7 +431,7 @@ a {
 
 .nav-privacy-link {
     margin-top: auto;
-    padding: 0.25vw 2vw 0.5vw;
+    padding: 0.25vw 2vw 0vw;
     align-self: center;
     font-size: 0.75rem;
     transition: 300ms color;

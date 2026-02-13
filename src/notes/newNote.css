@@ -1,15 +1,15 @@
 .newnote-main {
+    scrollbar-gutter: stable;
     padding: 15px 2vw 0 2vw;
-    overflow: hidden;
-    height: 82vh;
+    overflow-y: auto;
     width: 100%;
 
     @media (max-width: 1024px) {
         flex-direction: column;
         padding: 0 2vw 0 2vw;
         height: fit-content;
-        overflow-y: auto;
         display: flex;
+        height: 82vh;
         width: 100%;
     }
 }
@@ -126,6 +126,7 @@
     transition: 300ms border;
 
     @media (max-width: 1024px) {
+        padding: 2vw;
         height: 6vw;
         width: 6vw;
     }
@@ -326,7 +327,6 @@
     display: flex;
     flex-direction: column;
     /* потому что текст-ареа увеличивается в пикселях, что увеличивает размеры за пределы адекватных */
-    height: 90%;
     scrollbar-gutter: stable;
     overflow-y: auto;
     overflow-x: hidden;
@@ -334,6 +334,7 @@
     @media (max-width: 1024px) {
         scrollbar-gutter: auto;
         overflow: visible;
+        height: 90%;
         margin: 0;
         gap: 4vw;
     }
