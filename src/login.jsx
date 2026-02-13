@@ -248,9 +248,10 @@ function Login() {
                                             />
                                         </div>
                                         <input
-                                            type='checkbox'
+                                            onChange={(e) => setRemember(e.target.checked)}
                                             checked={remember}
-                                            onChange={() => setRemember(!remember)}
+                                            type='checkbox'
+                                            readOnly
                                         />
                                         <span
                                             className='remember-title'

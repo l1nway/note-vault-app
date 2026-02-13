@@ -731,7 +731,7 @@
     transition: 300ms border, 300ms filter, 300ms opacity;
 
     @media (max-width: 1024px) {
-        
+        gap: 2vw;
     }
 }
 
@@ -830,9 +830,10 @@
     transition: 300ms border;
     
     @media (max-width: 1024px) {
-        font-size: 6vw;
-        height: 10vw;
         border-radius: 2vw;
+        padding: 0vw 3vw;
+        font-size: 5vw;
+        height: 10vw;
         gap: 1vw;
     }
 }
@@ -1299,4 +1300,9 @@
     @media (max-width: 1024px) {
         font-size: 5vw;
     }
+}
+
+.rac-disabled-style {
+    opacity: 1;
+    filter: none;
 }

@@ -96,8 +96,8 @@ function NotesList() {
                         to='./new'
                     >
                         <div className='note-element'>
-                            <div className='note-top-group'>
-                                <h2 className='note-title'>
+                            <div className='note-empty-group'>
+                                <h2 className='note-empty-title'>
                                     {t('No notes yet')}
                                 </h2>
                                 <p className='note-desc'>{t('Create a note?')}</p>

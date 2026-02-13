@@ -184,8 +184,8 @@ function Trash() {
           {((path == 'trash' ? !deletedLoading : !archivedLoading) && !trash.length) &&
             <div className='note-animated-element'>
               <div className='note-element'>
-                  <div className='note-top-group'>
-                      <h2 className='note-title'>
+                  <div className='note-empty-group'>
+                      <h2 className='note-empty-title'>
                           {path == 'trash' ? t('Trash is empty') : t('Archive is empty')}
                       </h2>
                   </div>

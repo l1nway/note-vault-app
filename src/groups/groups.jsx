@@ -153,7 +153,7 @@ function Groups() {
                             onClick={() => openAnim('new')}
                             className='group-element'
                         >
-                            <h2 className='group-title'>{t(`No ${path} yet`)}</h2>
+                            <h2 className='note-empty-title'>{t(`No ${path} yet`)}</h2>
                             <p className='group-amount'>{t(`Create a ${path == 'tags' ? 'tag' : 'category'}?`)}</p>
                         </div>
                     }
