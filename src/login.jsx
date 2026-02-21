@@ -18,7 +18,6 @@ function Login() {
 
     const {
         path, text, online,
-        guestMode, setGuestMode,
 
         name, setName,
         email, setEmail,
@@ -325,7 +324,6 @@ function Login() {
 
                             <Link
                                 className='create-account'
-                                onClick={() => setGuestMode(true)}
                                 to='/notes'
                                 style={{display: 'none'}}
                             >
@@ -360,6 +358,9 @@ function Login() {
                     </div>
                 </div>
             </SlideDown>
+            <article>
+                <title>Authorization — Note Vault</title>
+            </article>
         </div>
     )
 }

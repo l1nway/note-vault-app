@@ -1,13 +1,12 @@
-import {useState, useEffect, useMemo} from 'react'
+import {useState, useEffect, useMemo, useCallback} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router'
 import Cookies from 'js-cookie'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faArrowUp as faArrowUpSolid, faPlaneCircleCheck} from '@fortawesome/free-solid-svg-icons'
+import {faArrowUp as faArrowUpSolid} from '@fortawesome/free-solid-svg-icons'
 
-import {editorStore} from '../store'
-import {profileStore} from '../store'
+import {appStore, profileStore, notesViewStore, screenStore, clarifyStore, pendingStore, editorStore, settingStore, tokenStore} from '../store'
 
 import Password from './password'
 import Connections from './connections'
@@ -93,6 +92,19 @@ function ProfileSettings() {
         ), 
         [langList, i18n, t, setChangingLang, setLangChanged]
     )
+    const stores = [appStore, profileStore, notesViewStore, screenStore, clarifyStore, pendingStore, editorStore, settingStore, tokenStore]
+
+    const log_out = useCallback(() => {
+        const keys = ['token', 'name', 'email', 'verif', 'accdate', 'avatar', 'remember']
+        keys.forEach(k => localStorage.removeItem(k))
+        keys.forEach(k => Cookies.remove(k))
+
+        stores.forEach(store => {
+            store.setState({}, true)
+        })
+
+        window.location.href = '/login'
+    }, [])
 
     // array with account settings buttons
 
@@ -172,14 +184,7 @@ function ProfileSettings() {
                     </button>
                     <button
                         className='logout-true'
-                        onClick={() => {
-                            localStorage.removeItem('token')
-                            localStorage.removeItem('avatar')
-                            Cookies.remove('token')
-                            Cookies.remove('avatar')
-
-                            navigate('/login')
-                        }}
+                        onClick={log_out}
                     >
                         {t('Confirm logout')}
                     </button>

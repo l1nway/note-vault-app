@@ -4,10 +4,10 @@ import Cookies from 'js-cookie'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {useTranslation} from 'react-i18next'
 import {useLocation} from 'react-router'
-import {useState, useMemo} from 'react'
+import {useState, useMemo, useCallback} from 'react'
 import {Plus, Save} from 'lucide-react'
 
-import {faArrowUp as faArrowUpSolid, faFloppyDisk, faXmark, faTriangleExclamation, faSpinner, faRotateRight, faSignal, faPlane, faPlaneCircleCheck} from '@fortawesome/free-solid-svg-icons'
+import {faUserSlash, faArrowUp as faArrowUpSolid, faFloppyDisk, faXmark, faTriangleExclamation, faSpinner, faRotateRight, faSignal, faPlane, faPlaneCircleCheck} from '@fortawesome/free-solid-svg-icons'
 
 import {apiStore, appStore} from '../store'
 
@@ -24,6 +24,7 @@ function NewNote() {
     const online = apiStore(state => state.online)
     const {offlineMode, setOfflineMode} = appStore()
 
+    const token = useMemo(() => [localStorage.getItem('token'), Cookies.get('token')].find(t => t && t !== 'null'), [])
     const {t} = useTranslation()
 
     const {state, actions, refs} = NoteEditor()
@@ -31,7 +32,7 @@ function NewNote() {
     const {navigate, clearInputs, newNote, modifyNote, markdownToggle, retryLoad, setVisibility, setErrors} = actions
     const {inputRef, selectRef, tagRef, markdownRef} = refs
 
-    const saveButton = () => {
+    const saveButton = useCallback(() => {
         if (note.name == '') {
             shake(inputRef.current)
             setErrors(prev => ({
@@ -48,7 +49,7 @@ function NewNote() {
         } else {
             modifyNote()
         }
-    }
+    }, [note.name])
 
     const [offline, setOffline] = useState(Cookies.get('offline') == 'true')
 
@@ -82,8 +83,7 @@ function NewNote() {
         }
     }], [navigate, saveButton, inputRef, selectRef, setVisibility, tagRef, markdownRef, markdownToggle])
 
-    const renderHotkeys = useMemo(() => 
-        hotkeys.map((element, index) =>
+    const renderHotkeys = useMemo(() => hotkeys.map((element, index) =>
         <Hotkey
             key={index}
             keys={element.key}
@@ -92,16 +92,15 @@ function NewNote() {
         />
     ), [hotkeys])
 
-    const errorStatus =
-        errors.input ||
-        errors.global ||
-        errors.categories ||
-        errors.tags
+    const errorStatus = errors.input || errors.global || errors.categories || errors.tags
 
     return (
         <div
             className='newnote-main'
         >
+            <article>
+                <title>New note — Note Vault</title>
+            </article>
             <div
                 className='notes-new-mobile'
                 onClick={saveButton}
@@ -131,6 +130,12 @@ function NewNote() {
                         />
                         {t('Back to notes')}
                     </button>
+                    <SlideLeft visibility={!token}>
+                        <FontAwesomeIcon
+                            className='unauthorized-user-icon'
+                            icon={faUserSlash}
+                        />
+                    </SlideLeft>
                     <SlideLeft
                         visibility={errorStatus}
                     >

@@ -94,6 +94,7 @@ const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setT
                 transform: 'translateZ(0)'
             }}
             ref={ref}
+            key={note.id}
             layoutId={note.id}
             layout={visible}
             viewport={{once: false, amount: 0.1, margin: '0px 0px 0px 0px'}}

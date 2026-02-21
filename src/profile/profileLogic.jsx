@@ -23,16 +23,13 @@ function profileLogic() {
     const [drag, setDrag] = useState(false)
 
     const {
-        profileLoading, setProfileLoading,
-        profileSaving, setProfileSaving,
-        profileError, setProfileError,
-        profileMessage, setProfileMessage,
+        setProfileLoading, setProfileError, setProfileMessage,
         // state for a file in the editor
-        tempFile, setTempFile,
+        setTempFile,
         // state if the uploaded file is not an image
-        fileError, setFileError,
+        setFileError,
         // state for a final file
-        setFile, file
+        setFile
     } = profileStore()
 
 
@@ -68,15 +65,13 @@ function profileLogic() {
                 method: 'DELETE',
                 headers: {
                     'content-type': 'application/json',
-                    authorization:
-                        `Bearer ${token}`
+                    authorization: `Bearer ${token}`
                 }
             })
-            .then(res => res.json())
             .then(() => {
-                setFile(null),
                 localStorage.removeItem('avatar'),
-                Cookies.remove('avatar')
+                Cookies.remove('avatar'),
+                setFile(null)
             })
     }
     
@@ -108,14 +103,7 @@ function profileLogic() {
         }
     }, [online, offlineMode, token])
 
-    return {
-        accDate,
-        drag,
-        setDrag,
-        fileRef,
-        handleFile,
-        delAvatar
-    }
+    return {accDate, drag, setDrag, fileRef, handleFile, delAvatar}
 }
 
 export default profileLogic

@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next'
 import {useLocation} from 'react-router'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faRotateRight, faSignal, faFloppyDisk, faTriangleExclamation, faTrashCan, faSpinner, faPlane, faPenToSquare, faUpload as faUploadSolid, faUserTie as faUserTieSolid, faTrash as faTrashSolid} from '@fortawesome/free-solid-svg-icons'
+import {faRotateRight, faSignal, faFloppyDisk, faTriangleExclamation, faTrashCan, faSpinner, faPlane, faUserTie as faUserTieSolid} from '@fortawesome/free-solid-svg-icons'
 
 import {apiStore, appStore, profileStore} from '../store'
 
@@ -45,6 +45,9 @@ function Profile() {
         <div
             className='profile-main'
         >
+            <article>
+                <title>Profile — Note Vault</title>
+            </article>
             {tempFile != null ? <Editor/> : null}
             <div
                 className='profile-title-block'
@@ -54,47 +57,35 @@ function Profile() {
                 >
                     {t('profile')}
                 </h1>
-                <SlideLeft
-                        visibility={profileLoading}
-                    >
-                        <FontAwesomeIcon
-                            className='clarify-loading-icon'
-                            icon={faSpinner}
-                        />
-                    </SlideLeft>
-                    <SlideLeft
-                        visibility={profileSaving}
-                    >
-                        <FontAwesomeIcon
-                            className={`loading-save-icon ${null == 'delete' ? '--trash' : null}`}
-                            icon={null == 'delete' ? faTrashCan : faFloppyDisk}
-                        />
-                    </SlideLeft>
-                    <SlideLeft
-                        visibility={profileError}
-                    >
-                        <FontAwesomeIcon
-                            className='loading-error-icon'
-                            icon={faTriangleExclamation}
-                        />
-                    </SlideLeft>
-                    <SlideLeft
-                        visibility={offlineMode}
-                    >
-                        <FontAwesomeIcon
-                            className='newnote-offline-icon'
-                            icon={faPlane}
-                        />
-                    </SlideLeft>
+                <SlideLeft visibility={profileLoading}>
+                    <FontAwesomeIcon
+                        className='clarify-loading-icon'
+                        icon={faSpinner}
+                    />
+                </SlideLeft>
+                <SlideLeft visibility={profileSaving}>
+                    <FontAwesomeIcon
+                        className={`loading-save-icon ${null == 'delete' ? '--trash' : null}`}
+                        icon={null == 'delete' ? faTrashCan : faFloppyDisk}
+                    />
+                </SlideLeft>
+                <SlideLeft visibility={profileError}>
+                    <FontAwesomeIcon
+                        className='loading-error-icon'
+                        icon={faTriangleExclamation}
+                    />
+                </SlideLeft>
+                <SlideLeft visibility={offlineMode}>
+                    <FontAwesomeIcon
+                        className='newnote-offline-icon'
+                        icon={faPlane}
+                    />
+                </SlideLeft>
             </div>
-            <SlideDown
-                visibility={!online && !offlineMode}
-            >
+            <SlideDown visibility={!online && !offlineMode}>
                 <div
                     className='groups-loading-error'
-                    onClick={() => {
-                        online ? turnOnlineMode() : setOfflineMode(true)
-                    }}
+                    onClick={() => {online ? turnOnlineMode() : setOfflineMode(true)}}
                 >
                     <div
                         className='loading-error-message'
@@ -194,16 +185,14 @@ function Profile() {
                                 accept='image/*'
                             />
                             <FontAwesomeIcon
-                                style={{
-                                    '--icon-display': file != null ? 'none' : ''
-                                }}
+                                style={{'--icon-display': (file == null || file == 'null') ? '' : 'none'}}
                                 className='user-icon'
                                 icon={faUserTieSolid}
                             />
                             <img
                                 className='avatar-img'
                                 style={{
-                                    '--icon-display': file == null ? 'none' : '1'
+                                    '--icon-display': (file == null || file == 'null') ? 'none' : '1'
                                 }}
                                 src={file ? `${file}?t=${Date.now()}` : null}
                             />
@@ -211,32 +200,26 @@ function Profile() {
                                 className='avatar-upload'
                                 type='button'
                                 style={{
-                                    '--bc-color': file == null ? 'var(--def-btn)' : 'var(--del-btn)',
-                                    '--bc-hover': file == null ? 'var(--def-btn-hvr)' : 'var(--del-btn-hvr)'
+                                    '--bc-color': (file == null || file == 'null') ? 'var(--def-btn)' : 'var(--del-btn)',
+                                    '--bc-hover': (file == null || file == 'null') ? 'var(--def-btn-hvr)' : 'var(--del-btn-hvr)'
                                 }}
                                 onClick={(e) => {
                                     e.stopPropagation(),
-                                    file == null ? fileRef.current.click() : delAvatar()
+                                    (file == null || file == 'null') ? fileRef.current.click() : delAvatar()
                                 }}
                             >
-                                {file ? <Trash2 className='upload-icon'/> : <ImageUp className='upload-icon'/>}
-                                {/* <FontAwesomeIcon
-                                    className='upload-icon'
-                                    icon={file == null ? faUploadSolid : faTrashSolid}
-                                /> */}
+                                {(file == null || file == 'null') ? <ImageUp className='upload-icon'/> : <Trash2 className='upload-icon'/>}
                             </button>
                             <button
                                 className='avatar-edit'
-                                tabIndex={file ? 0 : -1}
+                                tabIndex={(file == null || file == 'null') ? -1 : 0}
                                 type='button'
                                 style={{
-                                    '--bc-color': file == null ? 'transparent' : 'var(--def-btn)',
-                                    '--pointer': file == null ? 'none' : ''
+                                    '--bc-color': (file == null || file == 'null') ? 'transparent' : 'var(--def-btn)',
+                                    '--pointer': (file == null || file == 'null') ? 'none' : '',
+                                    '--icon-display': (file == null || file == 'null') ? 'none' : 'flex'
                                 }}
-                                onClick={(e) => (
-                                    e.stopPropagation(),
-                                    setTempFile(file)
-                                )}
+                                onClick={(e) => {e.stopPropagation(); setTempFile(`${file}?t=${Date.now()}`)}}
                             >
                                 {file && <SquarePen className='edit-icon'/>}
                                 {/* <FontAwesomeIcon
@@ -278,15 +261,15 @@ function Profile() {
                         <button
                             className='delete-button'
                             style={{
-                                backgroundColor: file == null ? 'var(--def-btn)' : 'var(--del-btn)'
+                                backgroundColor: (file == null || file == 'null') ? 'var(--def-btn)' : 'var(--del-btn)'
                             }}
                             onClick={(e) => {
                                 e.stopPropagation(),
-                                file == null ? console.log() : delAvatar()
+                                (file == null || file == 'null') ? console.log() : delAvatar()
                             }}
                             // fileRef.current.click()
                         >
-                            {t(file == null ? 'upload' : 'delete')}
+                            {t((file == null || file == 'null') ? 'upload' : 'delete')}
                         </button>
                         {/* change name & email */}
                         <User/>

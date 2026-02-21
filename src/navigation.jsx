@@ -28,8 +28,6 @@ function Navigation() {
     const {t} = useTranslation()
     const location = useLocation()
     const navigate = useNavigate()
-    
-    const guestMode = appStore(state => state.guestMode)
 
     // universal function for convenient routing of all values ​​from local storage and cookies
     const storedValue = useCallback((element) => {
@@ -40,6 +38,8 @@ function Navigation() {
                     val => val && val !== 'null'
                 ) || ''
     }, [])
+
+    const avatar = profileStore(state => state.avatar)
 
     const auth = {
         // individual token of the logged-in user
@@ -134,9 +134,7 @@ function Navigation() {
 
     const nodeRef = nodeRefs.current[locationKey]
     
-    useEffect(() => {
-        setNowLink(location.pathname)
-    }, [location])
+    useEffect(() => {setNowLink(location.pathname)}, [location])
 
     const navlinks = useMemo(() => [
         {
@@ -285,170 +283,164 @@ function Navigation() {
             <div
                 className='nav-main'
             >
-                        <div
-                            className='nav-logo'
-                        >
-                            <NotebookText className='logo-pic'/>
-                            <div className='nav-main-title'>
-                                Note Vault
-                            </div>
-                            <AnimatePresence mode='wait'>
-                                <motion.div
-                                    className='nav-mobile-title'
-                                    initial={{y: 10, opacity: 0}}
-                                    animate={{y: 0, opacity: 1}}
-                                    transition={{duration: 0.2}}
-                                    exit={{y: -10, opacity: 0}}
-                                    key={location.pathname} 
-                                >
-                                    {Object.entries(mobile).find(([key]) => location.pathname.startsWith(key)) 
-                                        ? (() => {
-                                            const item = Object.entries(mobile).find(([key]) => location.pathname.startsWith(key))[1]
-                                            return <>{item.icon}{item.label}</>
-                                        })()
-                                        : <>{currentNav?.icon}{t(currentTitle)}</>}
-                                </motion.div>
-                            </AnimatePresence>
-                        </div>
-                            <div
-                                className={`nav-group nav-arrowwww ${
-                                    location.pathname !== '/notes/new' &&
-                                    location.pathname !== '/profile' &&
-                                    !location.pathname.startsWith('/notes/edit') &&
-                                    !location.pathname.startsWith('/notes/note') ? 'nav-group-mobile' : ''
-                                }`}
-                                style={{color: 'var(--def-white)'}}
-                                onClick={() => navigate(-1)}
-                            >
-                                <MoveLeft className='nav-icon'/>
-                            </div>
-                            <div
-                                className={`nav-group ${
-                                    location.pathname === '/notes/new' ||
-                                    location.pathname === '/profile' ||
-                                    location.pathname.startsWith('/notes/edit') ||
-                                    location.pathname.startsWith('/notes/note') ? 'nav-group-mobile' : ''
-                                }`}
-                                onClick={() => setMenu(!menu)}
-                                ref={navRef}
-                                tabIndex='1'
-                            >
-                                <div
-                                    className={`hamburger-icon ${menu ? 'open' : ''}`}
-                                >
-                                    <span/>
-                                    <span/>
-                                    <span/>
-                                    <span/>
-                                </div>
-
-                                <Dropdown
-                                    className='nav-dropdown'
-                                    toggle={() => setMenu(!menu)}
-                                    visibility={menu}
-                                    ref={dropdownRef}
-                                >
-                                    {renderLinks}
-                                </Dropdown>
-
-                                <div
-                                    className='nav-links'
-                                    ref={navLinksWrapper}
-                                >
-                                    {renderLinks}
-                                    {ghost.active && (
-                                        <div
-                                            className={ghost.className}
-                                            style={ghost.style}
-                                        />
-                                    )}
-                                </div>
-                            </div>
-                        
-                    <Link to='../privacy' className='nav-privacy-link'>
-                        Privacy Policy
-                    </Link>
-                    <div
-                        className='nav-profile'
-                        onClick={() => setMenu(false)}
-                    >
-                        <Link
-                            className='profile-text'
-                            to={auth.token ? '/profile' : '/login'}
-                            tabIndex='0'
-                        >
-                            {auth.token ?
-                                <img
-                                    className='profile-img'
-                                    src={`${auth.avatar}?t=${Date.now()}`}
-                                />
-                            :
-                                <FontAwesomeIcon
-                                    className='profile-icon'
-                                    icon={faUserSolid}
-                                />
-                            }
-                            <div
-                                className='profile-info'
-                            >
-                                {!auth.token ?
-                                    <div
-                                        className='not-authorized'
-                                    >
-                                        {t('not logged in')}
-                                    </div>
-                                    :
-                                    <>
-                                        <p
-                                            className='navbar-name'
-                                        >
-                                            {auth.name}
-                                        </p>
-                                        <p
-                                            className='navbar-email'
-                                        >
-                                            {auth.email?.replace(/^[^@]+/, '…')}
-                                        </p>
-                                    </>
-                                }
-                            </div>
-                        </Link>
-                        {/* logout button present only if the user is logged in*/}
-                        {auth.token
-                            ? 
-                                <LogOut
-                                    className='logout-icon'
-                                    onClick={() => logout()}
-                                />
-                            :
-                                null
-                        }
+                <div
+                    className='nav-logo'
+                >
+                    <NotebookText className='logo-pic'/>
+                    <div className='nav-main-title'>
+                        Note Vault
                     </div>
+                    <AnimatePresence mode='wait'>
+                        <motion.div
+                            className='nav-mobile-title'
+                            initial={{y: 10, opacity: 0}}
+                            animate={{y: 0, opacity: 1}}
+                            transition={{duration: 0.2}}
+                            exit={{y: -10, opacity: 0}}
+                            key={location.pathname} 
+                        >
+                            {Object.entries(mobile).find(([key]) => location.pathname.startsWith(key)) 
+                                ? (() => {
+                                    const item = Object.entries(mobile).find(([key]) => location.pathname.startsWith(key))[1]
+                                    return <>{item.icon}{item.label}</>
+                                })()
+                                : <>{currentNav?.icon}{t(currentTitle)}</>}
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
+                <div
+                    className={`nav-group nav-arrowwww ${
+                        location.pathname !== '/notes/new' &&
+                        location.pathname !== '/profile' &&
+                        !location.pathname.startsWith('/notes/edit') &&
+                        !location.pathname.startsWith('/notes/note') ? 'nav-group-mobile' : ''
+                    }`}
+                    style={{color: 'var(--def-white)'}}
+                    onClick={() => navigate(-1)}
+                >
+                    <MoveLeft className='nav-icon'/>
+                </div>
+                <div
+                    className={`nav-group ${
+                        location.pathname === '/notes/new' ||
+                        location.pathname === '/profile' ||
+                        location.pathname.startsWith('/notes/edit') ||
+                        location.pathname.startsWith('/notes/note') ? 'nav-group-mobile' : ''
+                    }`}
+                    onClick={() => setMenu(!menu)}
+                    ref={navRef}
+                    tabIndex='1'
+                >
+                    <div
+                        className={`hamburger-icon ${menu ? 'open' : ''}`}
+                    >
+                        <span/>
+                        <span/>
+                        <span/>
+                        <span/>
+                    </div>
+
+                    <Dropdown
+                        className='nav-dropdown'
+                        toggle={() => setMenu(!menu)}
+                        visibility={menu}
+                        ref={dropdownRef}
+                    >
+                        {renderLinks}
+                    </Dropdown>
+
+                    <div
+                        className='nav-links'
+                        ref={navLinksWrapper}
+                    >
+                        {renderLinks}
+                        {ghost.active && (
+                            <div
+                                className={ghost.className}
+                                style={ghost.style}
+                            />
+                        )}
+                    </div>
+                </div>
+                <div
+                    className='nav-profile'
+                    onClick={() => setMenu(false)}
+                >
+                    <Link
+                        className='profile-text'
+                        to={auth.token ? '/profile' : '/login'}
+                        tabIndex='0'
+                    >
+                        {auth.token && auth.avatar ?
+                            <img
+                                src={`${auth.avatar}?t=${Date.now()}`}
+                                className='profile-img'
+                                key={avatar}
+                            />
+                        :
+                            <FontAwesomeIcon
+                                className='profile-icon'
+                                icon={faUserSolid}
+                            />
+                        }
+                        <div
+                            className='profile-info'
+                        >
+                            {!auth.token ?
+                                <div
+                                    className='not-authorized'
+                                >
+                                    {t('not logged in')}
+                                </div>
+                                :
+                                <>
+                                    <p
+                                        className='navbar-name'
+                                    >
+                                        {auth.name}
+                                    </p>
+                                    <p
+                                        className='navbar-email'
+                                    >
+                                        {auth.email?.replace(/^[^@]+/, '…')}
+                                    </p>
+                                </>
+                            }
+                        </div>
+                    </Link>
+                    {/* logout button present only if the user is logged in*/}
+                    {auth.token
+                        ? 
+                            <LogOut
+                                className='logout-icon'
+                                onClick={logout}
+                            />
+                        :
+                            null
+                    }
+                </div>
+                <Link to='../privacy' className='nav-privacy-link'>
+                    Privacy Policy
+                </Link>
             </div>
             {/*  */}
-            <div
-                className='content-wrapper'
-            >
-                <TransitionGroup
-                    component={null}
-                >
+            <div className='content-wrapper'>
+                <TransitionGroup component={null}>
                     <CSSTransition
                         key={location.pathname}
-                        nodeRef={nodeRef}
                         classNames='nav-change'
+                        nodeRef={nodeRef}
                         timeout={300}
                     >
-                        <div
-                            ref={nodeRef}
-                            className='nav-routing'
-                        >
-                            <Routes
-                                location={location}
-                            >
-                                <Route path='*' element={<Navigate to='/notes' replace/>}/>
-                                <Route 
+                        <div ref={nodeRef} className='nav-routing'>
+                            <Routes location={location}>
+                                <Route
+                                    element={auth.token ? <Navigate to='/notes' replace/> : <Navigate to='/' replace/>}
+                                    path='*'
+                                />
+                                <Route
+                                    element={auth.token ? <Profile/> : <Navigate to='/login' replace />} 
                                     path='profile'
-                                    element={auth.token || guestMode ? <Profile/> : <Navigate to='/login' replace />} 
                                 />
                                 <Route path='notes' element={<Notes/>}/>
                                     <Route path='notes/new' element={<NewNote/>}/>

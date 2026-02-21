@@ -84,7 +84,7 @@ function NoteEditor() {
     // creating new note
     const newNote = useCallback(async () => {
         // offline creation
-        if (offlineMode || !online) {
+        if (offlineMode || !online || !token) {
             const tempId = Date.now()
             // sync and offline flags for UI, syncAction -- for offline synchronization
             setNotes(notes => [{
@@ -108,7 +108,7 @@ function NoteEditor() {
             return
         }
         // online creation
-        if (online) {
+        if (online && token) {
             const tempId = Date.now()
             try {
                 // flagging that saving is occurring
@@ -156,7 +156,7 @@ function NoteEditor() {
     }, [offlineMode, online, noteData, setNotes, addOfflineActions, setIsSyncing, navigate, createNote])
 
     const modifyNote = useCallback(async () => {
-        if (offlineMode || !online) {
+        if (offlineMode || !online || !token) {
             const tempId = Date.now()
             setNotes(notes => {
                 const index = notes.findIndex(n => 
@@ -430,14 +430,14 @@ function NoteEditor() {
             setOfflineMode(true)
         }
 
-        if (offlineMode) {
+        if (offlineMode || !token) {
             turnOfflineMode()
             setNote(prev => ({
                 ...prev
             }))
         }
 
-        if (online) {
+        if (online && token) {
             turnOnlineMode()
         }
     }, [online, offlineMode])

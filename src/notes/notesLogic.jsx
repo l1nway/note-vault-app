@@ -12,6 +12,15 @@ function notesLogic() {
     const offlineMode = apiStore(state => state.offlineMode)
     const online = apiStore(state => state.online)
 
+    // checks for the presence of a token in cookies and local storage
+    const token = useMemo(
+        () => [localStorage.getItem('token'), Cookies.get('token')]
+        .find(
+            token => token
+        &&
+            token !== 'null'
+    ))
+
     // managing windows for deleting, archiving and editing
     const {action, setAction, animating, setAnimating, notesError, notesLoading, notesMessage, category, tag, search, setVisibility, setClarifyLoading, setRetryFunction} = clarifyStore(
         useShallow(state => ({
@@ -39,21 +48,12 @@ function notesLogic() {
     })))
 
     //
-    const [filteredNotes, setFilteredNotes] = useState((!online || offlineMode) ? notes : null)
+    const [filteredNotes, setFilteredNotes] = useState((offlineMode || !online || !token) ? notes : null)
     const [elementID, setElementID] = useState('')
     const [lastPage, setLastPage] = useState(0)
     const [page, setPage] = useState(1)
 
     const debouncedSearch = useDebounce(search, 300)
-
-    // checks for the presence of a token in cookies and local storage
-    const token = useMemo(
-        () => [localStorage.getItem('token'), Cookies.get('token')]
-        .find(
-            token => token
-        &&
-            token !== 'null'
-    ))
 
     const queryString = useMemo(() => {
         const params = []
@@ -85,7 +85,7 @@ function notesLogic() {
     }, [queryString, token, offlineMode, online])
 
     useEffect(() => {
-        if (!online || offlineMode) {
+        if (offlineMode || !online || !token) {
             let localData = notes || []
 
             if (category?.id) {

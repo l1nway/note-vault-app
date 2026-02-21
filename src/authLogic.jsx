@@ -19,7 +19,7 @@ function authLogic() {
     const path = location.pathname.slice(1)
 
     const {setNotesError, setNotesLoading, setNotesMessage} = clarifyStore()
-    const {setNotes, setTags, setCategories, setArchive, setTrash, guestMode, setGuestMode} = appStore()
+    const {setNotes, setTags, setCategories, setArchive, setTrash} = appStore()
 
     // send data to the server for login or registration
     const submitRequest = async () => {
@@ -177,8 +177,8 @@ function authLogic() {
     // 
     const texts = {
         register: {
-            title: 'welcome to the Note Vault',
-            desc: 'register to start using notes',
+            title: 'Welcome to the Note Vault',
+            desc: 'Register to start using notes',
             button: 'register',
             google: 'register using Google',
             apple: 'register using Apple',
@@ -201,7 +201,6 @@ function authLogic() {
     return {
         path,
         text: texts[path],
-        guestMode, setGuestMode,
         online,
 
         // state

@@ -595,6 +595,7 @@
 .rac-loading-style {
     opacity: 1;
 }
+
 .rac-disabled-style {
     opacity: 0.75;
     filter: grayscale(0.6) saturate(0.8);
@@ -1300,9 +1301,4 @@
     @media (max-width: 1024px) {
         font-size: 5vw;
     }
-}
-
-.rac-disabled-style {
-    opacity: 1;
-    filter: none;
 }

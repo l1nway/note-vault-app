@@ -3,12 +3,12 @@ import './groups.css'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {motion} from 'framer-motion'
+import Cookies from 'js-cookie'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlane, faTableCells as faTableCellsSolid, faList as faListSolid, faFloppyDisk, faTriangleExclamation, faTrashCan, faSpinner} from '@fortawesome/free-solid-svg-icons'
+import {faUserSlash, faPlane, faTableCells as faTableCellsSolid, faList as faListSolid, faFloppyDisk, faTriangleExclamation, faTrashCan, faSpinner} from '@fortawesome/free-solid-svg-icons'
 
 import Clarify from '../components/clarify'
-import SlideDown from '../components/slideDown'
 import SlideLeft from '../components/slideLeft'
 import groupsLogic from './groupsLogic'
 import GroupCard from './groupCard'
@@ -18,6 +18,7 @@ import ExtraObj from '../components/extraObj'
 function Groups() {
 
     const {t} = useTranslation()
+    const token = useMemo(() => [localStorage.getItem('token'), Cookies.get('token')].find(t => t && t !== 'null'), [])
 
     const {path, loading, catsView, setCatsView, listView, elementID, setElementID, color, setColor, name, setName, openAnim, retryFunction, action, clarifyRef, gridRef, listRef, setLoadingError, getGroups, errorMessage, loadingError, setErrorMessage, items, saving, error, offlineMode, setOfflineMode, online, page, lastPage, loadMore} = groupsLogic()
 
@@ -38,10 +39,15 @@ function Groups() {
         )
     }, [items, openAnim, listView])
 
+    console.log(items)
+
     return(
         <div
             className='groups-main'
         >
+        <article>
+            <title>Groups — Note Vault</title>
+        </article>
             {/* header  */}
             <div
                 className='groups-top'
@@ -55,42 +61,38 @@ function Groups() {
                         {t(path)}
                     </h1>
                     {/* displayed during loading */}
-                    <SlideLeft
-                        visibility={loading}
-                    >
+                    <SlideLeft visibility={!token}>
+                        <FontAwesomeIcon
+                            className='unauthorized-user-icon'
+                            icon={faUserSlash}
+                        />
+                    </SlideLeft>
+                    <SlideLeft visibility={loading}>
                         <FontAwesomeIcon
                             className='clarify-loading-icon'
                             icon={faSpinner}
                         />
                     </SlideLeft>
-                    <SlideLeft
-                        visibility={saving}
-                    >
+                    <SlideLeft visibility={saving}>
                         <FontAwesomeIcon
                             className={`loading-save-icon ${retryFunction == 'delete' ? '--trash' : null}`}
                             icon={retryFunction == 'delete' ? faTrashCan : faFloppyDisk}
                         />
                     </SlideLeft>
-                    <SlideLeft
-                        visibility={loadingError || error}
-                    >
+                    <SlideLeft visibility={loadingError || error}>
                         <FontAwesomeIcon
                             className='loading-error-icon'
                             icon={faTriangleExclamation}
                         />
                     </SlideLeft>
-                    <SlideLeft
-                        visibility={false}
-                    >
+                    <SlideLeft visibility={false}>
                         <span
                             className='notes-error-text'
                         >
                             {t(errorMessage)}
                         </span>
                     </SlideLeft>
-                    <SlideLeft
-                        visibility={offlineMode}
-                    >
+                    <SlideLeft visibility={offlineMode}>
                         <FontAwesomeIcon
                             className='newnote-offline-icon'
                             icon={faPlane}

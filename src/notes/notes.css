@@ -445,6 +445,7 @@ input[type=checkbox] {
 
 .notes-list {
     overflow-y: auto;
+    overflow-x: hidden;
     scrollbar-gutter: stable;
     transition: margin 300ms;
     display: flex;

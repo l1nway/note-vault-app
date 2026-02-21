@@ -24,9 +24,8 @@ function Notes() {
     // 
     const online = apiStore(state => state.online)
 
-    const {offlineMode, notes, tags, categories, setTags, setCategories, questMode} = appStore(
+    const {offlineMode, notes, tags, categories, setTags, setCategories} = appStore(
         useShallow(state => ({
-            questMode: state.questMode,
             offlineMode: state.offlineMode,
             notes: state.notes,
             tags: state.tags,
@@ -189,19 +188,21 @@ function Notes() {
     const renderHotkeys = useMemo(() => 
         hotkeys.map((element, index) =>
             <Hotkey
-                key={element.key}
-                keys={element.key}
                 onTrigger={element.trigger}
                 enabled={element.enabled}
+                keys={element.key}
+                key={element.key}
             />
-        ), 
-        [hotkeys]
+        ), [hotkeys]
     )
 
     return(
         <div
             className='notes-main'
         >
+            <article>
+                <title>Notes — Note Vault</title>
+            </article>
             <Link className='notes-new-mobile' to='new'>
                 <Plus className='notes-new-mobile-button'/>
             </Link>
@@ -217,27 +218,21 @@ function Notes() {
                         {t('All notes')}
                     </h1>
                     {/* displayed during loading */}
-                    <SlideLeft
-                        visibility={notesLoading}
-                    >
+                    <SlideLeft visibility={notesLoading}>
                         <FontAwesomeIcon
                             className='clarify-loading-icon'
                             icon={faSpinner}
                         />
                     </SlideLeft>
                     {/* displayed during saving */}
-                    <SlideLeft
-                        visibility={notes?.some(item => item?.saving == true)}
-                    >
+                    <SlideLeft visibility={notes?.some(item => item?.saving === true)}>
                         <FontAwesomeIcon
                             className={`loading-save-icon ${retryFunction == 'delete' ? '--trash' : null}`}
                             icon={retryFunction == 'delete' ? faTrashCan : faFloppyDisk}
                         />
                     </SlideLeft>
                     {/* displayed only if the server returned an error */}
-                    <SlideLeft
-                        visibility={notesError || notes?.some(item => item?.error == true)}
-                    >
+                    <SlideLeft visibility={notesError || notes?.some(item => item?.error === true)}>
                         <FontAwesomeIcon
                             className='loading-error-icon'
                             icon={faTriangleExclamation}
@@ -245,9 +240,7 @@ function Notes() {
                         />
                     </SlideLeft>
                     {/*  */}
-                    <SlideLeft
-                        visibility={false}
-                    >
+                    <SlideLeft visibility={false}>
                         <span
                             className='notes-error-text'
                         >
@@ -255,18 +248,14 @@ function Notes() {
                         </span>
                     </SlideLeft>
                     {/* displayed only if offline mode is enabled */}
-                    <SlideLeft
-                        visibility={offlineMode}
-                    >
+                    <SlideLeft visibility={offlineMode}>
                         <FontAwesomeIcon
                             className='newnote-offline-icon'
                             icon={faPlane}
                         />
                     </SlideLeft>
                     {/* displayed only if the user is not authorized */}
-                    <SlideLeft
-                        visibility={!token || questMode}
-                    >
+                    <SlideLeft visibility={!token}>
                         <FontAwesomeIcon
                             className='unauthorized-user-icon'
                             icon={faUserSlash}
@@ -282,36 +271,28 @@ function Notes() {
                 </Link>
             </div>
             {/* settings */}
-            <div
-                className='search-settings'
-            >
-                <label
-                    className={`input-group ${(notesError || (!search && !notes?.length)) && '--disabled'}`}
-                >
+            <div className='search-settings'>
+                <label className={`input-group ${(notesError || (!search && !notes?.length)) && '--disabled'}`}>
                     <FontAwesomeIcon
-                        className='search-icon'
                         style={{color: search ? '#fdc4e1' : '#F0EDF5'}}
                         icon={faMagnifyingGlassSolid}
+                        className='search-icon'
                     />
                     <input
-                        tabIndex={notes?.length ? 0 : -1}
+                        style={{cursor: notesError || (!search && !notes?.length) ? 'not-allowed' : 'text'}}
+                        disabled={notesError || (!search && !notes?.length)}
+                        onChange={e => setSearch(e.target.value)}
                         placeholder={t('Search in all notes…')}
-                        ref={searchRef}
                         onFocus={() => setSearchFocus(true)}
                         onBlur={() => setSearchFocus(false)}
-                        disabled={notesError || (!search && !notes?.length)}
+                        tabIndex={notes?.length ? 0 : -1}
                         className='search-input'
-                        style={{cursor: notesError || (!search && !notes?.length) ? 'not-allowed' : 'text'}}
-                        type='text'
+                        ref={searchRef}
                         value={search}
-                        onChange={e => setSearch(e.target.value)}
+                        type='text'
                     />
-                        <div
-                            className='search-hotkeys'
-                        >
-                            <SlideLeft
-                                visibility={!searchFocus}
-                            >
+                        <div className='search-hotkeys'>
+                            <SlideLeft visibility={!searchFocus}>
                                 <kbd>⌘</kbd>+<kbd>K</kbd>
                             </SlideLeft>
                         </div>
@@ -333,9 +314,9 @@ function Notes() {
                     error={notesError}
                     value={category?.id}
                     errorText={t('Error loading categories')}
-                    disabledText={t('No categories created')}
+                    disabledText={t('No categories')}
                     placeholder={t('All categories')}
-                    emptyText={t('No categories created')}
+                    emptyText={t('No categories')}
                     loadingText={t('Categories loading')}
                     onChange={setCategory}
                 />

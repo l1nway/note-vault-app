@@ -69,7 +69,7 @@ function GroupCard({element, openAnim, setElementID, setName, setColor, listView
         <motion.div
             tabIndex={0}
             className={`group-element`}
-            style={{ 
+            style={{
                 willChange: 'transform, opacity, height',
                 backfaceVisibility: 'hidden',
                 transform: 'translateZ(0)'

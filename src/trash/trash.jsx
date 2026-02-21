@@ -1,14 +1,14 @@
 import './trash.css'
 
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useShallow} from 'zustand/react/shallow'
+import Cookies from 'js-cookie'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlane, faUserSlash, faSpinner, faTrashCan, faTriangleExclamation, faFloppyDisk, faList as faListSolid, faTableCells as faTableCellsSolid} from '@fortawesome/free-solid-svg-icons'
+import {faPlane, faUserSlash, faSpinner, faTriangleExclamation, faFloppyDisk, faList as faListSolid, faTableCells as faTableCellsSolid} from '@fortawesome/free-solid-svg-icons'
 
 import Clarify from '../components/clarify'
-import SlideDown from '../components/slideDown'
 import SlideLeft from '../components/slideLeft'
 import trashLogic from './trashLogic'
 import NoteCard from '../components/noteCard'
@@ -18,17 +18,17 @@ import {notesViewStore, clarifyStore, appStore} from '../store'
 
 function Trash() {
   const {t} = useTranslation()
+  const token = useMemo(() => [localStorage.getItem('token'), Cookies.get('token')].find(t => t && t !== 'null'), [])
 
   const {deletedLoading, archivedLoading, path, selectedNotes, elementID, gridRef, listRef, getTrash, setElementID, openAnim, loadMore, lastPage, page} = trashLogic()
 
-  const {archive, setArchive, trash, setTrash, offlineMode, guestMode} = appStore(
+  const {archive, setArchive, trash, setTrash, offlineMode} = appStore(
     useShallow((state) => ({
         archive: state.archive,
         setArchive: state.setArchive,
         trash: state.trash,
         setTrash: state.setTrash,
-        offlineMode: state.offlineMode,
-        guestMode: state.guestMode,
+        offlineMode: state.offlineMode
   })))
 
   // global state that stores the display view of notes
@@ -75,6 +75,9 @@ function Trash() {
     <div
       className='trash-main'
     >
+      <article>
+        <title>Trash — Note Vault</title>
+      </article>
       <header
         className='trash-header'
       >
@@ -123,9 +126,7 @@ function Trash() {
               />
           </SlideLeft>
           {/* displayed only if the user is not authorized */}
-          <SlideLeft
-              visibility={guestMode}
-          >
+          <SlideLeft visibility={!token}>
               <FontAwesomeIcon
                   className='unauthorized-user-icon'
                   icon={faUserSlash}

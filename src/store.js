@@ -1,19 +1,11 @@
 import {create} from 'zustand'
 import {persist} from 'zustand/middleware'
 
-const parseValue = (v) => {
-  if (v == 'null' || v == null) return null
-  if (v == 'true') return true
-  if (v == 'false') return false
-  return v
-}
-
 export const appStore = create(
   persist(
     (set, get) => ({
       online: navigator.onLine,
       offlineMode: false,
-      guestMode: false,
       offlineActions: [],
       isSyncing: false,
       notes: [],
@@ -25,7 +17,6 @@ export const appStore = create(
 
       setOnline: (status) => set({online: status}),
       setOfflineMode: (status) => set({offlineMode: status}),
-      setGuestMode: (status) => set({guestMode: status}),
       setIsSyncing: (v) => set({isSyncing: v}),
       setNotes: (fn) =>
         typeof fn == 'function' ? set(state => ({notes: fn(state.notes)})) : set({notes: fn}),

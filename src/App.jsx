@@ -1,12 +1,13 @@
 import './App.css'
 
-import {useState, createRef, useRef, useEffect, useMemo} from 'react'
-import {Routes, Route, useLocation} from 'react-router'
 import {CSSTransition, TransitionGroup} from 'react-transition-group'
+import {createRef, useRef, useEffect, useMemo} from 'react'
+import {Routes, Route, useLocation, Navigate} from 'react-router'
 import Cookies from 'js-cookie'
 
 import Navigation from './navigation'
 import Login from './login'
+import Landing from './landing'
 
 import {apiStore, appStore} from './store'
 import useOfflineSync from './components/useOfflineSync'
@@ -18,12 +19,7 @@ function App() {
   const token = useMemo(() => [localStorage.getItem('token'), Cookies.get('token')].find(t => t && t !== 'null'), [])
   useOfflineSync(token)
 
-  useEffect(() => {
-    setOfflineMode?.(!online)
-  }, [online, setOfflineMode])
-
-  // тестирую возможность менять расположение бара
-  const [topBar, setTopBar] = useState(true)
+  useEffect(() => {setOfflineMode?.(!online)}, [online, setOfflineMode])
 
   // 
   const location = useLocation()
@@ -46,57 +42,27 @@ function App() {
   const topLevel = useMemo(() => (
     ['/login', '/register'].includes(location.pathname) ? location.pathname : 'main'
   ), [location.pathname])
-
-  // — Vite
-  // — Zustand
-  // — js-cookie
-  // — React Router
-  // — Font Awesome
-  // — framer-motion
-  // — react-i18next
-  // — TanStack Query
-  // — react-responsive
-  // — React Hotkeys Hook
-  // — react-color-palette
-  // — use-gesture by pmndrs
-  // — React Transition Group
-  // — Markdown Editor by uiwjs
-  // — React Avatar Editor by mosch 
-  // — React Content Loader by danilowoz
   
   return (
-    <div
-      className='app-main'
-      style={{
-        '--direction': topBar ? 'column' : 'column-reverse',
-        '--justify': topBar ? 'flex-start' : 'space-between'
-      }}
-    >
-      {/* <button
-        onClick={() => setTopBar(!topBar)}
-        style={{position: 'absolute', zIndex: '12'}}
-      >
-        top or bottom
-      </button> */}
-      <TransitionGroup
-        component={null}
-      >
+    <div className='app-main'>
+      <TransitionGroup component={null}>
         <CSSTransition
-            key={topLevel}
-            nodeRef={nodeRef}
             classNames='nav-change'
+            nodeRef={nodeRef}
+            key={topLevel}
             timeout={300}
         >
           <div
-            ref={nodeRef}
             className='page-list'
+            ref={nodeRef}
           >
             <Routes
               location={location}
             >
-              <Route path='/login' element={<Login/>}/>
               <Route path='/register' element={<Login/>}/>
               <Route path='/*' element={<Navigation/>}/>
+              <Route path='/login' element={<Login/>}/>
+              <Route path='/' element={token ? <Navigate to='/notes' replace/> : <Landing/>}/>
             </Routes>
           </div>
         </CSSTransition>

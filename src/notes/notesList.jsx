@@ -1,5 +1,5 @@
 import './notesList.css'
-import {motion} from 'framer-motion'
+import {motion, AnimatePresence} from 'framer-motion'
 
 import React, {useMemo, useCallback} from 'react'
 import {useShallow} from 'zustand/react/shallow'
@@ -14,8 +14,11 @@ import NoteCard from '../components/noteCard'
 import ExtraObj from '../components/extraObj'
 import Clarify from '../components/clarify'
 import notesLogic from './notesLogic'
+import Cookies from 'js-cookie'
 
 function NotesList() {
+    const token = useMemo(() => [localStorage.getItem('token'), Cookies.get('token')].find(t => t && t !== 'null'), [])
+
     const location = useLocation()
     const path = location.pathname.slice(1)
     const {t} = useTranslation()
@@ -57,7 +60,7 @@ function NotesList() {
 
     // displaying a sorted list
     const renderNotes = useMemo(() => {
-        const source = (online && !offlineMode) ? notes : filteredNotes
+        const source = (online && !offlineMode && token) ? notes : filteredNotes
         return source?.map((element, index) =>
             <NoteCard
                 key={element.id}
@@ -71,7 +74,7 @@ function NotesList() {
             />
     )}, [filteredNotes, online, offlineMode, notes, handleAction, setCategory, setTag, listView])
 
-    const source = (online && !offlineMode) ? notes : filteredNotes
+    const source = (online && !offlineMode && token) ? notes : filteredNotes
     const empty = !notesLoading && source?.length === 0
 
     return(
@@ -87,23 +90,42 @@ function NotesList() {
                 online={online}
                 path={path}
             />
-            <motion.div
-                className='notes-list'
-            >
+            <div className='notes-list'>
                 {empty &&
-                    <Link
+                    <motion.div
                         className='note-animated-element'
-                        to='./new'
+                        style={{ 
+                            willChange: 'transform, opacity, height',
+                            backfaceVisibility: 'hidden',
+                            transform: 'translateZ(0)'
+                        }}
+                        viewport={{once: false, amount: 0.1, margin: '0px 0px 0px 0px'}}
+                        initial={{opacity: 0, scale: 0.9}}
+                        whileInView={{opacity: 1, scale: 1}}
+                        key='empty'
+                        transition={{
+                            layout: { 
+                                type: 'spring', 
+                                stiffness: 300, 
+                                damping: 30
+                            },
+                            default: { 
+                                duration: 0.3, 
+                                ease: 'easeInOut'
+                            },
+                            opacity: {duration: 0.3}
+                        }}
+                        exit={{opacity: 0, scale: 0.8, transition: {duration: 0.3}}}
                     >
-                        <div className='note-element'>
+                        <Link className='note-element' to='./new'>
                             <div className='note-empty-group'>
                                 <h2 className='note-empty-title'>
                                     {t('No notes yet')}
                                 </h2>
                                 <p className='note-desc'>{t('Create a note?')}</p>
                             </div>
-                        </div>
-                    </Link>
+                        </Link>
+                    </motion.div>
                 }
                 {renderNotes}
                 <ExtraObj
@@ -113,15 +135,15 @@ function NotesList() {
                     loadMore={loadMore}
                     page={page}
                 />
-            </motion.div>
-            {action ?
+            </div>
+            {action &&
                 <Clarify
                     setID={setElementID}
                     getNotes={getNotes}
                     setNotes={setNotes}
                     id={elementID}
                 />
-            : null}
+            }
         </>
     )
 }

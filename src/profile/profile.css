@@ -206,7 +206,7 @@ button {
     height: 3vw;
     transition: 300ms background-color, 300ms border;
     pointer-events: var(--pointer);
-    display: flex;
+    display: var(--icon-display);
     align-items: center;
     justify-content: center;
 

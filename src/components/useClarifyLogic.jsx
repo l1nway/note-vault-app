@@ -131,7 +131,7 @@ const useClarifyLogic = (props) => {
     }, [action, path, props.id, props.name, props.color, setClarifyLoading, setLoadingError, props.setName, props.setColor, token, closeAnim, visibility])
 
     // to get at the first render
-    useEffect(() => online ? get() : setClarifyLoading(false), [])
+    useEffect(() => (online && token) ? get() : setClarifyLoading(false), [])
 
     // determining which server request must be re-executed to update the list after the user's action
     const refresh = useMemo(() => ({
@@ -256,7 +256,7 @@ const useClarifyLogic = (props) => {
         const setter = setterMap[path]
             
         if (action == 'edit') {
-            if (!online || offlineMode) {
+            if (offlineMode || !online || !token) {
                 const tempId = Date.now()
                 // sync and offline flags for UI, syncAction -- for offline synchronization
                 setter(prev =>
@@ -304,7 +304,7 @@ const useClarifyLogic = (props) => {
             change(retryContext)
             closeAnim()
         } else if (action == 'new') {
-            if (!online || offlineMode) {
+            if (offlineMode || !online || !token) {
                 const tempId = Date.now()
                 // sync and offline flags for UI, syncAction -- for offline synchronization
                 setter(prev => ([{
@@ -347,7 +347,7 @@ const useClarifyLogic = (props) => {
             change({id: props.id, action, name: props.name, color: props.color, path})
             closeAnim()
         } else if (action == 'unarchive' || action == 'restore') {
-            if (!online || offlineMode) {
+            if (offlineMode || !online || !token) {
                 let restoredItem = null
 
                 const setter = action == 'restore' ? setTrash : setArchive
@@ -404,14 +404,14 @@ const useClarifyLogic = (props) => {
         } else {
             const currentId = retryContext?.id || props.id
 
-            if (!online || offlineMode) {
+            if (offlineMode || !online || !token) {
                 addOfflineActions({
                     type: action,
                     entity: path,
                     payload: {id: currentId}
                 })
                 setIsSyncing(false)
-            } else {
+            } else if (online && token) {
                 change(retryContext || {id: currentId, action, path})
             }
 

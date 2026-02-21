@@ -410,10 +410,11 @@ a {
 }
 
 .nav-profile {
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 00px 20px 20px 20px;
+    padding: 00px 20px 0px 20px;
     border-radius: 20px;
     border: 1px solid transparent;
     transition: 300ms border;
@@ -430,11 +431,10 @@ a {
 }
 
 .nav-privacy-link {
-    margin-top: auto;
-    padding: 0.25vw 2vw 0vw;
-    align-self: center;
-    font-size: 0.75rem;
+    padding: 10px 0px 10px 20px;
     transition: 300ms color;
+    font-size: 0.75rem;
+    width: 100%;
 
     @media (max-width: 1024px) {
         display: none;

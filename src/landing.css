@@ -1,0 +1,102 @@
+.landing {
+    background: linear-gradient(135deg, #0f172a, #0b1120);
+    flex-direction: column;
+    min-height: 100vh;
+    color: #ffffff;
+    overflow-y: auto;
+    display: flex;
+    padding: 0 5%;
+    width: 100%;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, #ff4ecd, #8b5cf6);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+.hero {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+}
+
+.landing-text {
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.hero-buttons {
+    padding-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.primary-btn {
+    background: linear-gradient(90deg, #ff4ecd, #8b5cf6);
+    transition: box-shadow 300ms;
+    padding: 0rem 1.5rem;
+    border-radius: 10px;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    height: 3rem;
+    border: none;
+
+    &:hover, &:focus {
+        box-shadow: 0 8px 20px rgba(255, 78, 205, 0.4);
+        transition: box-shadow 300ms;
+    }
+}
+
+.secondary-btn {
+    transition: transform 300ms, box-shadow 300ms, border 300ms, background-color 300ms;
+    background-color: var(--blck-bc);
+    border: 1px solid #475569;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    color: #cbd5e1;
+    cursor: pointer;
+    height: 3rem;
+
+    &:hover, &:focus {
+        background-color: var(--blck-bc-hvr);
+        border-color: var(--blck-bc-fcs);
+        outline: none;
+    }
+}
+
+.features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    margin-top: 50px;
+    display: grid;
+    gap: 30px;
+}
+
+.feature-card {
+    transition: transform 300ms, background-color 300ms;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 1.5rem;
+    cursor: pointer;
+
+    &:hover, &:focus {
+        background-color: rgba(255, 255, 255, 0.08);
+        transform: translateY(-6px);
+    }
+}
+
+.landing-card-group {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.feature-icon {
+    height: 2rem;
+    width: 2rem;
+}

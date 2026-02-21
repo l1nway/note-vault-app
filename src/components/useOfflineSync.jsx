@@ -29,7 +29,7 @@ const useOfflineSync = () => {
     const {createNote, editNote} = useApi(token)
 
     useEffect(() => {
-        if (!online) return
+        if (!online || !token) return
 
         const processPendings = async () => {
             const readyTasks = pendings.filter(p => p.status == 'ready')
@@ -290,7 +290,7 @@ const useOfflineSync = () => {
 
         processPendings()
         sync()
-    },  [online, offlineActions?.length, pendings?.length])
+    },  [online, offlineActions?.length, pendings?.length, token])
 }
 
 export default useOfflineSync

@@ -7,7 +7,7 @@ import MDEditor from '@uiw/react-md-editor'
 import Cookies from 'js-cookie'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faArrowUp as faArrowUpSolid, faPenToSquare, faTriangleExclamation, faSpinner, faPlane, faShareNodes, faBoxArchive, faTrash} from '@fortawesome/free-solid-svg-icons'
+import {faArrowUp as faArrowUpSolid, faPenToSquare, faTriangleExclamation, faSpinner, faPlane, faUserSlash, faBoxArchive, faTrash} from '@fortawesome/free-solid-svg-icons'
 
 import Share from '../components/share'
 import Clarify from '../components/clarify'
@@ -34,12 +34,12 @@ function Note() {
     const [error, setError] = useState(false)
 
     const getNote = () => {
-    fetch(`https://api.notevault.pro/api/v1/notes/${location.state || id}`, {
-        headers: {
-            'content-type': 'application/json',
-            authorization: `Bearer ${token}`,
-        },
-    })
+        fetch(`https://api.notevault.pro/api/v1/notes/${location.state || id}`, {
+            headers: {
+                'content-type': 'application/json',
+                authorization: `Bearer ${token}`,
+            },
+        })
         .then(res => {
             if (!res.ok) throw new Error(res.statusText)
             return res.json()
@@ -52,7 +52,7 @@ function Note() {
     }
 
     // triggers the function execution on the first load
-    useEffect(() => online ? getNote() : setLoading(false), [])
+    useEffect(() => (online && token) ? getNote() : setLoading(false), [])
 
     const {action, setAction, setVisibility} = clarifyStore()
 
@@ -157,6 +157,9 @@ function Note() {
         <div
             className='note-main'
         >
+            <article>
+                <title>Watch note — Note Vault</title>
+            </article>
                 <div
                     className='note-header'
                 >
@@ -173,6 +176,12 @@ function Note() {
                             />
                             {t('Back to notes')}
                         </div>
+                        <SlideLeft visibility={!token}>
+                            <FontAwesomeIcon
+                                className='unauthorized-user-icon'
+                                icon={faUserSlash}
+                            />
+                        </SlideLeft>
                         <SlideLeft
                             visibility={error}
                         >

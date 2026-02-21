@@ -155,20 +155,22 @@ const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastP
     }), [listView])
 
     return (
-        <AnimatePresence>
+        <AnimatePresence mode='wait'>
         {/* loading skeleton */}
-            {loading ?
+            {loading &&
                 <motion.div
-                {...motionProps}
+                    {...motionProps}
+                    key='skeleton'
                 >
                     {mobile ? mobileSkeleton : skeleton}
                 </motion.div>
-            : null}
+            }
         {/* load more button */}
             {(page < lastPage) && !loading && online ?
                 <motion.div
                     onClick={loadMore}
                     {...motionProps}
+                    key='loadmore'
                 >
                     <div
                         className='load-more-button'

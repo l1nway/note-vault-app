@@ -199,6 +199,7 @@
 
 .groups-list {
     overflow-y: auto;
+    overflow-x: hidden;
     scrollbar-gutter: stable;
     display: flex;
     flex-direction: row;
@@ -356,11 +357,13 @@
 }
 
 .group-content {
+    min-width: 85%;
     flex-direction: column;
     gap: 0.5vw;
     display: flex;
 
     @media (max-width: 1024px) {
+        min-width: 75%;
         gap: 2vw;
     }
 }
@@ -368,7 +371,7 @@
 .group-element:has(.list-view:checked) .group-content {
     gap: 0vw 0.75vw;
     display: grid;
-    grid-template-columns: 25% 50%;
+    grid-template-columns: 25% 100%;
     grid-template-rows: 65% 0;
     align-items: start;
     min-width: 27%;
@@ -425,9 +428,8 @@
 }
 
 .group-title-top {
+    min-width: 100%;
     max-width: 14vw;
-    overflow: hidden;
-    text-overflow: ellipsis;
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
@@ -446,24 +448,25 @@
 }
 
 .group-title {
-    font-size: 2vw;
     transition: font-size 300ms;
+    text-overflow: ellipsis;
     text-wrap: nowrap;
+    overflow: hidden;
+    max-width: 91%;
+    font-size: 2vw;
 
     @media (max-width: 1024px) {
-        font-size: 5vw;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 30vw;
+        max-width: 22vw;
+        font-size: 5vw;
     }
 }
 
 .group-element:has(.list-view:checked) .group-title {
 
     @media (max-width: 1024px) {
-        overflow: visible;
         text-align: initial;
+        overflow: hidden;
     }
 }
 

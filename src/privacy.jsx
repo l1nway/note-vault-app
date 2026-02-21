@@ -4,6 +4,9 @@ import {ShieldCheck, ClipboardList, Lock, FileText, Mail, Github} from 'lucide-r
 export default function PrivacyPolicy() {
   return (
     <div className='pp-page'>
+      <article>
+          <title>Privacy policy — Note Vault</title>
+      </article>
       <div className='pp-header'>
         <h1>Privacy Policy</h1>
         <p className='pp-description'>
