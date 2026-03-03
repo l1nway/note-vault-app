@@ -71,7 +71,7 @@ function Password(props) {
     // contacting the server to change the password
     const changePass = useCallback(async () => {
         try {
-            const res = await fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/users/change-password`, {
+            const res = await fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/users/change-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

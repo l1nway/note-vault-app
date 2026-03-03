@@ -73,7 +73,7 @@ function User() {
     const getUser = useCallback(async (token) => {
         try {
             setProfileLoading(true)
-            const res = await fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/users/me`, {
+            const res = await fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/users/me`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ function User() {
 
     const changeName = useCallback(async () => {
         try {
-            const response = await fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/profile`, {
+            const response = await fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/profile`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

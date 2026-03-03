@@ -55,7 +55,7 @@ function Navigation() {
             if (!token) return
 
             try {
-                const response = await fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/users/me`, {
+                const response = await fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/users/me`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
