@@ -81,7 +81,7 @@ function Notes() {
     useEffect(() => {
         if (!token || !online) return
             const getTags = async () => {
-                const res = await fetch(`http://localhost:3000/api/v1/tags`, {
+                const res = await fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/tags`, {
                     headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }
                 })
                 const data = await res.json()
@@ -89,7 +89,7 @@ function Notes() {
             }
 
             const getCats = async () => {
-                const res = await fetch(`http://localhost:3000/api/v1/categories`, {
+                const res = await fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/categories`, {
                     headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }
                 })
                 const data = await res.json()

@@ -116,7 +116,7 @@ const Editor = forwardRef((props, ref) => {
             
             formData.append('file', blob, 'avatar.jpg')
 
-            fetch(`http://localhost:3000/api/v1/profile/avatar`, {
+            fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/profile/avatar`, {
                 headers: {authorization: `Bearer ${token}`},
                 method: 'POST',
                 body: formData
@@ -126,7 +126,7 @@ const Editor = forwardRef((props, ref) => {
                 return res.json()
             })
             .then(resData => {
-                const fullUrl = `http://localhost:3000${resData.avatar_url}`
+                const fullUrl = `http://note-vault-backend-w1uv.onrender.com${resData.avatar_url}`
                 
                 setRotate(0)
                 setZoom(1)

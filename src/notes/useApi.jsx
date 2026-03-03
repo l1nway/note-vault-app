@@ -1,7 +1,7 @@
 const useApi = (token) => {
 
     const request = async (url, {method = 'GET', body} = {}) => {
-        const res = await fetch(`http://localhost:3000${url}`, {
+        const res = await fetch(`http://note-vault-backend-w1uv.onrender.com${url}`, {
             method,
             headers: {
                 'content-type': 'application/json',

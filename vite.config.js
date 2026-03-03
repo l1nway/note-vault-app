@@ -13,8 +13,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/uploads': 'http://localhost:3000',
-      '/api': 'http://localhost:3000'
+      '/uploads': 'http://note-vault-backend-w1uv.onrender.com',
+      '/api': 'http://note-vault-backend-w1uv.onrender.com'
     },
     watch: {
       usePolling: true,

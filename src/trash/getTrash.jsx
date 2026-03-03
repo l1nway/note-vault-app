@@ -20,7 +20,7 @@ const getTrash = (
     )
 
     const trashUrl =
-        `http://localhost:3000/api/v1/notes` +
+        `http://note-vault-backend-w1uv.onrender.com/api/v1/notes` +
         `?${path == 'trash' ? 'isDeleted' : 'isArchived'}=true` +
         `&page=${page}`
 

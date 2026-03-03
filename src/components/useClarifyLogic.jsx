@@ -103,7 +103,7 @@ const useClarifyLogic = (props) => {
             setClarifyLoading(false)
             return
         }
-        fetch(`http://localhost:3000/api/v1/${(path == 'archived' || path == 'trash') ? 'notes' : path}`,
+        fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/${(path == 'archived' || path == 'trash') ? 'notes' : path}`,
             {
                 method: 'GET',
                 headers: {

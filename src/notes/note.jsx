@@ -34,7 +34,7 @@ function Note() {
     const [error, setError] = useState(false)
 
     const getNote = () => {
-        fetch(`http://localhost:3000/api/v1/notes/${location.state || id}`, {
+        fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/notes/${location.state || id}`, {
             headers: {
                 'content-type': 'application/json',
                 authorization: `Bearer ${token}`,

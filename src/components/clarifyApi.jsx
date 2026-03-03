@@ -27,10 +27,10 @@ const clarifyApi = async ({entity, action, id, token, payload}) => {
 
     const url =
         action == 'new'
-            ? `http://localhost:3000/api/v1/${normalizedEntity}`
+            ? `http://note-vault-backend-w1uv.onrender.com/api/v1/${normalizedEntity}`
             : normalizedEntity == 'notes' && noteActionEndpoints[action]
-                ? `http://localhost:3000/api/v1/notes/${id}/${noteActionEndpoints[action]}`
-                : `http://localhost:3000/api/v1/${normalizedEntity}/${id}`
+                ? `http://note-vault-backend-w1uv.onrender.com/api/v1/notes/${id}/${noteActionEndpoints[action]}`
+                : `http://note-vault-backend-w1uv.onrender.com/api/v1/${normalizedEntity}/${id}`
 
 
     const res = await fetch(url, {

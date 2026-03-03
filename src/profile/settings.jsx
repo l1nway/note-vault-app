@@ -72,7 +72,7 @@ function ProfileSettings() {
 
         if (token) {
             try {
-                const response = await fetch(`http://localhost:3000/api/v1/profile`, {
+                const response = await fetch(`http://note-vault-backend-w1uv.onrender.com/api/v1/profile`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
