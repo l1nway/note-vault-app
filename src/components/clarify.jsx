@@ -6,17 +6,7 @@ import {useTranslation} from 'react-i18next'
 import ClarifyView from './clarifyView'
 import useClarifyLogic from './useClarifyLogic'
 
-interface ClarifyProps {
-    color: string | null
-    setColor: (value: string | null) => void
-    [key: string]: any
-}
-
-interface ClarifyRef {
-    change: (context: any) => void
-}
-
-const Clarify = forwardRef<ClarifyRef, ClarifyProps>((props, ref) => {
+const Clarify = forwardRef((props, ref) => {
 
     const {t} = useTranslation()
 
@@ -26,36 +16,34 @@ const Clarify = forwardRef<ClarifyRef, ClarifyProps>((props, ref) => {
     const {loadingError} = state
 
     // color storage (used only for categories)
-    type color = string
-    
-    const colors: color[] = useMemo(() =>  ['#1E90FF', '#32CD32', '#8A2BE2', '#FF8C00', '#FF1493', '#008B8B', '#3CB371', '#DC143C', '#9370DB', '#66CDAA'], [])
+    const colors = useMemo(() =>  ['#1E90FF', '#32CD32', '#8A2BE2', '#FF8C00', '#FF1493', '#008B8B', '#3CB371', '#DC143C', '#9370DB', '#66CDAA'], [])
 
     // for the future; implement saving of the last used colors
-    const [recentColors, setRecentColors] = useState<{id: number, color: string}[]>([
+    const [recentColors, setRecentColors] = useState([
         {id: 1, color: '#1E90FF'}
     ])
 
-    const selectColor = useCallback((value: color) => {
+    const selectColor = useCallback((value) => {
         props.color == value ? props.setColor(null) : props.setColor(value)
     }, [props.color, props.setColor])
 
     // displays a list of colors
-    const renderColors: JSX.Element[] = useMemo(() => 
-        colors.map((value: color, index: number) => 
+    const renderColors = useMemo(() => 
+        colors.map((value, index) => 
             <label
+                style={{'--color-value' : value}}
                 className='color-element'
-                style={{'--color-value' : value} as React.CSSProperties}
                 tabIndex={0}
                 key={index}
             >
                 <input
+                    onChange={() => selectColor(value)}
+                    onClick={() => selectColor(value)}
+                    checked={props.color == value}
                     disabled={loadingError}
                     className='color-radio'
                     type='radio'
                     name='color'
-                    checked={props.color == value}
-                    onClick={() => selectColor(value)}
-                    onChange={() => selectColor(value)}
                 />
             </label>
     ), [colors, loadingError, props.color, props.setColor])

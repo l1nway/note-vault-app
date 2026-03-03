@@ -1,42 +1,18 @@
-import {useState, useRef, useCallback, useMemo, ReactNode} from 'react'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {useShallow} from 'zustand/react/shallow'
 import {faXmark, faSpinner, faTriangleExclamation, faArrowUp as faArrowUpSolid, faBookmark as faBookmarkSolid} from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {useState, useRef, useCallback, useMemo} from 'react'
 import {ColorPicker, useColor} from 'react-color-palette'
+import {useShallow} from 'zustand/react/shallow'
 import 'react-color-palette/css'
 
-import SlideLeftJSX from './slideLeft'
+import SlideLeft from './slideLeft'
 
 import {pendingStore, apiStore, appStore} from '../store'
 import {clarifyValue} from './clarifyTexts'
 import SlideDown from './slideDown'
-import {shake, clearShake} from '../components/shake'
+import {shake, clearShake} from './shake'
 
-type ViewProps = {
-    t: (key: string) => string
-    logic: {
-        state: any
-        actions: any
-        pathData: any
-    }
-    props: {
-        name: string | undefined
-        setName?: ((value: string) => void | undefined) | undefined
-        color?: string | undefined
-        setColor?: ((value: string) => void | undefined) | undefined
-        setID?: ((value: string) => void | undefined) | undefined
-    }
-    renderColors: ReactNode[]
-}
-
-const SlideLeft = SlideLeftJSX as React.FC<{
-    visibility: boolean
-    children: React.ReactNode
-    duration?: number
-    unmount?: boolean
-}>
-
-const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
+const ClarifyView = ({t, logic, props, renderColors}) => {
 
     const online = apiStore(state => state.online)
     const schedule = pendingStore(state => state.schedule)
@@ -53,9 +29,7 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
     const {path, effectivePath} = pathData
     const {closeAnim, get, setLoadingError, setClarifyLoading, offlineChange, change} = actions
 
-    const clarify = clarifyValue
-        [effectivePath as keyof typeof clarifyValue]?.
-        [action as keyof typeof clarifyValue[keyof typeof clarifyValue]]
+    const clarify = clarifyValue[effectivePath]?.[action]
 
     const [color, setColor] = useColor(props.color ? props.color : 'white')
 
@@ -65,7 +39,7 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
 
     const disabled = useMemo(() => loadingError || (!offlineMode && !online) || clarifyLoading || ((action == 'new' || action == 'edit') && props.name == ''), [loadingError, offlineMode, online, clarifyLoading, action, props.name])
 
-    const inputRef = useRef<HTMLInputElement>(null)
+    const inputRef = useRef(null)
 
     const [inputNull, setInputNull] = useState(false)
 
@@ -91,8 +65,7 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
         props?.setID?.('')
     }, [disabled, props, action, path, offlineChange, schedule, change, setArchive, setTrash, notes, online, closeAnim])
 
-    const clarifyInput = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement>) => {
+    const clarifyInput = useCallback((e) => {
             props.setName?.(e.target.value)
             setInputNull(false)
 
@@ -116,7 +89,7 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
                 onClick={(e) => e.stopPropagation()}
                 style={{
                     '--loading': clarifyLoading ? '4px' : '0'
-                } as React.CSSProperties}
+                }}
             >
                 <div
                     className='clarify-head'
@@ -222,7 +195,7 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
                         icon={faArrowUpSolid}
                         style={{
                             '--arrow-direction': picker ? '0deg' : '180deg'
-                        } as React.CSSProperties & Record<string, string>}
+                        }}
                     />
                 </button>
                 <SlideDown
@@ -269,7 +242,7 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
                                 icon={faBookmarkSolid}
                                 style={{
                                     '--opacity': save ? '1' : '0'
-                                } as React.CSSProperties & Record<string, string>}
+                                }}
                             />
                         </div>
                     </label>
@@ -289,7 +262,7 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
                     className={`clarify-action ${disabled && 'clarify-action-disabled'}`}
                     onClick={() => clarifyAction()}
                     style={
-                        (action == 'delete' || action == 'force')
+                        (action == 'delete' || action == 'permanent')
                             ? {
                                   '--btn-bg': 'var(--del-btn)',
                                   '--btn-bg-hvr': 'var(--del-btn-hvr)',
@@ -297,7 +270,7 @@ const ClarifyView = ({t, logic, props, renderColors}: ViewProps) => {
                             : {
                                   '--btn-bg': 'var(--def-btn)',
                                   '--btn-bg-hvr': 'var(--def-btn-hvr)',
-                              }  as React.CSSProperties & Record<string, string>
+                              }
                     }
                 >
                     {t(clarify?.button)}

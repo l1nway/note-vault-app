@@ -1,8 +1,9 @@
-import {useEffect, useState, useRef, createRef, useMemo, useCallback} from 'react'
 import {Link, useLocation, Route, Routes, useNavigate, Navigate} from 'react-router'
-import {useTranslation} from 'react-i18next'
+import {useEffect, useState, useRef, createRef, useMemo, useCallback} from 'react'
 import {CSSTransition, TransitionGroup} from 'react-transition-group'
 import {motion, AnimatePresence} from 'framer-motion'
+import {useShallow} from 'zustand/react/shallow'
+import {useTranslation} from 'react-i18next'
 import Cookies from 'js-cookie'
 import Privacy from './privacy'
 
@@ -29,25 +30,55 @@ function Navigation() {
     const location = useLocation()
     const navigate = useNavigate()
 
+    const {name, setName, email, setEmail, avatar, setAvatar, setLanguage} = profileStore(
+        useShallow((state) => ({
+            setLanguage: state.setLanguage,
+            setAvatar: state.setAvatar,
+            setEmail: state.setEmail,
+            setName: state.setName,
+            avatar: state.avatar,
+            email: state.email,
+            name: state.name
+        }))
+    )
+
     // universal function for convenient routing of all values ​​from local storage and cookies
-    const storedValue = useCallback((element) => {
+    const token = useMemo(() => {
         return [
-            localStorage.getItem(element),
-            Cookies.get(element)
-                ].find(
-                    val => val && val !== 'null'
-                ) || ''
+            localStorage.getItem('token'),
+            Cookies.get('token')
+        ].find(t => t && t !== 'null')
     }, [])
 
-    const avatar = profileStore(state => state.avatar)
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (!token) return
 
-    const auth = {
-        // individual token of the logged-in user
-        token: storedValue('token'),
-        name: storedValue('name'),
-        email: storedValue('email'),
-        avatar: storedValue('avatar'),
-    }
+            try {
+                const response = await fetch(`http://localhost:3000/api/v1/users/me`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+
+                if (response.ok) {
+                    const data = await response.json()
+                    setAvatar(data.avatar_url)
+                    setLanguage(data.language)
+                    setEmail(data.email)
+                    setName(data.name)
+                } else if (response.status === 401) {
+                    logout()
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        }
+
+        fetchUser()
+    }, [])
 
     // object with the number of objects at each endpoint
     const [amount, setAmount] = useState([])
@@ -128,9 +159,7 @@ function Navigation() {
 
     const locationKey = location.pathname
 
-    if (!nodeRefs.current[locationKey]) {
-        nodeRefs.current[locationKey] = createRef()
-    }
+    if (!nodeRefs.current[locationKey]) {nodeRefs.current[locationKey] = createRef()}
 
     const nodeRef = nodeRefs.current[locationKey]
     
@@ -232,13 +261,7 @@ function Navigation() {
     const stores = [appStore, profileStore, notesViewStore, screenStore, clarifyStore, pendingStore, editorStore, settingStore, tokenStore]
 
     const logout = useCallback(() => {
-        const keys = ['token', 'name', 'email', 'verif', 'accdate', 'avatar', 'remember']
-        keys.forEach(k => localStorage.removeItem(k))
-        keys.forEach(k => Cookies.remove(k))
-
-        stores.forEach(store => {
-            store.setState({}, true)
-        })
+        stores.forEach(store => {store.setState({}, true)})
 
         window.location.href = '/login'
     }, [])
@@ -341,8 +364,8 @@ function Navigation() {
                     </div>
 
                     <Dropdown
-                        className='nav-dropdown'
                         toggle={() => setMenu(!menu)}
+                        className='nav-dropdown'
                         visibility={menu}
                         ref={dropdownRef}
                     >
@@ -363,17 +386,17 @@ function Navigation() {
                     </div>
                 </div>
                 <div
-                    className='nav-profile'
                     onClick={() => setMenu(false)}
+                    className='nav-profile'
                 >
                     <Link
+                        to={token ? '/profile' : '/login'}
                         className='profile-text'
-                        to={auth.token ? '/profile' : '/login'}
                         tabIndex='0'
                     >
-                        {auth.token && auth.avatar ?
+                        {token && avatar && avatar !== 'null' ?
                             <img
-                                src={`${auth.avatar}?t=${Date.now()}`}
+                                src={`${avatar}?t=${Date.now()}`}
                                 className='profile-img'
                                 key={avatar}
                             />
@@ -383,40 +406,29 @@ function Navigation() {
                                 icon={faUserSolid}
                             />
                         }
-                        <div
-                            className='profile-info'
-                        >
-                            {!auth.token ?
-                                <div
-                                    className='not-authorized'
-                                >
+                        <div className='profile-info'>
+                            {!token ?
+                                <div className='not-authorized'>
                                     {t('not logged in')}
                                 </div>
                                 :
                                 <>
-                                    <p
-                                        className='navbar-name'
-                                    >
-                                        {auth.name}
+                                    <p className='navbar-name'>
+                                        {name}
                                     </p>
-                                    <p
-                                        className='navbar-email'
-                                    >
-                                        {auth.email?.replace(/^[^@]+/, '…')}
+                                    <p className='navbar-email'>
+                                        {email?.replace(/^[^@]+/, '…')}
                                     </p>
                                 </>
                             }
                         </div>
                     </Link>
                     {/* logout button present only if the user is logged in*/}
-                    {auth.token
-                        ? 
-                            <LogOut
-                                className='logout-icon'
-                                onClick={logout}
-                            />
-                        :
-                            null
+                    {token &&
+                        <LogOut
+                            className='logout-icon'
+                            onClick={logout}
+                        />
                     }
                 </div>
                 <Link to='../privacy' className='nav-privacy-link'>
@@ -435,11 +447,11 @@ function Navigation() {
                         <div ref={nodeRef} className='nav-routing'>
                             <Routes location={location}>
                                 <Route
-                                    element={auth.token ? <Navigate to='/notes' replace/> : <Navigate to='/' replace/>}
+                                    element={token ? <Navigate to='/notes' replace/> : <Navigate to='/' replace/>}
                                     path='*'
                                 />
                                 <Route
-                                    element={auth.token ? <Profile/> : <Navigate to='/login' replace />} 
+                                    element={token ? <Profile/> : <Navigate to='/login' replace />} 
                                     path='profile'
                                 />
                                 <Route path='notes' element={<Notes/>}/>

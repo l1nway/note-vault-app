@@ -63,14 +63,14 @@ function NotesList() {
         const source = (online && !offlineMode && token) ? notes : filteredNotes
         return source?.map((element, index) =>
             <NoteCard
-                key={element.id}
-                note={element}
-                onAction={handleAction}
-                setCategory={setCategory}
-                setTag={setTag}
-                setNoteInfo={setNoteInfo}
                 retryFunction={retryFunction}
+                setCategory={setCategory}
+                setNoteInfo={setNoteInfo}
+                onAction={handleAction}
                 listView={listView}
+                key={element.id}
+                setTag={setTag}
+                note={element}
             />
     )}, [filteredNotes, online, offlineMode, notes, handleAction, setCategory, setTag, listView])
 

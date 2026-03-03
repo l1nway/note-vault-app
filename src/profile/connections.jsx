@@ -22,7 +22,7 @@ function Connections() {
             account: 'google user',
             date: '20-12-2025',
             active: false
-        },{
+        }, {
             name: 'apple',
             icon: faApple,
             class: '--apple',

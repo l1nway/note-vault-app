@@ -12,6 +12,10 @@ export default defineConfig({
     dedupe: ['react', 'react-dom'],
   },
   server: {
+    proxy: {
+      '/uploads': 'http://localhost:3000',
+      '/api': 'http://localhost:3000'
+    },
     watch: {
       usePolling: true,
       interval: 200,

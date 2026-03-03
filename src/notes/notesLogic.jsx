@@ -42,11 +42,7 @@ function notesLogic() {
             setRetryFunction: state.setRetryFunction
     })))
 
-    const {notes} = appStore(
-        useShallow((state) => ({
-            notes: state.notes
-    })))
-
+    const {notes} = appStore(useShallow((state) => ({notes: state.notes})))
     //
     const [filteredNotes, setFilteredNotes] = useState((offlineMode || !online || !token) ? notes : null)
     const [elementID, setElementID] = useState('')
@@ -73,9 +69,7 @@ function notesLogic() {
     }, [category?.id, tag?.id, debouncedSearch, page])
 
     // gets a list of notes from the server
-    useEffect(() => {
-        setPage(1)
-    }, [category, tag, debouncedSearch])
+    useEffect(() => {setPage(1)}, [category, tag, debouncedSearch])
 
     useEffect(() => {
         if (online && !offlineMode && token) {
@@ -109,15 +103,11 @@ function notesLogic() {
     }, [debouncedSearch, category, tag, notes, offlineMode, online])
 
     const loadMore = useCallback(() => {
-        if (page < lastPage) {
-            setPage(prev => prev + 1)
-        }
+        if (page < lastPage) {setPage(prev => prev + 1)}
     }, [lastPage])
 
     const openAnim = useCallback((action) => {
-        if (animating == true) {
-            return false
-        }
+        if (animating == true) {return false}
         setAnimating(true)
         setAction(action)
         setRetryFunction(action)

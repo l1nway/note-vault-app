@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect, forwardRef} from 'react'
+import {useState, useRef, useEffect, forwardRef, useCallback} from 'react'
 import {useGesture} from '@use-gesture/react'
 import {useTranslation} from 'react-i18next'
 import AvatarEditor from 'react-avatar-editor'
@@ -13,29 +13,35 @@ import {profileStore} from '../store'
 import {editorStore} from '../store'
 
 import SlideDown from '../components/slideDown'
+import {useShallow} from 'zustand/react/shallow'
 
 const Editor = forwardRef((props, ref) => {
-
-    const {visible, setVisible} = editorStore()
 
     const {t} = useTranslation()
 
     const token = localStorage.getItem('token') || Cookies.get('token') || ''
 
-    // state for a final file
-    const {setFile} = profileStore()
+    const {visible, setVisible} = editorStore()
 
-    // state for a file in the editor
-    const {tempFile, setTempFile} = profileStore()
-    
+    const {tempFile, setTempFile, setAvatar} = profileStore(
+        useShallow((state) => ({
+            setTempFile: state.setTempFile,
+            setAvatar: state.setAvatar,
+            tempFile: state.tempFile
+        }))
+    )
+
     //
+
+    // пока хз буду ли доделывать в итоге
+    const [annotation, setAnnotation] = useState('')
 
     // ref needed to transfer the image
     const editor = useRef(null)
-
-    // 
-
     const avatarContainer = useRef(null)
+
+    // state for area where editor is placed
+    const editorAreaRef = useRef()
 
     //
 
@@ -62,14 +68,86 @@ const Editor = forwardRef((props, ref) => {
             setZoom(nextZoom)
         }
 
-    },
-    {
+    }, {
         pinch: {
             scaleBounds: {min: MIN_ZOOM, max: MAX_ZOOM},
             rubberband: true
         }
-    }
-    )
+    })
+
+    // func for rotating preview image
+    const turn = useCallback((dir) => {
+        setRotate(prevRotate => {
+            const start = prevRotate;
+            let target = start + (dir === 'left' ? -90 : 90)
+
+            if (target > 180) target = 180
+            if (target < -180) target = -180
+            
+            if (target === start) return start
+
+            const dur = 300
+            let t0
+            const ease = p => p < 0.5 ? 2*p*p : -1+(4-2*p)*p
+
+            const anim = t => {
+                t0 ||= t
+                const p = Math.min((t - t0) / dur, 1)
+                const currentVal = start + (target - start) * ease(p)
+                
+                setRotate(currentVal)
+                
+                if (p < 1) requestAnimationFrame(anim)
+            }
+
+            requestAnimationFrame(anim)
+            
+            return start
+        })
+    }, [])
+
+    const setPic = useCallback(() => {
+        const canvas = editor.current.getImageScaledToCanvas()
+
+        canvas.toBlob(blob => {
+            if (!blob) return
+
+            const formData = new FormData()
+            
+            formData.append('file', blob, 'avatar.jpg')
+
+            fetch(`http://localhost:3000/api/v1/profile/avatar`, {
+                headers: {authorization: `Bearer ${token}`},
+                method: 'POST',
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Upload failed')
+                return res.json()
+            })
+            .then(resData => {
+                const fullUrl = `http://localhost:3000${resData.avatar_url}`
+                
+                setRotate(0)
+                setZoom(1)
+                setAvatar(fullUrl)
+                
+                setVisible(false)
+                setTimeout(() => setTempFile(null), 400)
+            })
+            .catch(err => {
+                console.error('Error uploading avatar:', err)
+            })
+        }, 'image/jpeg', 0.9) 
+    }, [token])
+
+    // func for reseting all values
+    const reset = useCallback(() => {
+        setTimeout(() => setTempFile(null), 350)
+        setVisible(false)
+        setRotate(0)
+        setZoom(1)
+    }, [])
 
     useEffect(() => {
         const container = avatarContainer.current
@@ -81,11 +159,6 @@ const Editor = forwardRef((props, ref) => {
         return () => container.removeEventListener('touchmove', preventScroll)
     }, [])
 
-    //
-
-    // state for area where editor is placed
-    const editorAreaRef = useRef()
-
     useEffect(() => {
         const anotations = {
             // messages in case the turn has reached 180 degrees
@@ -95,81 +168,6 @@ const Editor = forwardRef((props, ref) => {
 
         setAnnotation(anotations[rotate])
     }, [rotate])
-
-    // func for rotating preview image
-    const turn = dir => {
-        // rotate image according to direction
-        const start = rotate
-        let target = start + (dir == 'left' ? -90 : 90)
-
-        if (target > 180) {
-            target = 180
-            if (start == 180) return
-        }
-
-        if (target < -180) {
-            target = -180
-            if (start == -180) return
-        }
-
-        // image rotation animation
-        const dur = 300
-        let t0
-        const ease = p => p < 0.5 ? 2*p*p : -1+(4-2*p)*p
-
-        const anim = t => {
-            t0 ||= t
-            const p = Math.min((t - t0) / dur, 1)
-            const val = start + (target - start) * ease(p)
-            setRotate(val)
-            if (p < 1) requestAnimationFrame(anim)
-            
-        }
-
-        requestAnimationFrame(anim)
-    }
-
-    //
-
-    // пока хз буду ли доделывать в итоге
-    const [annotation, setAnnotation] = useState('')
-
-    // func for reseting all values
-    const reset = () => {
-        setRotate(0)
-        setZoom(1)
-        setVisible(false)
-        setTimeout(() => setTempFile(null), 350)
-    }
-
-    const setAvatar = () => {
-        const canvas = editor.current.getImageScaledToCanvas()
-
-        canvas.toBlob(blob => {
-            const formData = new FormData()
-            formData.append('avatar', blob, 'avatar.png'
-        )
-
-        fetch(`https://api.notevault.pro/api/v1/profile/avatar`,
-            {
-                method: 'POST',
-                headers: {
-                    authorization:
-                        `Bearer ${token}`
-                },
-                    body: formData
-            })
-        .then(res => res.json())
-        .then(resData => {
-            setRotate(0)
-            setZoom(1)
-            setFile(resData.avatar_url)
-            localStorage.setItem('avatar', resData.avatar_url)
-            Cookies.set('avatar', resData.avatar_url)
-            setVisible(false)
-            setTimeout(() => setTempFile(null), 400)
-        })
-    })}
 
     return(
         <div
@@ -182,19 +180,19 @@ const Editor = forwardRef((props, ref) => {
                 } : null}
         >
             <div
-                className='editor-block'
                 onClick={(e) => e.stopPropagation()}
+                className='editor-block'
             >
                 <div
                     className='editor-area'
-                    tabIndex='0'
                     ref={editorAreaRef}
+                    tabIndex='0'
                 >
                     <div
+                        style={{touchAction: 'none'}}
                         className='editor-content'
                         ref={avatarContainer}
                         {...bindPinch()}
-                        style={{touchAction: 'none'}}
                     >
                         <FontAwesomeIcon
                             className='left-rotate'
@@ -207,15 +205,13 @@ const Editor = forwardRef((props, ref) => {
                             onClick={() => turn('left')}
                             icon={faRotateLeftSolid}
                         />
-                        <div
-                            className='avatar-editor'
-                        >
+                        <div className='avatar-editor'>
                             <AvatarEditor
                                 crossOrigin='anonymous'
                                 onLoadSuccess={() => setAnnotation('The image can only be square. If your image has a different aspect ratio, you can move it to fit the desired image into the square.')}
                                 // onImageChange={() => setAnnotation('For a specific angle of rotation and scaling of the image, you can use the sliders below')}
-                                width={500}
-                                height={500}
+                                width={512}
+                                height={512}
                                 image={tempFile}
                                 borderRadius={500}
                                 border={0}
@@ -258,46 +254,38 @@ const Editor = forwardRef((props, ref) => {
                         </div>
                     </SlideDown>
                 </div>
-                <label
-                    className='editor-zoom'
-                >
-                    <span
-                        className='zoom-title'
-                    >
+                <label className='editor-zoom'>
+                    <span className='zoom-title'>
                         {t('zoom')}
                     </span>
                     <input
+                        onChange={(e) => setZoom(+e.target.value)}
                         className='zoom-range'
+                        value={zoom}
                         type='range'
+                        step='0.01'
                         min='1'
                         max='2'
-                        step='0.01'
-                        value={zoom}
-                        onChange={(e) => setZoom(+e.target.value)}
                     />
                 </label>
-                <label
-                    className='editor-rotate'
-                >
-                    <span
-                        className='rotate-title'
-                    >
+                <label className='editor-rotate'>
+                    <span className='rotate-title'>
                         {t('rotate')}
                     </span>
                     <input
+                        onChange={(e) => setRotate(+e.target.value)}
                         className='rotate-range'
+                        value={rotate}
                         type='range'
                         min='-180'
                         max='180'
                         step='1'
-                        value={rotate}
-                        onChange={(e) => setRotate(+e.target.value)}
                     />
                 </label>
 
                 <button
+                    onClick={() => setPic()}
                     className='save-button'
-                    onClick={() => setAvatar()}
                 >
                     {t('save')}
                 </button>

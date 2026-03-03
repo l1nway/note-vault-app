@@ -1,11 +1,7 @@
 import Cookies from 'js-cookie'
 import {appStore, clarifyStore} from '../store'
 
-const getNotes = async (
-    queryString = '',
-    page = 1,
-    setLastPage = () => {}
-) => {
+const getNotes = async (queryString = '', page = 1, setLastPage = () => {}) => {
     const {setNotes} = appStore.getState()
     const {setNotesError, setNotesLoading, setNotesMessage} = clarifyStore.getState()
     // 
@@ -23,7 +19,7 @@ const getNotes = async (
         setNotesError?.(false)
 
     const res = await fetch(
-    `https://api.notevault.pro/api/v1/notes${queryString}`,
+    `http://localhost:3000/api/v1/notes${queryString}`,
     {
         method: 'GET',
         headers: {

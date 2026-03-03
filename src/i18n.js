@@ -1,5 +1,6 @@
-import i18n from 'i18next'
 import {initReactI18next} from 'react-i18next'
+import {profileStore} from './store'
+import i18n from 'i18next'
 
 const resources = {
   ru: {
@@ -430,15 +431,23 @@ const resources = {
   }
 }
 
+const language = profileStore.getState().language
+
+profileStore.subscribe(
+  (state) => state.language, (lang) => {
+    if (lang && i18n.language !== lang) {
+      i18n.changeLanguage(lang)
+    }
+  }
+)
+
 i18n
   .use(initReactI18next)
   .init({
-    resources,
-    lng: localStorage.getItem('lang') || 'en',
+    interpolation: {escapeValue: false},
+    lng: language || 'en',
     fallbackLng: 'en',
-    interpolation: {
-      escapeValue: false
-    }
+    resources
   })
 
 export default i18n

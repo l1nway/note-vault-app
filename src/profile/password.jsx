@@ -1,8 +1,7 @@
-import {useState, useMemo} from 'react'
-import {useTranslation} from 'react-i18next'
-import Cookies from 'js-cookie'
-
 import SlideDown from '../components/slideDown'
+import {useTranslation} from 'react-i18next'
+import {useState, useMemo, useCallback} from 'react'
+import Cookies from 'js-cookie'
 
 function Password(props) {
 
@@ -38,7 +37,7 @@ function Password(props) {
     const allValid = newPassMatch && newPassValid && serverOK
 
     // function for checking the liquidity of the entered new password
-    const passLegit = (value) => {
+    const passLegit = useCallback((value) => {
         if (value.length == 0) {
             setNewPassValid(true)
             return true
@@ -64,15 +63,15 @@ function Password(props) {
 
         setNewPassValid(true)
         return true
-    }
+    }, [email])
 
     const [legitMessage, setLegitMessage] = useState(null)
     // content of the message that appears according to the type of illiquidity
 
     // contacting the server to change the password
-    const changePass = async () => {
+    const changePass = useCallback(async () => {
         try {
-            const res = await fetch(`https://api.notevault.pro/api/v1/profile/password`, {
+            const res = await fetch(`http://localhost:3000/api/v1/users/change-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,6 +85,8 @@ function Password(props) {
             })
 
         if (!res.ok) {
+            const errorData = await res.json()
+            console.error('Server error:', errorData.message)
             setServerOK(false)
             return
         }
@@ -93,9 +94,8 @@ function Password(props) {
         props.setPasswordChanged(true)
         props.setChangingPassword(false)
 
-        const timer = setTimeout(() => 
-            props.setPasswordChanged(false),
-        7000)
+        const timer = setTimeout(() => props.setPasswordChanged(false), 7000)
+        setServerOK(true)
 
         return () => clearTimeout(timer)
 
@@ -103,7 +103,7 @@ function Password(props) {
             console.error('Fetch failed:', err)
             setServerOK(false)
         }
-    }
+    }, [token, password, newPass, confirmPass])
 
     //
 

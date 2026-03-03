@@ -182,7 +182,7 @@ function Trash() {
         <div
           className='trash-list'
         >
-          {((path == 'trash' ? !deletedLoading : !archivedLoading) && !trash.length) &&
+          {((path == 'trash' ? !deletedLoading : !archivedLoading) && !trash?.length) &&
             <div className='note-animated-element'>
               <div className='note-element'>
                   <div className='note-empty-group'>

@@ -37,7 +37,7 @@ const getGroups = async (
     setLoading(true)
     setLoadingError(false)
     try {
-        const res = await fetch(`https://api.notevault.pro/api/v1/${path}`, {
+        const res = await fetch(`http://localhost:3000/api/v1/${path}`, {
             // &page=${page}
             method: 'GET',
             headers: {

@@ -25,21 +25,19 @@ function Groups() {
     const renderGroups = useMemo(() => {
         return (items || []).map((element) =>
             <GroupCard
-                key={element.id}
-                element={element}
-                openAnim={openAnim}
+                retryFunction={retryFunction}
                 setElementID={setElementID}
-                setName={setName}
+                setCatsView={setCatsView}
+                openAnim={openAnim}
                 setColor={setColor}
                 listView={listView}
                 catsView={catsView}
-                setCatsView={setCatsView}
-                retryFunction={retryFunction}
+                element={element}
+                setName={setName}
+                key={element.id}
             />
         )
     }, [items, openAnim, listView])
-
-    console.log(items)
 
     return(
         <div
@@ -136,14 +134,14 @@ function Groups() {
                 </div>
             </div>
                 <LoadingError
-                    pageError={loadingError}
+                    setPageMessage={setErrorMessage}
+                    setOfflineMode={setOfflineMode}
                     setPageError={setLoadingError}
                     pageMessage={errorMessage}
-                    setPageMessage={setErrorMessage}
+                    offlineMode={offlineMode}
+                    pageError={loadingError}
                     getPage={getGroups}
                     online={online}
-                    offlineMode={offlineMode}
-                    setOfflineMode={setOfflineMode}
                     path={path}
                 />
                 <motion.div
@@ -162,21 +160,21 @@ function Groups() {
                     {renderGroups}
                     <ExtraObj
                         listView={listView}
-                        loading={loading}
-                        page={page}
                         lastPage={lastPage}
                         loadMore={loadMore}
+                        loading={loading}
+                        page={page}
                     />
                 </motion.div>
             {action ?
                 <Clarify
+                    setID={setElementID}
+                    setColor={setColor}
+                    setName={setName}
                     ref={clarifyRef}
                     id={elementID}
-                    setID={setElementID}
                     color={color}
-                    setColor={setColor}
                     name={name}
-                    setName={setName}
                 />
             : null}
         </div>

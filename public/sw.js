@@ -1,10 +1,7 @@
 const STATIC_CACHE = 'app-shell-v2'
 const DATA_CACHE = 'data-v1'
 
-const APP_SHELL = [
-  '/',
-  '/index.html'
-]
+const APP_SHELL = ['/', '/index.html']
 
 self.addEventListener('install', event => {
   console.log('[SW] Install')

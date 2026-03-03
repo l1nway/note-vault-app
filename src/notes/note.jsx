@@ -34,7 +34,7 @@ function Note() {
     const [error, setError] = useState(false)
 
     const getNote = () => {
-        fetch(`https://api.notevault.pro/api/v1/notes/${location.state || id}`, {
+        fetch(`http://localhost:3000/api/v1/notes/${location.state || id}`, {
             headers: {
                 'content-type': 'application/json',
                 authorization: `Bearer ${token}`,
@@ -160,12 +160,8 @@ function Note() {
             <article>
                 <title>Watch note — Note Vault</title>
             </article>
-                <div
-                    className='note-header'
-                >
-                    <div
-                        className='newnote-top'
-                    >
+                <div className='note-header'>
+                    <div className='newnote-top'>
                         <div
                             onClick={() => navigate(-1)}
                             className='back-notes'
@@ -182,67 +178,45 @@ function Note() {
                                 icon={faUserSlash}
                             />
                         </SlideLeft>
-                        <SlideLeft
-                            visibility={error}
-                        >
+                        <SlideLeft visibility={error}>
                             <FontAwesomeIcon
                                 className='newnote-loading-error'
                                 icon={faTriangleExclamation}
                                 tabIndex='0'
                             />
                         </SlideLeft>
-                        <SlideLeft
-                            visibility={loading}
-                        >
+                        <SlideLeft visibility={loading}>
                             <FontAwesomeIcon
                                 className='newnote-loading-icon'
                                 icon={faSpinner}
                             />
                         </SlideLeft>
-                        <SlideLeft
-                            visibility={offlineMode}
-                        >
+                        <SlideLeft visibility={offlineMode}>
                             <FontAwesomeIcon
                                 className='newnote-offline-icon'
                                 icon={faPlane}
                             />
                         </SlideLeft>
                     </div>
-                    <div
-                        className='note-button-group'
-                    >
+                    <div className='note-button-group'>
                         {renderButtons}
                     </div>
                 </div>
                 {/* NOTE */}
                 
-                <div
-                    className='note-info'
-                >
-                    <SlideDown
-                        visibility={!loading}
-                    >
-                        <div
-                            className='note-info-title'
-                        >
+                <div className='note-info'>
+                    <SlideDown visibility={!loading}>
+                        <div className='note-info-title'>
                             {t(noteInfo.title)}
                         </div>
-                        <div
-                            className='note-info-dates'
-                        >
+                        <div className='note-info-dates'>
                             <div className='note-dates'>
-                                <div
-                                    className='note-info-created'
-                                >
+                                <div className='note-info-created'>
                                     {t('Created')}: {new Date(noteInfo.created_at).toLocaleDateString(i18n.language, {
                                         month: 'short', day: 'numeric', year: 'numeric'})}
                                 </div>
-                                <div
-                                    className='note-info-circle'
-                                />
-                                <div
-                                    className='note-info-updated'
-                                >
+                                <div className='note-info-circle'/>
+                                <div className='note-info-updated'>
                                     {t('Updated')}: {new Date(noteInfo.updated_at).toLocaleDateString(i18n.language, {
                                         month: 'short', day: 'numeric', year: 'numeric'})}
                                 </div>
@@ -251,43 +225,28 @@ function Note() {
                                 {renderButtons}
                             </div>
                         </div>
-                        <div
-                            className='note-info-groups'
-                        >
+                        <div className='note-info-groups'>
                             {noteInfo.category !== null ?
-                                <div
-                                    className='note-info-categories'
-                                >
+                                <div className='note-info-categories'>
                                     <Link
-                                        to='/notes'
-                                        className='note-info-category'
+                                        state={{sort: 'category', value: noteInfo.category?.name}}
                                         style={{'--cat-color': noteInfo.category?.color}}
-                                        state={{
-                                            sort: 'category',
-                                            value: noteInfo.category?.name
-                                        }}
+                                        className='note-info-category'
+                                        to='/notes'
                                     >
-                                        <div
-                                            className='info-category-circle'
-                                        />
-                                        {t(noteInfo.category?.name)}
+                                        <div className='info-category-circle'/>
+                                            {t(noteInfo.category?.name)}
                                     </Link>
                                 </div>
                             : null}
-                            <div
-                                className='note-info-tags'
-                            >
+                            <div className='note-info-tags'>
                                 {renderTags}
                             </div>
                         </div>
-                        {noteInfo.is_markdown ? 
-                            <MDEditor.Markdown
-                                source={noteInfo.content}
-                            />
+                        {noteInfo.isMarkdown ? 
+                            <MDEditor.Markdown source={noteInfo.content}/>
                         : 
-                            <div
-                                className='note-info-content'
-                            >
+                            <div className='note-info-content'>
                                 {noteInfo.content}
                             </div>
                         }

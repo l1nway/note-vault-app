@@ -21,14 +21,12 @@ function groupsLogic() {
     
     const online = apiStore(state => state.online)
 
-    const {tags, setTags, categories, setCategories, offlineMode, setOfflineMode} = appStore(
+    const {tags, categories, offlineMode, setOfflineMode} = appStore(
         useShallow(state => ({
-            offlineMode: state.offlineMode,
             setOfflineMode: state.setOfflineMode,
-            tags: state.tags,
-            setTags: state.setTags,
+            offlineMode: state.offlineMode,
             categories: state.categories,
-            setCategories: state.setCategories
+            tags: state.tags
     })))
 
     const {tagsError, categoriesError, setCategoriesError, categoriesLoading, setCategoriesLoading, tagsLoading, setTagsLoading, setTagsError, action, setAction, setVisibility, animating, setAnimating, setClarifyLoading, retryFunction, setRetryFunction, setCurrentElementId} = clarifyStore(
@@ -56,6 +54,7 @@ function groupsLogic() {
         () => (path == 'tags' ? tags : categories),
         [path, tags, categories]
     )
+    console.log(items)
     
     const saving = useMemo(() => items?.some(item => item?.saving), [items])
     const error = useMemo(() => items?.some(item => item?.error), [items])

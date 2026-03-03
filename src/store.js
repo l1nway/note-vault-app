@@ -1,5 +1,6 @@
-import {create} from 'zustand'
+import {subscribeWithSelector} from 'zustand/middleware'
 import {persist} from 'zustand/middleware'
+import {create} from 'zustand'
 
 export const appStore = create(
   persist(
@@ -69,30 +70,45 @@ export const apiStore = create((set) => ({
 window.addEventListener('online', () => apiStore.getState().setOnline(true))
 window.addEventListener('offline', () => apiStore.getState().setOnline(false))
 
-export const profileStore = create((set) => ({
-  file: null,
-  setFile: (newFile) => set({file: newFile}),
-  removeFile: () => set({file: null}),
+export const profileStore = create(
+  subscribeWithSelector((set) => ({
+    tempFile: null,
+    setTempFile: (newFile) => set({tempFile: newFile}),
+    removeTempFile: () => set({tempFile: null}),
 
-  tempFile: null,
-  setTempFile: (newFile) => set({tempFile: newFile}),
-  removeTempFile: () => set({tempFile: null}),
+    fileError: false,
+    setFileError: (settings) => set({fileError: settings}),
 
-  fileError: false,
-  setFileError: (settings) => set({fileError: settings}),
+    profileLoading: false,
+    setProfileLoading: (settings) => set({profileLoading: settings}),
 
-  profileLoading: false,
-  setProfileLoading: (settings) => set({profileLoading: settings}),
+    profileSaving: false,
+    setProfileSaving: (settings) => set({profileSaving: settings}),
 
-  profileSaving: false,
-  setProfileSaving: (settings) => set({profileSaving: settings}),
+    profileError: false,
+    setProfileError: (settings) => set({profileError: settings}),
 
-  profileError: false,
-  setProfileError: (settings) => set({profileError: settings}),
+    profileMessage: false,
+    setProfileMessage: (settings) => set({profileMessage: settings}),
 
-  profileMessage: false,
-  setProfileMessage: (settings) => set({profileMessage: settings}),
-}))
+    name: null,
+    setName: (settings) => set({name: settings}),
+
+    email: null,
+    setEmail: (settings) => set({email: settings}),
+
+    verifed: false,
+    setVerifed: (settings) => set({verifed: settings}),
+
+    created: null,
+    setCreated: (settings) => set({created: settings}),
+
+    avatar: null,
+    setAvatar: (settings) => set({avatar: settings}),
+
+    language: null,
+    setLanguage: (settings) => set({language: settings}),
+  })))
 
 export const notesViewStore = create((set) => ({
     notesView: 'grid',

@@ -1,11 +1,7 @@
 const useApi = (token) => {
 
-    const request = async (url, {
-        method = 'GET',
-        body
-    } = {}
-    ) => {
-        const res = await fetch(`https://api.notevault.pro${url}`, {
+    const request = async (url, {method = 'GET', body} = {}) => {
+        const res = await fetch(`http://localhost:3000${url}`, {
             method,
             headers: {
                 'content-type': 'application/json',
@@ -13,7 +9,7 @@ const useApi = (token) => {
             },
             body: body ? JSON.stringify(body) : undefined
         })
-
+        
     if (!res.ok) {
         let error
         try {
@@ -23,7 +19,6 @@ const useApi = (token) => {
         }
         throw error
     }
-
         return res.json()
     }
 
@@ -33,8 +28,7 @@ const useApi = (token) => {
         body: data
     })
 
-    const getNote = (id) =>
-        request(`/api/v1/notes/${id}`)
+    const getNote = (id) => request(`/api/v1/notes/${id}`)
 
     const editNote = (id, data) =>
         request(`/api/v1/notes/${id}`, {
@@ -42,19 +36,11 @@ const useApi = (token) => {
         body: data
     })
 
-  const getTags = () =>
-        request('/api/v1/tags')
+  const getTags = () => request('/api/v1/tags')
 
-  const getCategories = () =>
-        request('/api/v1/categories')
+  const getCategories = () => request('/api/v1/categories')
 
-  return {
-        createNote,
-        getNote,
-        editNote,
-        getTags,
-        getCategories
-  }
+  return {createNote, getNote, editNote, getTags, getCategories}
 }
 
 export default useApi

@@ -49,7 +49,7 @@ function NewNote() {
         } else {
             modifyNote()
         }
-    }, [note.name])
+    }, [note])
 
     const [offline, setOffline] = useState(Cookies.get('offline') == 'true')
 
@@ -95,9 +95,7 @@ function NewNote() {
     const errorStatus = errors.input || errors.global || errors.categories || errors.tags
 
     return (
-        <div
-            className='newnote-main'
-        >
+        <div className='newnote-main'>
             <article>
                 <title>New note — Note Vault</title>
             </article>
@@ -111,12 +109,8 @@ function NewNote() {
                 }
             </div>
             {/* HEADER */}
-            <div
-                className='newnote-header'
-            >
-                <div
-                    className='newnote-top'
-                >
+            <div className='newnote-header'>
+                <div className='newnote-top'>
                     <button
                         className='back-notes'
                         onClick={() => {
@@ -136,9 +130,7 @@ function NewNote() {
                             icon={faUserSlash}
                         />
                     </SlideLeft>
-                    <SlideLeft
-                        visibility={errorStatus}
-                    >
+                    <SlideLeft visibility={errorStatus}>
                         <FontAwesomeIcon
                             className='newnote-loading-error'
                             icon={faTriangleExclamation}

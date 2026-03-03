@@ -24,7 +24,7 @@ const allActions = {
     ],
     trash: [
         {type: 'restore', icon: faTrashCanArrowUp},
-        {type: 'force', icon: faTrashSolid}
+        {type: 'permanent', icon: faTrashSolid}
     ]
 }
 
@@ -165,7 +165,7 @@ const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setT
                                 icon={faTowerBroadcast}
                             />
                         </div>
-                        {note.is_markdown ?
+                        {note.isMarkdown ?
                             <React.Suspense fallback={null}>
                                 <MarkdownPreview content={note.content}/>
                             </React.Suspense>
@@ -216,7 +216,7 @@ const noteCard = React.memo(function NoteCard({note, onAction, setCategory, setT
                         <div
                             className='note-date'
                         >
-                            {new Date(note.created_at).toLocaleDateString(i18n.language, {month: 'short', day: 'numeric'})}
+                            {new Date(note.createdAt).toLocaleDateString(i18n.language, {month: 'short', day: 'numeric'})}
                         </div>
                     </div>
                 </div>

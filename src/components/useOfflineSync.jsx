@@ -122,7 +122,7 @@ const useOfflineSync = () => {
                     restore: async (payload, tempId) => {
                         return await clarifyApi({entity: 'trash', action: 'restore', id: tempId, token, payload})
                     },
-                    force: async (id) => await clarifyApi({entity: 'archived', action: 'force', id, token}),
+                    permanent: async (id) => await clarifyApi({entity: 'archived', action: 'permanent', id, token}),
                 }
             }
 
@@ -260,7 +260,7 @@ const useOfflineSync = () => {
                     }
                 }
 
-                if (['archive', 'delete', 'force'].includes(action.type)) {
+                if (['archive', 'delete', 'permanent'].includes(action.type)) {
                     const {entity, payload, tempId} = action
                     const id = payload?.id || tempId
 

@@ -20,8 +20,8 @@ const getTrash = (
     )
 
     const trashUrl =
-        `https://api.notevault.pro/api/v1/notes` +
-        `?${path == 'trash' ? 'deleted' : 'archived'}=true` +
+        `http://localhost:3000/api/v1/notes` +
+        `?${path == 'trash' ? 'isDeleted' : 'isArchived'}=true` +
         `&page=${page}`
 
     path == 'trash' ? setDeletedLoading(true) : setArchivedLoading(true)

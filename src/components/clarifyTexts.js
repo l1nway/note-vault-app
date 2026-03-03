@@ -16,7 +16,7 @@ const noteGeneral = {
         desc: 'Are you sure want to unarchive this note?',
         button: 'unarchive'
     },
-    force: {
+    permanent: {
         title: 'Permanently delete note',
         desc: 'Are you sure want to permanently delete this note? This action cannot be undone.',
         button: 'delete'

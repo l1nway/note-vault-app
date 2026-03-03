@@ -1,4 +1,5 @@
 import {useState, useEffect, useMemo, useCallback} from 'react'
+import {useShallow} from 'zustand/react/shallow'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router'
 import Cookies from 'js-cookie'
@@ -18,17 +19,26 @@ function ProfileSettings() {
 
     const navigate = useNavigate()
 
-    const [passwordChanged, setPasswordChanged] = useState(false)
+    const token = useMemo(() => {
+        return [
+            localStorage.getItem('token'),
+            Cookies.get('token')
+        ].find(t => t && t !== 'null')
+    }, [])
 
-    // state for a file in the editor
-    const {tempFile} = profileStore()
-
-    // 
-    
-    const [langChanged, setLangChanged] = useState(false)
+    const {language, setLanguage, tempFile} = profileStore(
+        useShallow((state) => ({
+            setLanguage: state.setLanguage,
+            language: state.language,
+            tempFile: state.tempFile
+        }))
+    )
 
     // image editor visibility
     const {setVisible} = editorStore()
+
+    const [passwordChanged, setPasswordChanged] = useState(false)
+    const [langChanged, setLangChanged] = useState(false)
 
     // subpage visibility states
     const [changingPassword, setChangingPassword] = useState(false)
@@ -42,13 +52,11 @@ function ProfileSettings() {
         icon: '🇷🇺',
         name: 'russian',
         code: 'ru'
-    },
-    {
+    }, {
         icon: '🇺🇦',
         name: 'ukrainian',
         code: 'ua'
-    },
-    {
+    }, {
         icon: '🇵🇱',
         name: 'polish',
         code: 'pl'
@@ -58,25 +66,48 @@ function ProfileSettings() {
         code: 'en'
     }], [])
 
+    const changeLanguage = useCallback(async (code) => {
+        i18n.changeLanguage(code)
+        setLanguage(code)
+
+        if (token) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/v1/profile`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({language: code})
+                })
+
+                if (response.ok) {
+                    setTimeout(() => setLangChanged(false), 7000)
+                    setChangingLang(false)
+                    setLangChanged(true)
+                } else {
+                    console.error('Failed to save language on server')
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        } else {
+            setTimeout(() => setLangChanged(false), 7000)
+            setLangChanged(true)
+        }
+    }, [token, i18n, t])
+
     const renderLangs = useMemo(() => 
         langList.map((element, index) =>
         <label
             className='slctd-lang'
-            key={index}
+            key={element.code}
         >
             <input
+                onChange={() => changeLanguage(element.code)}
+                checked={language === element.code}
                 className='lang-checkbox'
                 type='radio'
-                checked={localStorage.getItem('lang') == element.code}
-                onChange={() => {
-                    localStorage.setItem('lang', element.code)
-                    i18n.changeLanguage(element.code)
-                    setChangingLang(false)
-                    setLangChanged(true)
-                    setTimeout(() => 
-                        setLangChanged(false),
-                    7000)
-                }}
             />
             <div
                 className='lang-icon'
@@ -89,19 +120,12 @@ function ProfileSettings() {
                 {t(element.name)}
             </div>
         </label>
-        ), 
-        [langList, i18n, t, setChangingLang, setLangChanged]
-    )
+    ), [langList, i18n, t, language, changeLanguage])
+
     const stores = [appStore, profileStore, notesViewStore, screenStore, clarifyStore, pendingStore, editorStore, settingStore, tokenStore]
 
     const log_out = useCallback(() => {
-        const keys = ['token', 'name', 'email', 'verif', 'accdate', 'avatar', 'remember']
-        keys.forEach(k => localStorage.removeItem(k))
-        keys.forEach(k => Cookies.remove(k))
-
-        stores.forEach(store => {
-            store.setState({}, true)
-        })
+        stores.forEach(store => {store.setState({}, true)})
 
         window.location.href = '/login'
     }, [])
@@ -226,15 +250,10 @@ function ProfileSettings() {
         )
     )
 
-    // 
-
     // presence of a temporary file determines the existence of a image editor, if the file exists, a super-short timeout is started, allowing the animation to play
     useEffect(() => {
         if (tempFile != null) {
-            setTimeout(() => {
-                setVisible(true)
-            }, 10)
-
+            setTimeout(() => setVisible(true), 10)
             return () => clearTimeout()
         }
     }, [tempFile])

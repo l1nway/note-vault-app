@@ -74,11 +74,9 @@ function NoteEditor() {
     const noteData = useMemo(() => ({
         title: note.name,
         content: note.content,
-        is_markdown: note.markdown,
-        category_id: note?.category?.id,
-        category: note?.category,
-        tags: note.selectedTags,
-        tag_ids: note?.selectedTags?.map(t => t.id)
+        isMarkdown: note.markdown,
+        categoryId: note?.category?.id,
+        tagIds: note?.selectedTags?.map(t => t.id)
     }), [note.name, note.content, note.markdown, note.category, note.selectedTags])
 
     // creating new note
@@ -231,8 +229,6 @@ function NoteEditor() {
             }))
             setVisibility(v => ({...v, markdown: resData.is_markdown == 1}))
             setErrors(error => ({...error, global: false}))
-
-            console.log(resData.category)
         } catch (error) {
             setErrors(prev => ({
                 ...prev,
@@ -300,9 +296,7 @@ function NoteEditor() {
         })
     }, [])
 
-    useEffect(() => {
-        return () => clearTimeout(markdownTimer.current)
-    }, [])
+    useEffect(() => {return () => clearTimeout(markdownTimer.current)}, [])
 
     const loadGroups = useCallback(async () => {
         try {

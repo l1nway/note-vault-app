@@ -5,7 +5,7 @@ import {useMemo, useCallback} from 'react'
 
 import MDEditor from '@uiw/react-md-editor'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTriangleExclamation, faXmark, faArrowUp as faArrowUpSolid, faBookmark as faBookmarkSolid} from '@fortawesome/free-solid-svg-icons'
+import {faTriangleExclamation, faArrowUp as faArrowUpSolid, faBookmark as faBookmarkSolid} from '@fortawesome/free-solid-svg-icons'
 
 import SlideDown from '../components/slideDown'
 import SlideLeft from '../components/slideLeft'
@@ -25,15 +25,9 @@ function NoteForm({state, actions, refs}) {
 
     const {inputRef, tagRef, markdownRef} = refs
 
-    const tagsDisabled = useMemo(
-        () => (tags?.length ?? 0) == 0,
-        [tags]
-    )
+    const tagsDisabled = useMemo(() => (tags?.length ?? 0) == 0, [tags])
 
-    const catsDisabled = useMemo(
-        () => (categories?.length ?? 0) == 0 || loading || errors.categories,
-        [categories, loading]
-    )
+    const catsDisabled = useMemo(() => (categories?.length ?? 0) == 0 || loading || errors.categories, [categories, loading])
 
     // display list of tags
     const renderTags = useMemo(() => 
@@ -63,37 +57,23 @@ function NoteForm({state, actions, refs}) {
     }, [setNote])
 
     return (
-        <form
-            className='newnote-form'
-        >
+        <form className='newnote-form'>
             {/* NAME */}
-            <label
-                className={`newnote-name-label
-                    ${loading ? '--loading' : ''}
-                `}
-            >
-                <div
-                    className='newnote-name-title'
-                >
-                    <span
-                        className='newnote-name'
-                    >
+            <label className={`newnote-name-label ${loading ? '--loading' : ''}`}>
+                <div className='newnote-name-title'>
+                    <span className='newnote-name'>
                         {t('Note name')}
                     </span>
-                    <SlideLeft
-                        visibility={errors.global || errors.input}
-                    >
+                    <SlideLeft visibility={errors.global || errors.input}>
                         <FontAwesomeIcon
+                            onClick={() => {(online && errors.global) && retryLoad()}}
                             className='newnote-loading-error'
                             icon={faTriangleExclamation}
-                            onClick={() => {(online && errors.global) && retryLoad()}}
                             tabIndex='0'
                         />
                     </SlideLeft>
                 </div>
-                <div
-                    className='newnote-input-group'
-                >
+                <div className='newnote-input-group'>
                     <input
                         className={
                             `newnote-input
@@ -121,19 +101,13 @@ function NoteForm({state, actions, refs}) {
                         placeholder={t('Note title')}
                     />
                     {loading &&
-                        <span
-                            className='loading-dots --input'
-                        >
+                        <span className='loading-dots --input'>
                             <i></i><i></i><i></i>
                         </span>
                     }
                 </div>
-                <SlideDown
-                    visibility={errors.input}
-                >
-                    <span
-                        className='newnote-input-error'
-                    >
+                <SlideDown visibility={errors.input}>
+                    <span className='newnote-input-error'>
                         {t(errors.inputMessage)}
                     </span>
                 </SlideDown>
@@ -147,50 +121,46 @@ function NoteForm({state, actions, refs}) {
                     `
                 }
             >
-                <div
-                    className='newnote-category-title'
-                >
+                <div className='newnote-category-title'>
                     <span
                         className='newnote-category'
                     >
                         {t('category')}
                     </span>
-                    <SlideLeft
-                        visibility={errors.categories}
-                    >
+                    <SlideLeft visibility={errors.categories}>
                         <FontAwesomeIcon
+                            onClick={() => online && retryLoad()}
                             className='newnote-loading-error'
                             icon={faTriangleExclamation}
-                            onClick={() => online && retryLoad()}
                             tabIndex='0'
                         />
                     </SlideLeft>
                 </div>
                 <Select
-                    style={{opacity: 1, filter: 'none'}}
-                    optionsClassName='notes-select-options'
                     ArrowIcon={
                         <FontAwesomeIcon
                             className='select-icon'
                             icon={faArrowUpSolid}
                         />
                     }
-                    className='newnote-category-select'
-                    placeholder={t('Category not selected')}
-                    emptyText={t('No categories created')}
-                    loadingText={t('Categories loading')}
-                    errorText={t('Error loading categories')}
-                    disabledText={t('No categories created')}
-                    value={note.category}
-                    loading={loading}
-                    error={errors.categories}
-                    disabled={catsDisabled}
-                    options={categories}
                     onChange={(e) => 
                         setNote(prev => ({
                             ...prev,
                             category: e
-                        }))}
+                    }))}
+                    placeholder={t('Category not selected')}
+                    errorText={t('Error loading categories')}
+                    disabledText={t('No categories created')}
+                    optionsClassName='notes-select-options'
+                    emptyText={t('No categories created')}
+                    loadingText={t('Categories loading')}
+                    style={{opacity: 1, filter: 'none'}}
+                    className='newnote-category-select'
+                    error={errors.categories}
+                    disabled={catsDisabled}
+                    value={note.category}
+                    options={categories}
+                    loading={loading}
                 />
             </label>
             {/* TAG PICKER */}
@@ -203,17 +173,11 @@ function NoteForm({state, actions, refs}) {
                 }
                 tabIndex={-1}
             >
-                <div
-                    className='newnote-category-title'
-                >
-                    <span
-                        className='newnote-category'
-                    >
+                <div className='newnote-category-title'>
+                    <span className='newnote-category'>
                         {t('tags')}
                     </span>
-                    <SlideLeft
-                        visibility={errors.tags}
-                    >
+                    <SlideLeft visibility={errors.tags}>
                         <FontAwesomeIcon
                             className='newnote-loading-error'
                             icon={faTriangleExclamation}
@@ -222,25 +186,17 @@ function NoteForm({state, actions, refs}) {
                         />
                     </SlideLeft>
                 </div>
-                <SlideDown
-                    visibility={errors.tags || loading || tagsDisabled}
-                >
-                    <span
-                        className={`tags-error-message ${errors.tags && 'true-error'}`}
-                    >
+                <SlideDown visibility={errors.tags || loading || tagsDisabled}>
+                    <span className={`tags-error-message ${errors.tags && 'true-error'}`}>
                         {t(errors.tagsMessage)}
-                        <SlideLeft
-                            visibility={loading}
-                        >
+                        <SlideLeft visibility={loading}>
                             <span className='loading-dots'>
                                 <i></i><i></i><i></i>
                             </span>
                         </SlideLeft>
                     </span>
                 </SlideDown>
-                <SlideDown
-                    visibility={visibility.tags && !tagsDisabled}
-                >
+                <SlideDown visibility={visibility.tags && !tagsDisabled}>
                     <div
                         className='newnote-tags'
                         tabIndex={-1}
@@ -256,46 +212,34 @@ function NoteForm({state, actions, refs}) {
                     ${loading ? '--loading' : ''}
                 `}
             >
-                <div
-                    className='newnote-content'
-                >
-                    <div
-                        className='newnote-name-title'
-                    >
-                        <span
-                            className='newnote-content-title'
-                        >
+                <div className='newnote-content'>
+                    <div className='newnote-name-title'>
+                        <span className='newnote-content-title'>
                             {t('content')}
                         </span>
-                        <SlideLeft
-                            visibility={errors.global}
-                        >
+                        <SlideLeft visibility={errors.global}>
                             <FontAwesomeIcon
+                                onClick={() => online && retryLoad()}
                                 className='newnote-loading-error'
                                 icon={faTriangleExclamation}
-                                onClick={() => online && retryLoad()}
                                 tabIndex='0'
                             />
                         </SlideLeft>
                     </div>
                     <label
-                        className='newnote-markdown'
-                        tabIndex='0'
-                        ref={markdownRef}
-                        onClick={() => markdownToggle()}
                         style={{
-                                    '--color': note.markdown ? 'var(--def-white)' : 'var(--blck-bc-fcs)',
-                                    pointerEvents: errors.global && 'none'
-                                }}
+                            '--color': note.markdown ? 'var(--def-white)' : 'var(--blck-bc-fcs)',
+                            pointerEvents: errors.global && 'none'
+                        }}
+                        onClick={() => markdownToggle()}
+                        className='newnote-markdown'
+                        ref={markdownRef}
+                        tabIndex='0'
                     >
-                        <p
-                            className='newnote-markdown-title'
-                        >
+                        <p className='newnote-markdown-title'>
                             {t('markdown')}
                         </p>
-                        <div
-                            className='newnote-markdown-checkbox'
-                        >
+                        <div className='newnote-markdown-checkbox'>
                             <FontAwesomeIcon
                                 className='newnote-checkbox-icon'
                                 icon={faBookmarkSolid}
@@ -307,9 +251,7 @@ function NoteForm({state, actions, refs}) {
                     </label>
                 </div>
                     {!note.markdown ? (
-                        <div
-                            className='newnote-content-group'
-                        >
+                        <div className='newnote-content-group'>
                             <span
                                 className='loading-dots --textarea'
                                 style={{
@@ -317,9 +259,7 @@ function NoteForm({state, actions, refs}) {
                                     pointerEvents: !loading && 'none'
                                 }}
                             >
-                                <div
-                                    className='content-loading-placeholder'
-                                >
+                                <div className='content-loading-placeholder'>
                                     {t('Loading content')}
                                 </div>
                                 <i></i><i></i><i></i>
@@ -331,29 +271,27 @@ function NoteForm({state, actions, refs}) {
                                     ${errors.global && '--loading-input-error'}
                                 `}
                                 value={errors.global ? 'Error loading content' : note.content}
-                                onChange={e => textareaAction(e)}
-                                disabled={loading || errors.global}
                                 onFocus={() => setTextareaFocus(true)}
                                 onBlur={() => setTextareaFocus(true)}
+                                disabled={loading || errors.global}
+                                onChange={e => textareaAction(e)}
                             />
                         </div>) : 
                     (
-                        <div
-                            className='newnote-content-markdown'
-                        >
+                        <div className='newnote-content-markdown'>
                                 <MDEditor
-                                    value={note.content}
                                     onChange={(value) => setNote(
                                         prev => ({
                                             ...prev,
                                             content: value
                                     }))}
-                                    preview='live'
-                                    hideToolbar={false}
                                     className={`newnote-md-editor ${visibility.markdown ? 'visible' : null}`}
-                                    style={{height: '100%'}}
                                     onFocus={() => setTextareaFocus(true)}
                                     onBlur={() => setTextareaFocus(true)}
+                                    style={{height: '100%'}}
+                                    value={note.content}
+                                    hideToolbar={false}
+                                    preview='live'
                                 />
                         </div>
                     )}

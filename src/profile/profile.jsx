@@ -16,6 +16,7 @@ import Settings from './settings'
 import profileLogic from './profileLogic'
 import SlideDown from '../components/slideDown'
 import SlideLeft from '../components/slideLeft'
+import {useShallow} from 'zustand/react/shallow'
 
 function Profile() {
 
@@ -27,19 +28,23 @@ function Profile() {
     const location = useLocation()
     const path = location.pathname.slice(1)
 
-    // 
-    const {
-        profileLoading, profileSaving, profileError, profileMessage, 
-        // state for a file in the editor
-        tempFile, setTempFile,
-        // state if the uploaded file is not an image
-        fileError,
-        // state for a final file
-        file
-    } = profileStore()
+    const {avatar, created, profileLoading, profileSaving, profileError, profileMessage, tempFile, setTempFile, fileError} = profileStore(
+        useShallow((state) => ({
+            setProfileLoading: state.setProfileLoading,
+            profileLoading: state.profileLoading,
+            profileMessage: state.profileMessage,
+            profileSaving: state.profileSaving,
+            profileError: state.profileError,
+            setTempFile: state.setTempFile,
+            fileError: state.fileError,
+            tempFile: state.tempFile,
+            created: state.created,
+            avatar: state.avatar,
+        }))
+    )
 
     // 
-    const {drag, setDrag, fileRef, handleFile, delAvatar, accDate} = profileLogic()
+    const {drag, setDrag, fileRef, handleFile, delAvatar} = profileLogic()
 
     return (
         <div
@@ -49,12 +54,8 @@ function Profile() {
                 <title>Profile — Note Vault</title>
             </article>
             {tempFile != null ? <Editor/> : null}
-            <div
-                className='profile-title-block'
-            >
-                <h1
-                    className='profile-title'
-                >
+            <div className='profile-title-block'>
+                <h1 className='profile-title'>
                     {t('profile')}
                 </h1>
                 <SlideLeft visibility={profileLoading}>
@@ -151,30 +152,25 @@ function Profile() {
                 >
                     {/* upload or change avatar */}
                     <label
-                        className='profile-avatar'
-                        htmlFor='editor-file-input'
                         style={{'--file-hover': drag ? '#2f3847' : 'transparent'}}
-                        onDragOver={(e) => {
-                            e.preventDefault(),
-                            setDrag(true)
-                        }}
+                        onDragOver={(e) => {e.preventDefault(); setDrag(true)}}
                         onDragLeave={() => setDrag(false)}
                         onDragEnd={() => setDrag(false)}
+                        htmlFor='editor-file-input'
+                        className='profile-avatar'
                         onDrop={(e) => {
-                            e.preventDefault(),
+                            e.dataTransfer.files[0] && handleFile(e.dataTransfer.files[0])
+                            e.preventDefault()
                             setDrag(false)
-                            if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0])
                         }}
                         // onClick={() => fileRef.current.click()}
                     >
                         <input
-                            type='radio'
-                            checked={drag}
                             onChange={e => setDrag(e.target.checked)}
+                            checked={drag}
+                            type='radio'
                         />
-                        <div
-                            className='avatar-element'
-                        >
+                        <div className='avatar-element'>
                             <input
                                 type='file'
                                 className='editor-file-input'
@@ -185,46 +181,45 @@ function Profile() {
                                 accept='image/*'
                             />
                             <FontAwesomeIcon
-                                style={{'--icon-display': (file == null || file == 'null') ? '' : 'none'}}
+                                style={{'--icon-display': (avatar == null || avatar == 'null') ? '' : 'none'}}
                                 className='user-icon'
                                 icon={faUserTieSolid}
                             />
                             <img
+                                style={{'--icon-display': (avatar == null || avatar == 'null') ? 'none' : '1'}}
+                                src={avatar ? `${avatar}?t=${Date.now()}` : null}
                                 className='avatar-img'
-                                style={{
-                                    '--icon-display': (file == null || file == 'null') ? 'none' : '1'
-                                }}
-                                src={file ? `${file}?t=${Date.now()}` : null}
+                                key={avatar}
                             />
                             <button
                                 className='avatar-upload'
                                 type='button'
                                 style={{
-                                    '--bc-color': (file == null || file == 'null') ? 'var(--def-btn)' : 'var(--del-btn)',
-                                    '--bc-hover': (file == null || file == 'null') ? 'var(--def-btn-hvr)' : 'var(--del-btn-hvr)'
+                                    '--bc-color': (avatar == null || avatar == 'null') ? 'var(--def-btn)' : 'var(--del-btn)',
+                                    '--bc-hover': (avatar == null || avatar == 'null') ? 'var(--def-btn-hvr)' : 'var(--del-btn-hvr)'
                                 }}
-                                onClick={(e) => {
-                                    e.stopPropagation(),
-                                    (file == null || file == 'null') ? fileRef.current.click() : delAvatar()
+                                onClick={e => {
+                                    (avatar == null || avatar == 'null') ? fileRef.current.click() : delAvatar();
+                                    e.stopPropagation()
                                 }}
                             >
-                                {(file == null || file == 'null') ? <ImageUp className='upload-icon'/> : <Trash2 className='upload-icon'/>}
+                                {(avatar == null || avatar == 'null') ? <ImageUp className='upload-icon'/> : <Trash2 className='upload-icon'/>}
                             </button>
                             <button
                                 className='avatar-edit'
-                                tabIndex={(file == null || file == 'null') ? -1 : 0}
+                                tabIndex={(avatar == null || avatar == 'null') ? -1 : 0}
                                 type='button'
                                 style={{
-                                    '--bc-color': (file == null || file == 'null') ? 'transparent' : 'var(--def-btn)',
-                                    '--pointer': (file == null || file == 'null') ? 'none' : '',
-                                    '--icon-display': (file == null || file == 'null') ? 'none' : 'flex'
+                                    '--bc-color': (avatar == null || avatar == 'null') ? 'transparent' : 'var(--def-btn)',
+                                    '--pointer': (avatar == null || avatar == 'null') ? 'none' : '',
+                                    '--icon-display': (avatar == null || avatar == 'null') ? 'none' : 'flex'
                                 }}
-                                onClick={(e) => {e.stopPropagation(); setTempFile(`${file}?t=${Date.now()}`)}}
+                                onClick={(e) => {e.stopPropagation(); setTempFile(`${avatar}?t=${Date.now()}`)}}
                             >
-                                {file && <SquarePen className='edit-icon'/>}
+                                {avatar && <SquarePen className='edit-icon'/>}
                                 {/* <FontAwesomeIcon
                                     className='edit-icon'
-                                    icon={file == null ? null : faPenToSquare}
+                                    icon={avatar == null ? null : faPenToSquare}
                                 /> */}
                             </button>
                         </div>
@@ -244,32 +239,28 @@ function Profile() {
                         </p>
                     </label>
                     <div className='profile-elements'>
-                        <SlideDown
-                            visibility={file != null}
-                        >
+                        <SlideDown visibility={avatar}>
                             <button
                                 className='delete-button'
                                 style={{backgroundColor: 'var(--def-btn)'}}
-                                onClick={(e) => (
+                                onClick={(e) => {
                                     e.stopPropagation(),
-                                    setTempFile(file)
-                                )}
+                                    setTempFile(avatar)
+                                }}
                             >
                                 {t('edit')}
                             </button>
                         </SlideDown>
                         <button
+                            style={{backgroundColor: (avatar == null || avatar == 'null') ? 'var(--def-btn)' : 'var(--del-btn)'}}
                             className='delete-button'
-                            style={{
-                                backgroundColor: (file == null || file == 'null') ? 'var(--def-btn)' : 'var(--del-btn)'
-                            }}
                             onClick={(e) => {
-                                e.stopPropagation(),
-                                (file == null || file == 'null') ? console.log() : delAvatar()
+                                e.stopPropagation()
+                                (avatar == null || avatar == 'null') ? console.log() : delAvatar()
                             }}
                             // fileRef.current.click()
                         >
-                            {t((file == null || file == 'null') ? 'upload' : 'delete')}
+                            {t((avatar == null || avatar == 'null') ? 'upload' : 'delete')}
                         </button>
                         {/* change name & email */}
                         <User/>
@@ -278,7 +269,7 @@ function Profile() {
                         <div
                             className='profile-date'
                         >
-                            {t('Account created')} {new Date(accDate).toLocaleDateString(i18n.language, {
+                            {t('Account created')} {new Date(created).toLocaleDateString(i18n.language, {
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric'

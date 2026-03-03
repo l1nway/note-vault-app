@@ -1,117 +1,58 @@
-import {useState, useEffect, useRef} from 'react'
-import {useTranslation} from 'react-i18next'
-import Cookies from 'js-cookie'
+import {faTriangleExclamation} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTriangleExclamation, faXmark, faArrowUp as faArrowUpSolid, faBookmark as faBookmarkSolid} from '@fortawesome/free-solid-svg-icons'
-
+import {useState, useEffect, useRef, useCallback} from 'react'
+import {useShallow} from 'zustand/react/shallow'
 import SlideDown from '../components/slideDown'
 import SlideLeft from '../components/slideLeft'
-
-import {apiStore} from '../store'
+import {useTranslation} from 'react-i18next'
 import {shake} from '../components/shake'
+import {profileStore} from '../store'
+import Cookies from 'js-cookie'
+import {useMemo} from 'react'
 
 function User() {
-    const online = apiStore(state => state.online)
 
     const {t} = useTranslation()
-    
-    // universal function for convenient routing of all values ​​from local storage and cookies
-    const storedValue = (key) => {
-        return [
-            localStorage.getItem(key),
-            Cookies.get(key)
-                ].find(
-                    val => val && val !== 'null'
-                ) || ''
-    }
 
-    // individual token of the logged-in user
-    const token = storedValue('token')
+    const nameRef = useRef(null)
 
-    // getting user information from the server
-    const getUser = () => {
-            fetch(`https://api.notevault.pro/api/v1/auth/me`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'content-type': 'application/json',
-                        authorization: 
-                            `Bearer ${token}`
-                    }
-                })
-        // .then(res => res.json())
-        // .then(resData => console.log(resData))
-    }
+    const {setLanguage, name, setName, email, setEmail, setVerifed, setCreated, setAvatar, setProfileLoading} = profileStore(
+        useShallow((state) => ({
+            setProfileLoading: state.setProfileLoading,
+            setLanguage: state.setLanguage,
+            setCreated: state.setCreated,
+            setVerifed: state.setVerifed,
+            setAvatar: state.setAvatar,
+            setEmail: state.setEmail,
+            setName: state.setName,
+            email: state.email,
+            name: state.name
+        }))
+    )
 
-    // triggers a call at the time of first load
-    useEffect(() => getUser(), [])
-
-    // как 
-    const remember = true
-
-    const changeName = () => {
-        fetch(`https://api.notevault.pro/api/v1/profile`,
-            {
-                method: 'PATCH',
-                headers: {
-                    'content-type': 'application/json',
-                    authorization:
-                        `Bearer ${token}`
-                },
-                    body: JSON.stringify({
-                        name: name
-                    })
-            })
-        .then(res => res.json())
-        .then(resData => {
-                remember
-                ?   localStorage.setItem('name', resData.name)
-                :   Cookies.set('name', resData.name, {expires: 1})
-            setStoredName(resData.name)
-
-            setNameSaved(true)
-            setTimeout(() => {
-                setNameSaved(false)
-                }, 7000)
-        })
-        .catch(error => {
-            shake(nameRef.current)
-            setNameError(true)
-        })
-    }
+    const [localName, setLocalName] = useState('')
+    const [localEmail, setLocalEmail] = useState('')
 
     //
     const [nameSaved, setNameSaved] = useState(false)
-
     // states for values
-    const [name, setName] = useState(storedValue('name'))
     const [nameError, setNameError] = useState(false)
-    const [email, setEmail] = useState(storedValue('email'))
-    const verifed = storedValue('verif')
-
-    // 
-    const [storedName, setStoredName] = useState(storedValue('name'))
-
-    // checking password matches
-    const nameEdited = name !== storedName
-    const emailEdited = email !== storedValue('email')
 
     // displaying a message about sending verification
     const [sendVerif, setSendVerif] = useState(false)
 
     // displaying a message about unavailability of email editing
     const [prohibited, setProhibited] = useState(false)
+
+    // checking password matches
+    const nameEdited = name !== localName
+    const emailEdited = email !== localEmail
     
     let nameStatus
-        if (nameError) {
-            nameStatus = 'error'
-        } else if (name == '') {
-            nameStatus = 'empty'
-        } else if (nameSaved) {
-            nameStatus = 'saved'
-        } else {
-            nameStatus = 'unsaved'
-        }
+        if (nameError) {nameStatus = 'error'}
+        else if (name == '') {nameStatus = 'empty'}
+        else if (nameSaved) {nameStatus = 'saved'}
+        else {nameStatus = 'unsaved'}
 
     const nameText = {
         error: 'Error saving changes',
@@ -120,29 +61,89 @@ function User() {
         saved: 'Name saved'
     }
 
-    const nameRef = useRef(null)
+    // individual token of the logged-in user
+    const token = useMemo(() => {
+        return [
+            localStorage.getItem('token'),
+            Cookies.get('token')
+        ].find(t => t && t !== 'null')
+    }, [])
+
+    // getting user information from the server
+    const getUser = useCallback(async (token) => {
+        try {
+            setProfileLoading(true)
+            const res = await fetch(`http://localhost:3000/api/v1/users/me`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (!res.ok) {
+                const e = await res.json()
+                console.error(e)
+                return
+            }
+
+            const data = await res.json()
+            setVerifed(data.email_verified_at)
+            setCreated(data.created_at)
+            setLanguage(data.language)
+            setAvatar(data.avatar_url)
+            setLocalEmail(data.email)
+            setLocalName(data.name)
+            setEmail(data.email)
+            setName(data.name)
+            
+            return data
+        } catch (e) {
+            console.error(e)
+        } finally {
+            setProfileLoading(false)
+        }
+    })
+
+    // triggers a call at the time of first load
+    useEffect(() => {getUser(token)}, [])
+
+    const changeName = useCallback(async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/v1/profile`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({name: name})
+            })
+
+            if (!response.ok) throw new Error('Update failed')
+
+            const resData = await response.json()
+
+            setLocalName(resData.name)
+            setName(resData.name)
+
+            setNameSaved(true)
+            setTimeout(() => setNameSaved(false), 7000)
+        } catch (error) {
+            shake(nameRef.current)
+            console.error(error)
+            setNameError(true)
+        }
+    }, [name, token])
 
     return (
-        <form
-            className='profile-values'
-        >
-            <label
-                className='profile-name'
-            >
-                <span
-                    className='profile-name-group'
-                >
-                    <div
-                        className='name-title-group'
-                    >
-                        <p
-                            className='name-title'
-                        >
+        <form className='profile-values'>
+            <label className='profile-name'>
+                <span className='profile-name-group'>
+                    <div className='name-title-group'>
+                        <p className='name-title'>
                             {t('Username')} 
                         </p>
-                        <SlideLeft
-                            visibility={nameError}
-                        >
+                        <SlideLeft visibility={nameError}>
                             <FontAwesomeIcon
                                 className='newnote-loading-error'
                                 icon={faTriangleExclamation}
@@ -151,12 +152,10 @@ function User() {
                             />
                         </SlideLeft>
                     </div>
-                    <SlideLeft
-                        visibility={nameEdited || nameSaved}
-                    >
+                    <SlideLeft visibility={nameEdited || nameSaved}>
                         <p
-                            key={nameStatus}
                             className={`name-status --${nameStatus}`}
+                            key={nameStatus}
                         >
                             {t(nameText[nameStatus])}
                         </p>
@@ -164,83 +163,62 @@ function User() {
                 </span>
                 <input
                     className={`name-input ${(nameError || name == '') && '--animated-error'}`}
+                    onFocus={() => setNameSaved(false)}
                     ref={nameRef}
-                    type='text'
                     value={name}
-                    onFocus={() => {
-                        setNameSaved(false)
-                    }}
+                    type='text'
                     onChange={e => {
                         setName(e.target.value)
                         setNameError(false)
                     }}
                 />
             </label>
-            <label
-                className='profile-email'
-            >
-                <span
-                    className='profile-email-group'
-                >
-                    <p
-                        className='profile-email-title'
-                    >
+            <label className='profile-email'>
+                <span className='profile-email-group'>
+                    <p className='profile-email-title'>
                         {t('E-Mail')}
                     </p>
-                    <SlideLeft
-                        visibility={emailEdited}
-                    >
-                        <p
-                            className='name-status'
-                        >
+                    <SlideLeft visibility={emailEdited}>
+                        <p className='name-status'>
                             {t('Email unsaved')}
                         </p>
                     </SlideLeft>
-                    <SlideLeft
-                        visibility={prohibited}
-                    >
-                        <p
-                            className='name-status'
-                        >
+                    <SlideLeft visibility={prohibited}>
+                        <p className='name-status'>
                             {t('Email editing is not yet available')}
                         </p>
                     </SlideLeft>
                 </span>
                 <input
-                    className='profile-email-input'
-                    type='text'
-                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     onFocus={() => setProhibited(true)}
                     onBlur={() => setProhibited(false)}
+                    className='profile-email-input'
+                    value={email}
+                    type='text'
                     readOnly
-                    onChange={e => (
-                        setEmail(e.target.value))}
                 />
             </label>
-            <SlideDown
-                visibility={(name !== '' && nameEdited) || emailEdited}
-            >
-                <div
-                    className='values-buttons'
-                >
+            <SlideDown visibility={(name !== '' && nameEdited) || emailEdited}>
+                <div className='values-buttons'>
                     <button
-                        type='button'
-                        className='values-save'
                         tabIndex={nameEdited || emailEdited ? 0 : -1}
                         onClick={() => changeName()}
+                        className='values-save'
+                        type='button'
                     >
                         {t('save')}
                     </button>
                     
                     <button
-                        type='button'
+                        tabIndex={nameEdited || emailEdited ? 0 : -1}
                         className='values-cancel'
                         onClick={() => {
-                            setName(storedValue('name'))
-                            setEmail(storedValue('email'))
+                            setEmail(localEmail)
                             setNameError(false)
+                            setName(localName)
                         }}
-                        tabIndex={nameEdited || emailEdited ? 0 : -1}
+                        type='button'
                     >
                         {t('cancel')}
                     </button>

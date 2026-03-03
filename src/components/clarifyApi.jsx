@@ -1,19 +1,13 @@
-const clarifyApi = async ({
-    entity,
-    action,
-    id,
-    token,
-    payload
-}) => {
+const clarifyApi = async ({entity, action, id, token, payload}) => {
     // different methods are used for different actions; object with correspondences
     const methods = {
-        new: 'POST',
-        edit: 'PATCH',
+        permanent: 'DELETE',
+        unarchive: 'PATCH',
         delete: 'DELETE',
-        archive: 'POST',
-        unarchive: 'POST',
-        restore: 'POST',
-        force: 'DELETE'
+        archive: 'PATCH',
+        restore: 'PATCH',
+        edit: 'PATCH',
+        new: 'POST',
     }
     
     // matching a method to a user action
@@ -25,18 +19,18 @@ const clarifyApi = async ({
             : entity
 
     const noteActionEndpoints = {
-        archive: 'archive',
         unarchive: 'unarchive',
+        permanent: 'permanent',
         restore: 'restore',
-        force: 'force',
+        archive: 'archive',
     }
 
     const url =
         action == 'new'
-            ? `https://api.notevault.pro/api/v1/${normalizedEntity}`
+            ? `http://localhost:3000/api/v1/${normalizedEntity}`
             : normalizedEntity == 'notes' && noteActionEndpoints[action]
-                ? `https://api.notevault.pro/api/v1/notes/${id}/${noteActionEndpoints[action]}`
-                : `https://api.notevault.pro/api/v1/${normalizedEntity}/${id}`
+                ? `http://localhost:3000/api/v1/notes/${id}/${noteActionEndpoints[action]}`
+                : `http://localhost:3000/api/v1/${normalizedEntity}/${id}`
 
 
     const res = await fetch(url, {
