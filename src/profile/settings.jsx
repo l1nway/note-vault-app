@@ -72,7 +72,7 @@ function ProfileSettings() {
 
         if (token) {
             try {
-                const response = await fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/profile`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/profile`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',

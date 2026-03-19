@@ -20,7 +20,7 @@ const getTrash = (
     )
 
     const trashUrl =
-        `https://note-vault-backend-w1uv.onrender.com/api/v1/notes` +
+        `${import.meta.env.VITE_API_URL}/notes` +
         `?${path == 'trash' ? 'isDeleted' : 'isArchived'}=true` +
         `&page=${page}`
 

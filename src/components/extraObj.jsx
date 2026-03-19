@@ -1,8 +1,8 @@
-import React, {useMemo} from 'react'
 import {motion, AnimatePresence} from 'framer-motion'
 import ContentLoader from 'react-content-loader'
 import {useMediaQuery} from 'react-responsive'
 import {useTranslation} from 'react-i18next'
+import React, {useMemo} from 'react'
 import {apiStore} from '../store'
 
 const ExtraObj = React.memo(({listView = false, loading = false, page = 1, lastPage = 1, loadMore = null}) => {

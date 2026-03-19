@@ -24,7 +24,7 @@ function authLogic() {
     // send data to the server for login or registration
     const submitRequest = async () => {
         try {
-            const res = await fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/auth/${path}`,
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/${path}`,
                 {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -74,7 +74,7 @@ function authLogic() {
             setNotesError(false)
 
             const fetchPromises = endpoints.map(endpoint =>
-                fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/${endpoint.key}`, {
+                fetch(`${import.meta.env.VITE_API_URL}/${endpoint.key}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

@@ -50,7 +50,7 @@ function profileLogic() {
     
     // request to the server to delete the avatar
     const delAvatar = useCallback(() => {
-        fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/profile/avatar`, {
+        fetch(`${import.meta.env.VITE_API_URL}/profile/avatar`, {
             method: 'DELETE',
             headers: {'Authorization': `Bearer ${token}`}
         })

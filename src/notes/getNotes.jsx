@@ -19,7 +19,7 @@ const getNotes = async (queryString = '', page = 1, setLastPage = () => {}) => {
         setNotesError?.(false)
 
     const res = await fetch(
-    `https://note-vault-backend-w1uv.onrender.com/api/v1/notes${queryString}`,
+    `${import.meta.env.VITE_API_URL}/notes${queryString}`,
     {
         method: 'GET',
         headers: {

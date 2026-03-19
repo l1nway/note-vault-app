@@ -55,7 +55,7 @@ function Navigation() {
             if (!token) return
 
             try {
-                const response = await fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/users/me`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -262,7 +262,8 @@ function Navigation() {
 
     const logout = useCallback(() => {
         stores.forEach(store => {store.setState({}, true)})
-
+        Cookies.remove('token')
+        
         window.location.href = '/login'
     }, [])
 
@@ -409,7 +410,7 @@ function Navigation() {
                         <div className='profile-info'>
                             {!token ?
                                 <div className='not-authorized'>
-                                    {t('not logged in')}
+                                    {t('Not logged in')}
                                 </div>
                                 :
                                 <>

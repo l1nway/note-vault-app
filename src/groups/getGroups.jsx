@@ -37,7 +37,7 @@ const getGroups = async (
     setLoading(true)
     setLoadingError(false)
     try {
-        const res = await fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/${path}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/${path}`, {
             // &page=${page}
             method: 'GET',
             headers: {

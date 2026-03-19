@@ -54,7 +54,6 @@ function groupsLogic() {
         () => (path == 'tags' ? tags : categories),
         [path, tags, categories]
     )
-    console.log(items)
     
     const saving = useMemo(() => items?.some(item => item?.saving), [items])
     const error = useMemo(() => items?.some(item => item?.error), [items])

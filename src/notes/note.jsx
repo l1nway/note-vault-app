@@ -34,7 +34,7 @@ function Note() {
     const [error, setError] = useState(false)
 
     const getNote = () => {
-        fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/notes/${location.state || id}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/notes/${location.state || id}`, {
             headers: {
                 'content-type': 'application/json',
                 authorization: `Bearer ${token}`,
@@ -212,21 +212,25 @@ function Note() {
                         <div className='note-info-dates'>
                             <div className='note-dates'>
                                 <div className='note-info-created'>
-                                    {t('Created')}: {new Date(noteInfo.created_at).toLocaleDateString(i18n.language, {
+                                    {t('Created')}: {new Date(noteInfo.createdAt).toLocaleDateString(i18n.language, {
                                         month: 'short', day: 'numeric', year: 'numeric'})}
                                 </div>
-                                <div className='note-info-circle'/>
-                                <div className='note-info-updated'>
-                                    {t('Updated')}: {new Date(noteInfo.updated_at).toLocaleDateString(i18n.language, {
-                                        month: 'short', day: 'numeric', year: 'numeric'})}
-                                </div>
+                                {noteInfo.updatedAt &&
+                                    <>
+                                        <div className='note-info-circle'/>
+                                        <div className='note-info-updated'>
+                                            {t('Updated')}: {new Date(noteInfo.updatedAt).toLocaleDateString(i18n.language, {
+                                                month: 'short', day: 'numeric', year: 'numeric'})}
+                                        </div>
+                                    </>
+                                }
                             </div>
                             <div className='note-mobile-buttons'>
                                 {renderButtons}
                             </div>
                         </div>
                         <div className='note-info-groups'>
-                            {noteInfo.category !== null ?
+                            {noteInfo.category !== null &&
                                 <div className='note-info-categories'>
                                     <Link
                                         state={{sort: 'category', value: noteInfo.category?.name}}
@@ -238,7 +242,7 @@ function Note() {
                                             {t(noteInfo.category?.name)}
                                     </Link>
                                 </div>
-                            : null}
+                            }
                             <div className='note-info-tags'>
                                 {renderTags}
                             </div>
@@ -253,9 +257,9 @@ function Note() {
                     </SlideDown>
                 </div>
                 {/* SHARE WINDOW */}
-                {act ? <Share id={location.state}/> : null}
+                {act && <Share id={location.state}/>}
                 {/* CLARIFICATION WINDOWS */}
-                {action ? <Clarify id={location.state}/> : null}
+                {action && <Clarify id={location.state}/>}
         </div>
     )
 }

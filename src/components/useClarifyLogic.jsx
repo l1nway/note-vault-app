@@ -103,7 +103,7 @@ const useClarifyLogic = (props) => {
             setClarifyLoading(false)
             return
         }
-        fetch(`https://note-vault-backend-w1uv.onrender.com/api/v1/${(path == 'archived' || path == 'trash') ? 'notes' : path}`,
+        fetch(`${import.meta.env.VITE_API_URL}/${(path == 'archived' || path == 'trash') ? 'notes' : path}`,
             {
                 method: 'GET',
                 headers: {
