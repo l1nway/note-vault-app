@@ -127,7 +127,7 @@ const Editor = forwardRef((props, ref) => {
             })
             .then(resData => {
                 const fullUrl = new URL(import.meta.env.VITE_API_URL).origin + resData.avatar_url
-                
+                console.log(fullUrl)
                 setRotate(0)
                 setZoom(1)
                 setAvatar(fullUrl)

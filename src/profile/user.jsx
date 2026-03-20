@@ -86,17 +86,17 @@ function User() {
                 console.error(e)
                 return
             }
-
+            
             const data = await res.json()
+            const fullUrl = new URL(import.meta.env.VITE_API_URL).origin + data.avatar_url
             setVerifed(data.email_verified_at)
             setCreated(data.created_at)
             setLanguage(data.language)
-            setAvatar(data.avatar_url)
             setLocalEmail(data.email)
             setLocalName(data.name)
             setEmail(data.email)
+            setAvatar(fullUrl)
             setName(data.name)
-            
             return data
         } catch (e) {
             console.error(e)

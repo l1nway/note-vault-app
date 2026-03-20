@@ -12,7 +12,7 @@ const LoadingError = React.memo(({pageError, setPageError, pageMessage, setPageM
 
     const errorButton = useCallback(() => {
         if (online) {
-            getPage(path, setPageMessage)
+            getPage(path, 1, setPageMessage)
             return
         }
         setOfflineMode(true)

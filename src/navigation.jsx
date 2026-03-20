@@ -65,9 +65,10 @@ function Navigation() {
 
                 if (response.ok) {
                     const data = await response.json()
-                    setAvatar(data.avatar_url)
+                    const fullUrl = new URL(import.meta.env.VITE_API_URL).origin + data.avatar_url
                     setLanguage(data.language)
                     setEmail(data.email)
+                    setAvatar(fullUrl)
                     setName(data.name)
                 } else if (response.status === 401) {
                     logout()

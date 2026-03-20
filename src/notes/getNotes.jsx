@@ -19,7 +19,7 @@ const getNotes = async (queryString = '', page = 1, setLastPage = () => {}) => {
         setNotesError?.(false)
 
     const res = await fetch(
-    `${import.meta.env.VITE_API_URL}/notes${queryString}`,
+    `${import.meta.env.VITE_API_URL}/${queryString}`,
     {
         method: 'GET',
         headers: {

@@ -24,22 +24,22 @@ function notesLogic() {
     // managing windows for deleting, archiving and editing
     const {action, setAction, animating, setAnimating, notesError, notesLoading, notesMessage, category, tag, search, setVisibility, setClarifyLoading, setRetryFunction} = clarifyStore(
         useShallow(state => ({
-            action: state.action,
-            setAction: state.setAction,
-            animating: state.animating,
-            setAnimating: state.setAnimating,
-            setNotesError: state.setNotesError,
-            notesError: state.notesError,
-            notesLoading: state.notesLoading,
+            setClarifyLoading: state.setClarifyLoading,
+            setRetryFunction: state.setRetryFunction,
             setNotesLoading: state.setNotesLoading,
             setNotesMessage: state.setNotesMessage,
-            notesMessage: state.notesMessage,
-            category: state.category,
-            tag: state.tag,
-            search: state.search,
+            setNotesError: state.setNotesError,
             setVisibility: state.setVisibility,
-            setClarifyLoading: state.setClarifyLoading,
-            setRetryFunction: state.setRetryFunction
+            notesLoading: state.notesLoading,
+            notesMessage: state.notesMessage,
+            setAnimating: state.setAnimating,
+            notesError: state.notesError,
+            setAction: state.setAction,
+            animating: state.animating,
+            category: state.category,
+            action: state.action,
+            search: state.search,
+            tag: state.tag
     })))
 
     const {notes} = appStore(useShallow((state) => ({notes: state.notes})))
@@ -73,7 +73,7 @@ function notesLogic() {
 
     useEffect(() => {
         if (online && !offlineMode && token) {
-            getNotes(queryString, page, setLastPage)
+            getNotes('notes' + queryString, page, setLastPage)
             setFilteredNotes(null)
         }
     }, [queryString, token, offlineMode, online])
