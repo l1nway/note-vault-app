@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 import {appStore, clarifyStore} from '../store'
 
-const getNotes = async (queryString = '', page = 1, setLastPage = () => {}) => {
+const getNotes = async (queryString = 'notes', page = 1, setLastPage = () => {}) => {
     const {setNotes} = appStore.getState()
     const {setNotesError, setNotesLoading, setNotesMessage} = clarifyStore.getState()
     // 
@@ -17,7 +17,6 @@ const getNotes = async (queryString = '', page = 1, setLastPage = () => {}) => {
     try {
         setNotesLoading?.(true)
         setNotesError?.(false)
-
     const res = await fetch(
     `${import.meta.env.VITE_API_URL}/${queryString}`,
     {
@@ -27,7 +26,7 @@ const getNotes = async (queryString = '', page = 1, setLastPage = () => {}) => {
             authorization: `Bearer ${token}`,
         },
     })
-
+    
     if (!res.ok) throw new Error('Fetch failed')
     
     const resData = await res.json()
